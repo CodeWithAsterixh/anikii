@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { Suspense } from "react";
 
 import BreadCrumbed from "@/ui/components/Breadcrumbed";
 type Props = {
@@ -11,7 +11,7 @@ function Layout({ children }: Props) {
   return (
     <main className=" w-full h-fit flex items-start justify-start flex-col pb-32">
       <BreadCrumbed />
-      {children}
+      <Suspense>{children}</Suspense>
     </main>
   );
 }
