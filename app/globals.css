@@ -1,0 +1,124 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #E6E4DC;
+  --foreground: #2C2C2E;
+}
+/* Slide up from bottom of the screen */
+@keyframes slideUp {
+  from {
+    transform: translateY(100vh); /* Start below the viewport */
+  }
+  to {
+    transform: translateY(0); /* End at the original position */
+  }
+}
+
+/* Slide down to bottom of the screen */
+@keyframes slideDown {
+  from {
+    transform: translateY(0); /* Start at the original position */
+  }
+  to {
+    transform: translateY(100vh); /* End below the viewport */
+  }
+}
+/* Slide down below content */
+@keyframes slideDownReveal {
+  from {
+    transform: translateY(0); /* Start at the original position */
+    opacity: 0;
+  }
+  to {
+    transform: translateY(44px); /* End below the viewport */
+    opacity: 1;
+  }
+}
+/* Slide down below content more */
+@keyframes slideDownRevealMore {
+  from {
+    transform: translateY(0); /* Start at the original position */
+    opacity: 0;
+  }
+  to {
+    --y: calc(100%+20px);
+    transform: translateY(--y); /* End below the viewport */
+    opacity: 1;
+  }
+}
+/* Slide down below content more */
+@keyframes slideDownSimple {
+  from {
+    transform: translateY(-50%); /* Start at the original position */
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0); /* End below the viewport */
+    opacity: 1;
+  }
+}
+/* Slide down below content more */
+@keyframes slideUpSimple {
+  from {
+    transform: translateY(0); /* Start at the original position */
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-50%); /* End below the viewport */
+    opacity: 0;
+  }
+}
+/* Fade in (Opacity transition) */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Fade out (Opacity transition) */
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #272A2D;
+    --foreground: #ECECEC;
+  }
+}
+*::-webkit-scrollbar{
+  display: none;
+}
+.scrollbar-h::-webkit-scrollbar{
+  display: block;
+  width: 4px;
+
+}
+.scrollbar-h::-webkit-scrollbar-track{
+  background: transparent;
+}
+.scrollbar-h::-webkit-scrollbar-thumb{
+  display: block;
+  background: #E6E4DC;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  background: #347CCB !important;
+}
+body {
+  color: var(--foreground);
+  background: var(--background);
+  width: 100vw;
+  height: 100vh;
+  font-family: Arial, Helvetica, sans-serif;
+}
