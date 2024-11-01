@@ -1,32 +1,27 @@
-export class Fullscreen {
-  elem: HTMLDivElement | null = null;
-  constructor(element: HTMLDivElement) {
-    this.elem = element;
-  }
-  /* View in fullscreen */
-  open() {
-    if (this.elem) {
-      this.elem.requestFullscreen();
-    }
+interface ExtendedScreenOrientation extends ScreenOrientation {
+  lock: (orientation: "portrait" | "landscape") => Promise<void>;
+}
+
+export function setOrientation(to: "landscape" | "unlock" = "landscape") {
+  if (
+    typeof window === "undefined" ||
+    typeof screen === "undefined" ||
+    !screen.orientation
+  ) {
+    return; // Exit if not in a browser environment or if screen.orientation is unavailable
   }
 
-  /* Close fullscreen */
-  close() {
-    if (document.exitFullscreen) {
-      document.exitFullscreen();
-    }
-  }
-}
-export function setOrientation(to: "landscape" | "unlock" = "landscape") {
+  const orientation = screen.orientation as ExtendedScreenOrientation;
+
   try {
-    if (screen.orientation) {
-      if (to === "unlock") {
-        screen.orientation.unlock();
-      } else if (to === "landscape" && screen.orientation.lock) {
-        screen.orientation.lock("landscape");
-      }
+    if (to === "unlock" && typeof orientation.unlock === "function") {
+      orientation.unlock();
+    } else if (to === "landscape" && typeof orientation.lock === "function") {
+      orientation.lock("landscape").catch(() => {
+        console.warn("Failed to lock orientation to landscape");
+      });
     }
   } catch (error) {
-    return;
+    console.error("Error setting orientation:", error);
   }
 }
