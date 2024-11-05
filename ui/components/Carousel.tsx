@@ -5,13 +5,16 @@ import { Button, Carousel as CarouselFlow } from "flowbite-react";
 import clsx from "clsx";
 import { glassMorphism } from "../styles/style";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+
 import {
   CaretLeft,
   CaretRight,
   CircleNotch,
   Image as ImageIcon,
 } from "@phosphor-icons/react/dist/ssr";
-import { anilistTrending } from "@/app/(pages)/page";
+import { anilistTrending } from "@/mods/schemas";
+
 
 type Props = {
   animeTrend?: anilistTrending[];
@@ -34,10 +37,17 @@ function CarouselItem({ imgUrl, id, rate, title }: CarouselItemProp) {
     <div className="flex size-full items-end justify-end relative">
       <div className="size-full z-0 bg-gray-500 absolute top-0 left-0 flex items-center justify-center">
         {imgUrl ? (
-          <img
+          <Image
             className="size-full object-center object-cover"
-            src={imgUrl}
+
+            src={`api/images?url=${imgUrl}`}
+
             alt={title + " image"}
+            width={500}
+            height={500}
+            placeholder="blur"
+            quality={90}
+
           />
         ) : (
           <ImageIcon className="text-3xl animate-pulse" />

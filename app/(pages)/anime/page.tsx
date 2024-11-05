@@ -141,7 +141,7 @@ function AnimeDescription({}: Props) {
                     <Button
                       onClick={() =>
                         navigate(
-                          "/watch?anime_title=tate+no+yuusha+no+nariagari&ep=1&se=1"
+                         `${id}-episode-1`
                         )
                       }
                       className="!bg-secondary !ring-0 !border-0"

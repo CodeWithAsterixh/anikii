@@ -26,7 +26,8 @@ function MovieCard({ isList, image, title, rate, id }: Props) {
       alt={title ? title : ""}
       width={500}
       height={500}
-      priority
+      quality={80}
+     placeholder="blur"
     />
   );
   const titleComp = title ? title.split("(Dub)")[0].trimEnd() : "";
