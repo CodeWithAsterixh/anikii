@@ -3,12 +3,13 @@
 import BreadCrumbed from "@/ui/components/Breadcrumbed";
 import MovieCard from "@/ui/major/MovieCard";
 import { useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
-import { gogoPopular } from "../page";
+import React, { useCallback, useEffect, useState } from "react";
 import { SmileySad } from "@phosphor-icons/react/dist/ssr";
 import { Button } from "flowbite-react";
 import Loader from "@/ui/components/loader";
 import axios from "axios";
+import { gogoPopular } from "@/mods/schemas";
+import { HeadContent } from "../../../ui/HeadContent";
 
 type Props = object;
 
@@ -20,7 +21,8 @@ function SearchFor({}: Props) {
     error: false,
   });
   const term = params.get("term");
-  async function search() {
+
+  const search = useCallback(async () => {
     setProcess({ error: false, loading: true });
     try {
       const animes = await axios.get(`/api/search?term=${term}`, {
@@ -38,15 +40,21 @@ function SearchFor({}: Props) {
       setProcess({ error: true, loading: false });
       return err;
     }
-  }
+  }, [term]);
+
   useEffect(() => {
     if (term) {
       search();
     }
-  }, [term]);
+  }, [search, term]);
 
   return (
     <main className=" w-full h-fit flex items-start justify-start flex-col pb-32">
+      <HeadContent
+        description={`Watch all your favorite anime like ${term} on Anikii with lesser ads and easy access.`}
+        title={`You searched for: ${term}`}
+        url={`www.anikii.vercel.app/search?term=${term}`}
+      />
       <BreadCrumbed />
 
       {process.error ? (

@@ -1,56 +1,20 @@
 "use client";
 
+import { Anime } from "@/mods/schemas";
 import { ViewAllEps } from "@/ui/components/EPISODED";
 import Loader from "@/ui/components/loader";
 import MovieEPSliider from "@/ui/components/MovieEPSliider";
-import MovieCard from "@/ui/major/MovieCard";
+import RecommendationsSection from "@/ui/sections/RecommendationsSection";
 import { SmileySad } from "@phosphor-icons/react/dist/ssr";
 import axios from "axios";
 import clsx from "clsx";
 import { Button } from "flowbite-react";
+import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { anilistTrending } from "../page";
+import { useCallback, useEffect, useState } from "react";
+import { HeadContent } from "../../../ui/HeadContent";
 
 type Props = object;
-interface Title {
-  english: string | null;
-  native: string | null;
-  romaji: string;
-  userPreferred: string;
-}
-
-interface CoverImage {
-  extraLarge: string;
-  large: string;
-  color: string;
-}
-
-export interface Anime {
-  id: number | string; // Supports both number and string ID types
-  title: Title;
-  name: string;
-  coverImage: CoverImage;
-  bannerImage: string | null;
-  season: string;
-  seasonYear?: number; // Optional, as this is not in the second object
-  description: string;
-  type: string;
-  format?: string; // Optional, as this is not in the second object
-  status: string;
-  episodes: string[] | number;
-  genres?: string[]; // Optional, since it may not be available in the second object
-  averageScore?: number; // Optional, since it may not be available in the second object
-  popularity?: number; // Optional, since it may not be available in the second object
-  meanScore?: number; // Optional, since it may not be available in the second object
-  recommendations?: []; // Optional, since it may not be available in the second object
-  source: string;
-  image?: string; // Optional, to accommodate the image field from the second object
-  plot_summary?: string; // Optional, to accommodate the plot_summary field from the second object
-  genre?: string; // Optional, to accommodate the genre field from the second object
-  released?: string; // Optional, to accommodate the released field from the second object
-  other_name?: string; // Optional, to accommodate the other_name field from the second object
-}
 
 function AnimeDescription({}: Props) {
   const params = useSearchParams();
@@ -58,16 +22,12 @@ function AnimeDescription({}: Props) {
   const router = useRouter();
   const navigate = router.push;
   const [details, setDetails] = useState<Anime | null>(null);
-  const [recommendations, setRecommendations] = useState<anilistTrending[]>([]);
   const [process, setProcess] = useState({
     loading: false,
     error: false,
   });
-  const [processRecommend, setProcessRecommend] = useState({
-    loading: false,
-    error: false,
-  });
-  async function findAnimeDetails() {
+
+  const findAnimeDetails = useCallback(async () => {
     setProcess({ error: false, loading: true });
     try {
       const animes = await axios.get(`/api/details?id=${id}`, {
@@ -85,36 +45,22 @@ function AnimeDescription({}: Props) {
       setProcess({ error: true, loading: false });
       return err;
     }
-  }
-  async function getRecommendations() {
-    setProcessRecommend({ error: false, loading: true });
-    try {
-      const animes = await axios.get(`/api/recommendations?name=${id}`, {
-        onDownloadProgress() {
-          setProcessRecommend({ error: false, loading: true });
-        },
-        timeout: 10000,
-      });
+  }, [id]);
 
-      const animeResult = animes.data;
-
-      setRecommendations(animeResult);
-      setProcessRecommend({ error: false, loading: false });
-    } catch (err) {
-      setProcessRecommend({ error: true, loading: false });
-      return err;
-    }
-  }
   useEffect(() => {
     findAnimeDetails();
-    getRecommendations();
-  }, [id]);
+  }, [findAnimeDetails, id]);
   useEffect(() => {
     console.log(details);
   }, [details]);
 
   return (
     <>
+      <HeadContent
+        description={`${id} ${details?.description}`}
+        title={`Anikii | ${details?.name}`}
+        url={`www.anikii.vercel.app/anime?anime_id=${id}`}
+      />
       {process.error ? (
         <h3 className="text-secondary w-full h-fit flex items-center justify-center flex-col gap-3 font-bold">
           <SmileySad className="text-5xl" weight="fill" /> Error loading movie
@@ -141,25 +87,31 @@ function AnimeDescription({}: Props) {
                   "brightness-50 blur-xl"
                 )}
               >
-                <img
-                  src={
-                    details.bannerImage ? details.bannerImage : details.image
-                  }
-                  alt={"example image"}
+                <Image
                   className="size-full object-cover object-center"
+                  src={`api/images?url=${
+                    details.bannerImage ? details.bannerImage : details.image
+                  }`}
+                  alt={details.name}
+                  width={500}
+                  height={500}
+                  priority
                 />
               </span>
               {/* ----------------------------- */}
 
               <div className="w-3/4 m-2 min-w-[80vw] min-[320px]:min-w-48 min-[498px]:w-36 sm:w-48 h-40 min-[498px]:h-52 sm:h-60 min-[498px]:!min-h-full relative border-4 border-base-white rounded-md shrink-0">
-                <img
-                  src={
+                <Image
+                  className="size-full object-cover object-center"
+                  src={`api/images?url=${
                     details.coverImage
                       ? details.coverImage.extraLarge
                       : details.image
-                  }
-                  alt={"example image"}
-                  className="size-full object-cover object-center"
+                  }`}
+                  alt={details.name}
+                  width={500}
+                  height={500}
+                  priority
                 />
               </div>
               <article className="w-full h-fit flex  flex-col sm:flex-row items-center min-[498px]:items-start justify-start gap-2 ">
@@ -280,39 +232,7 @@ function AnimeDescription({}: Props) {
           </>
         )
       )}
-      {processRecommend.error ? (
-        <h3 className="text-secondary w-full h-fit flex items-center justify-center flex-col gap-3 font-bold">
-          <SmileySad className="text-5xl" weight="fill" /> Error loading movie
-          Information
-          <section className="w-full flex items-center justify-center h-fit p-2">
-            <Button
-              onClick={getRecommendations}
-              className="!bg-secondary !ring-0 !border-0 w-full min-[498px]:!w-fit"
-            >
-              Reload recommendations
-            </Button>
-          </section>
-        </h3>
-      ) : processRecommend.loading ? (
-        <Loader />
-      ) : (
-        recommendations && (
-          <section className="w-full h-fit p-2">
-            <h3 className="text-secondary font-bold">You may like</h3>
-            <div className="w-full h-fit flex items-start justify-start flex-wrap gap-2">
-              {recommendations.map((anime, index) => (
-                <MovieCard
-                  key={index}
-                  image={anime.coverImage.large}
-                  title={anime.title.userPreferred}
-                  rate={anime.averageScore}
-                  id={id ? id : ""}
-                />
-              ))}
-            </div>
-          </section>
-        )
-      )}
+      <RecommendationsSection anime_episode={id} />
     </>
   );
 }

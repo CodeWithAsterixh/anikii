@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import ThemeToggler from "@/ui/components/ThemeToggler";
 import { setTheme } from "@/state/reducers";
 import Header from "@/ui/components/Header";
+import Head from "next/head";
 type Props = {
   children?: React.ReactNode;
 };
@@ -37,6 +38,20 @@ function Layout({ children }: Props) {
   }, [mode]);
   return (
     <>
+      <Head>
+        <title>Anikii | Genjitsu wa kantan</title>
+        <meta
+          name="description"
+          content="Watch My Favorite Anime on Anikii with lesser ads and easy access."
+        />
+        <meta property="og:title" content="Anikii | Genjitsu wa kantan" />
+        <meta
+          property="og:description"
+          content="Watch My Favorite Anime on Anikii with lesser ads and easy access."
+        />
+        <meta property="og:image" content="www.anikii.vercel.app" />
+        <meta property="og:url" content="www.anikii.vercel.app" />
+      </Head>
       <Header />
       {children}
 
