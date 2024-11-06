@@ -20,12 +20,12 @@ export default function Footer() {
           </div>
           <div className="w-full max-w-[150px] flex flex-col gap-3">
             <b className="text-2xl">About</b>
-            <Link
-              href="aster-develops/vercel.app/About"
+            <a
+              href="https://aster-develops/vercel.app/About"
               className="text-gray-800 dark:text-gray-300 text-md"
             >
               About Us
-            </Link>
+            </a>
           </div>
           <div className="w-full max-w-[170px] flex flex-col gap-3">
             <b className="text-2xl">More</b>
