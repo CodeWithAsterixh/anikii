@@ -141,7 +141,7 @@ function AnimeDescription({}: Props) {
                     <Button
                       onClick={() =>
                         navigate(
-                         `/anime?anime_id=${id}-episode-1`
+                         `/watch?anime_episode=${id}-episode-1`
                         )
                       }
                       className="!bg-secondary !ring-0 !border-0"
