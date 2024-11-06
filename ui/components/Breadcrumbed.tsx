@@ -1,41 +1,132 @@
 "use client";
-import { House } from "@phosphor-icons/react/dist/ssr";
-import clsx from "clsx";
-import { Breadcrumb, BreadcrumbItem } from "flowbite-react";
-import { usePathname } from "next/navigation";
+
 import React from "react";
+import { Button, Carousel as CarouselFlow } from "flowbite-react";
+import clsx from "clsx";
+import { glassMorphism } from "../styles/style";
+import { useRouter } from "next/navigation";
 
-type Props = object;
+import {
+  CaretLeft,
+  CaretRight,
+  CircleNotch,
+  Image as ImageIcon,
+} from "@phosphor-icons/react/dist/ssr";
+import { anilistTrending } from "@/mods/schemas";
 
-function BreadCrumbed({}: Props) {
-  const pathName = usePathname();
-  const paths = pathName.split("/").map((path) => ({
-    name: path !== "" ? path : "Home",
-    path: `/` + path,
-  }));
+type Props = {
+  animeTrend?: anilistTrending[];
+  loading?: boolean;
+};
+
+type CarouselItemProps = {
+  imgUrl?: string;
+  title?: string;
+  rate?: number;
+  id?: string | number;
+};
+
+const CarouselItem: React.FC<CarouselItemProps> = ({
+  imgUrl,
+  id,
+  rate,
+  title,
+}) => {
+  const router = useRouter();
+
+  const handleOpen = () => router.push(`/anime?anime_id=${id}`);
 
   return (
-    <Breadcrumb className="w-full h-fit p-3 backdrop-blur-md shadow-lg bg-base-white/75 dark:bg-base-black/75 sticky top-0 z-[2] overflow-x-auto">
-      {paths.map(({ name, path }, index) => (
-        <BreadcrumbItem
-          key={index}
-          href={index !== paths.length - 1 ? path : undefined}
-          className={clsx(
-            index !== paths.length - 1
-              ? "*:text-base-black/70 dark:*:text-base-white/70"
-              : "*:text-base-black dark:*:text-base-white",
-            index !== paths.length - 1 &&
-              "*:hover:text-base-black dark:*:hover:text-base-white",
-          )}
-        >
-          <div className="w-fit capitalize flex gap-2 items-center justify-start text-base">
-            {name == "Home" && <House weight="fill" className="-mt-1" />}
-            {decodeURI(name)}
-          </div>
-        </BreadcrumbItem>
-      ))}
-    </Breadcrumb>
+    <div className="flex size-full items-end justify-end relative">
+      <div className="size-full z-0 bg-gray-500 absolute top-0 left-0 flex items-center justify-center">
+        {imgUrl ? (
+          <img
+            className="size-full object-center object-cover"
+            src={imgUrl}
+            alt={`${title} image`}
+            width={500}
+            height={500}
+            loading="lazy"
+          />
+        ) : (
+          <ImageIcon className="text-3xl animate-pulse" />
+        )}
+      </div>
+      <ul className="w-full relative px-2 pb-2 bg-gradient-to-tr from-black/80 to-transparent">
+        {rate && (
+          <li className="text-secondary font-bold text-sm sm:text-base">
+            #{Math.ceil((rate / 100) * 10)} Spotlight
+          </li>
+        )}
+        {title && <li className="font-bold">{title}</li>}
+        <li className="flex items-center gap-2">
+          <Button onClick={handleOpen} className="!bg-primary *:p-1">
+            Watch now
+          </Button>
+          <Button outline className="!bg-light-primary *:p-1">
+            Details
+          </Button>
+        </li>
+      </ul>
+    </div>
   );
-}
+};
 
-export default BreadCrumbed;
+const Carousel: React.FC<Props> = ({ animeTrend, loading }) => {
+  const renderCarouselItem = (anime: anilistTrending, index: number) => (
+    <CarouselItem
+      key={index}
+      imgUrl={anime.coverImage.extraLarge}
+      id={anime.id}
+      rate={anime.averageScore}
+      title={anime.title.userPreferred}
+    />
+  );
+
+  return (
+    <CarouselFlow
+      slide={false}
+      className={clsx("w-full h-72 sm:h-96 isolate", glassMorphism.className)}
+      indicators={false}
+      leftControl={renderControlButton(CaretLeft, "left")}
+      rightControl={renderControlButton(CaretRight, "right")}
+    >
+      {loading ? (
+        <div className="flex size-full items-center justify-center relative">
+          <CircleNotch
+            weight="bold"
+            size={25}
+            className="text-5xl animate-spin"
+          />
+        </div>
+      ) : (
+        animeTrend?.map(renderCarouselItem)
+      )}
+    </CarouselFlow>
+  );
+};
+
+// Control Button for Carousel
+const renderControlButton = (
+  Icon: React.ComponentType,
+  position: "left" | "right"
+) => (
+  <span
+    className={clsx(
+      "h-1/4 flex items-center justify-center absolute top-1/2 -translate-y-1/2",
+      `bg-black/30 rounded-${position === "left" ? "r" : "l"}-md`,
+      "px-1 min-[300px]:px-2 sm:px-4"
+    )}
+  >
+    <span
+      className={clsx(
+        "flex items-center justify-center p-2 text-lg min-[300px]:text-2xl sm:text-3xl rounded-full",
+        glassMorphism.className
+      )}
+    >
+      <Icon />
+    </span>
+  </span>
+);
+
+export default Carousel;

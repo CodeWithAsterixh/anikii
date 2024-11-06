@@ -1,11 +1,11 @@
 "use client";
 
-import { CaretLeft, CaretRight } from "@phosphor-icons/react/dist/ssr";
+import { CaretLeft, CaretRight } from "@phosphor-icons/react";
 import React, { useEffect, useRef, useState } from "react";
 import { EPListProp, MoviePlayerEpCard } from "./EPISODED";
 import clsx from "clsx";
 
-const __BASEMVEW__ = 128;
+const BASE_VIEW_WIDTH = 128;
 
 function MovieEPSliider({
   episodes = [
@@ -16,50 +16,34 @@ function MovieEPSliider({
   ],
 }: EPListProp) {
   const epsScroller = useRef<HTMLUListElement>(null);
-  const [epsPositioning, setEpsPositioning] = useState({
-    currentIndex: 0,
-    maxIndex: 0,
-  });
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [maxIndex, setMaxIndex] = useState(0);
+
+  const updateMaxIndex = () => {
+    setMaxIndex(Math.floor(window.innerWidth / BASE_VIEW_WIDTH));
+  };
+
   useEffect(() => {
-    if (epsScroller.current !== null) {
-      setEpsPositioning((prev) => ({
-        ...prev,
-        maxIndex: Math.floor(window.innerWidth / __BASEMVEW__),
-      }));
-    }
-  }, [epsScroller]);
+    updateMaxIndex();
+    window.addEventListener("resize", updateMaxIndex);
+    return () => window.removeEventListener("resize", updateMaxIndex);
+  }, []);
+
   useEffect(() => {
-    if (epsScroller.current !== null) {
-      const pos = epsScroller.current;
-
-      pos.scrollLeft = epsPositioning.currentIndex * window.innerWidth;
+    if (epsScroller.current) {
+      epsScroller.current.scrollLeft = currentIndex * window.innerWidth;
     }
-  }, [epsPositioning.currentIndex]);
+  }, [currentIndex]);
 
-  function handleSlide(towards: "back" | "fort") {
-    switch (towards) {
-      case "back":
-        setEpsPositioning((prev) => ({
-          ...prev,
-          currentIndex: prev.currentIndex !== 0 ? prev.currentIndex - 1 : 0,
-        }));
+  const handleSlide = (direction: "back" | "forward") => {
+    setCurrentIndex((prev) => {
+      if (direction === "back") {
+        return Math.max(prev - 1, 0);
+      }
+      return Math.min(prev + 1, maxIndex);
+    });
+  };
 
-        break;
-      case "fort":
-        setEpsPositioning((prev) => ({
-          ...prev,
-          currentIndex:
-            prev.currentIndex !== prev.maxIndex
-              ? prev.currentIndex + 1
-              : prev.maxIndex,
-        }));
-
-        break;
-
-      default:
-        break;
-    }
-  }
   return (
     <section className="w-[calc(100%-(0.5rem*2))] h-fit relative mt-3 mx-2">
       <ul
@@ -76,13 +60,13 @@ function MovieEPSliider({
             />
           ))}
       </ul>
+
+      {/* Navigation Buttons */}
       <div>
-        {epsPositioning.maxIndex > 1 && epsPositioning.currentIndex >= 1 && (
+        {maxIndex > 1 && currentIndex > 0 && (
           <button
             className={clsx(
-              "flex items-center justify-center p-2 text-lg min-[300px]:text-2xl sm:text-3xl rounded-r-md",
-              "bg-black/70",
-              "absolute left-0 top-1/2 -translate-y-1/2"
+              "flex items-center justify-center p-2 text-lg min-[300px]:text-2xl sm:text-3xl rounded-r-md bg-black/70 absolute left-0 top-1/2 -translate-y-1/2"
             )}
             onClick={() => handleSlide("back")}
           >
@@ -90,19 +74,16 @@ function MovieEPSliider({
           </button>
         )}
 
-        {epsPositioning.maxIndex > 1 &&
-          epsPositioning.maxIndex !== epsPositioning.currentIndex && (
-            <button
-              className={clsx(
-                "flex items-center justify-center p-2 text-lg min-[300px]:text-2xl sm:text-3xl rounded-l-md",
-                "bg-black/70",
-                "absolute right-0 top-1/2 -translate-y-1/2"
-              )}
-              onClick={() => handleSlide("fort")}
-            >
-              <CaretRight />
-            </button>
-          )}
+        {maxIndex > 1 && currentIndex < maxIndex && (
+          <button
+            className={clsx(
+              "flex items-center justify-center p-2 text-lg min-[300px]:text-2xl sm:text-3xl rounded-l-md bg-black/70 absolute right-0 top-1/2 -translate-y-1/2"
+            )}
+            onClick={() => handleSlide("forward")}
+          >
+            <CaretRight />
+          </button>
+        )}
       </div>
     </section>
   );

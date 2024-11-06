@@ -49,7 +49,7 @@ function Layout({ children }: Props) {
           property="og:description"
           content="Watch My Favorite Anime on Anikii with lesser ads and easy access."
         />
-        <meta property="og:image" content="www.anikii.vercel.app" />
+        <meta property="og:image" content="www.anikii.vercel.app/anikii.jpg" />
         <meta property="og:url" content="www.anikii.vercel.app" />
       </Head>
       <Header />

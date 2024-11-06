@@ -4,6 +4,7 @@ import "./globals.css";
 import { ReduxProvider } from "@/state/provider";
 import { ModalProvider } from "@/ui/Modal/Modal";
 import { Toaster } from "react-hot-toast";
+import Footer from "@/ui/components/Footer/Footer";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -33,7 +34,10 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased dark:bg-base-black bg-base-white`}
       >
         <ReduxProvider>
-          <ModalProvider>{children}</ModalProvider>
+          <ModalProvider>
+            {children}
+            <Footer />
+          </ModalProvider>
 
           <Toaster />
         </ReduxProvider>
