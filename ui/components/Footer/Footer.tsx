@@ -9,7 +9,7 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="w-full bg-base-black/10 dark:bg-base-black text-base-black dark:text-base-white flex flex-col items-center justify-center gap-10 pt-10 bottom-0">
+    <footer className="w-full bg-base-black/10 dark:bg-black text-base-black dark:text-base-white flex flex-col items-center justify-center gap-10 pt-10 bottom-0">
       <div className="w-full px-5 md:px-20">
         <div className="w-full flex flex-col md:flex-row md:justify-between gap-9">
           <div className="w-full max-w-[170px] flex flex-col gap-3">
