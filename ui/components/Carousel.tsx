@@ -6,9 +6,6 @@ import clsx from "clsx";
 import { glassMorphism } from "../styles/style";
 import { useRouter } from "next/navigation";
 
-
-
-
 import {
   CaretLeft,
   CaretRight,
@@ -16,40 +13,42 @@ import {
   Image as ImageIcon,
 } from "@phosphor-icons/react/dist/ssr";
 import { anilistTrending } from "@/mods/schemas";
-
+import Link from "next/link";
 
 type Props = {
   animeTrend?: anilistTrending[];
   loading?: boolean;
 };
-type CarouselItemProp = {
+
+type CarouselItemProps = {
   imgUrl?: string;
   title?: string;
   rate?: number;
   id?: string | number;
 };
 
-function CarouselItem({ imgUrl, id, rate, title }: CarouselItemProp) {
+const CarouselItem: React.FC<CarouselItemProps> = ({
+  imgUrl,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  id,
+  rate,
+  title,
+}) => {
   const router = useRouter();
-  const navigate = router.push;
-  function handleOpen() {
-    navigate(`/anime?anime_id=${id}`);
-  }
+
+  const handleOpen = () => router.push(`/anime?anime_id=${title}`);
+
   return (
     <div className="flex size-full items-end justify-end relative">
       <div className="size-full z-0 bg-gray-500 absolute top-0 left-0 flex items-center justify-center">
         {imgUrl ? (
           <img
             className="size-full object-center object-cover"
-
             src={imgUrl}
-
-            alt={title + " image"}
+            alt={`${title} image`}
             width={500}
             height={500}
             loading="lazy"
-           
-
           />
         ) : (
           <ImageIcon className="text-3xl animate-pulse" />
@@ -62,63 +61,44 @@ function CarouselItem({ imgUrl, id, rate, title }: CarouselItemProp) {
           </li>
         )}
         {title && <li className="font-bold">{title}</li>}
-        <li className="flex items-center justify-start gap-2">
-          <Button onClick={handleOpen} className="!bg-primary *:p-1">
-            Watch now
-          </Button>
-          <Button outline className="!bg-light-primary *:p-1">
-            Details
-          </Button>
+        <li className="flex items-center gap-2">
+          <Link href={`/watch?anime_episode=${title}-episode-1`}>
+            <Button onClick={handleOpen} className="!bg-primary *:p-1">
+              Watch now
+            </Button>
+          </Link>
+          <Link href={`/anime?anime_id=${title}`}>
+            <Button outline className="!bg-light-primary *:p-1">
+              Details
+            </Button>
+          </Link>
         </li>
       </ul>
     </div>
   );
-}
-function Carousel({ animeTrend, loading }: Props) {
+};
+
+const Carousel: React.FC<Props> = ({ animeTrend, loading }) => {
+  const renderCarouselItem = (anime: anilistTrending, index: number) => (
+    <CarouselItem
+      key={index}
+      imgUrl={anime.coverImage.extraLarge}
+      id={anime.id}
+      rate={anime.averageScore}
+      title={anime.title.userPreferred}
+    />
+  );
+
   return (
     <CarouselFlow
       slide={false}
       className={clsx("w-full h-72 sm:h-96 isolate", glassMorphism.className)}
       indicators={false}
-      leftControl={
-        <span
-          className={clsx(
-            "h-1/4 flex items-center justify-center absolute left-0 top-1/2 -translate-y-1/2",
-            "bg-black/30 rounded-r-md",
-            "px-1 min-[300px]:px-2 sm:px-4"
-          )}
-        >
-          <span
-            className={clsx(
-              "flex items-center justify-center p-2 text-lg min-[300px]:text-2xl sm:text-3xl rounded-full",
-              glassMorphism.className
-            )}
-          >
-            <CaretLeft />
-          </span>
-        </span>
-      }
-      rightControl={
-        <span
-          className={clsx(
-            "h-1/4 flex items-center justify-center absolute right-0 top-1/2 -translate-y-1/2",
-            "bg-black/30 rounded-l-md",
-            "px-1 min-[300px]:px-2 sm:px-4"
-          )}
-        >
-          <span
-            className={clsx(
-              "flex items-center justify-center p-2 text-lg min-[300px]:text-2xl sm:text-3xl rounded-full",
-              glassMorphism.className
-            )}
-          >
-            <CaretRight />
-          </span>
-        </span>
-      }
+      leftControl={renderControlButton(CaretLeft, "left")}
+      rightControl={renderControlButton(CaretRight, "right")}
     >
       {loading ? (
-        <div className="flex size-full  items-center justify-center relative">
+        <div className="flex size-full items-center justify-center relative">
           <CircleNotch
             weight="bold"
             size={25}
@@ -126,19 +106,33 @@ function Carousel({ animeTrend, loading }: Props) {
           />
         </div>
       ) : (
-        animeTrend &&
-        animeTrend.map((anime, index) => (
-          <CarouselItem
-            key={index}
-            imgUrl={anime.coverImage.extraLarge}
-            id={anime.id}
-            rate={anime.averageScore}
-            title={anime.title.userPreferred}
-          />
-        ))
+        animeTrend?.map(renderCarouselItem)
       )}
     </CarouselFlow>
   );
-}
+};
+
+// Control Button for Carousel
+const renderControlButton = (
+  Icon: React.ComponentType,
+  position: "left" | "right"
+) => (
+  <span
+    className={clsx(
+      "h-1/4 flex items-center justify-center absolute top-1/2 -translate-y-1/2",
+      `bg-black/30 rounded-${position === "left" ? "r" : "l"}-md`,
+      "px-1 min-[300px]:px-2 sm:px-4"
+    )}
+  >
+    <span
+      className={clsx(
+        "flex items-center justify-center p-2 text-lg min-[300px]:text-2xl sm:text-3xl rounded-full",
+        glassMorphism.className
+      )}
+    >
+      <Icon />
+    </span>
+  </span>
+);
 
 export default Carousel;

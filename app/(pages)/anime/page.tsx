@@ -95,7 +95,6 @@ function AnimeDescription({}: Props) {
                   alt={details.name}
                   width={500}
                   height={500}
-                  
                 />
               </span>
               {/* ----------------------------- */}
@@ -107,16 +106,15 @@ function AnimeDescription({}: Props) {
                     details.coverImage
                       ? details.coverImage.extraLarge
                       : details.image
-           }
+                  }
                   alt={details.name}
                   width={500}
                   height={500}
-        
                 />
               </div>
               <article className="w-full h-fit flex  flex-col sm:flex-row items-center min-[498px]:items-start justify-start gap-2 ">
                 <ul className="w-fit flex flex-col items-center min-[498px]:items-start justify-center p-2 gap-4 shrink-0">
-                  <li className="w-fit text-center min-[498px]:text-left text-base-white">
+                  <li className="w-fit text-center min-[498px]:text-left text-base-black dark:text-base-white">
                     {details.title ? details.title.userPreferred : details.name}
                   </li>
                   <li className="w-fit flex items-center justify-center gap-2 flex-wrap text-base-white">
@@ -140,9 +138,7 @@ function AnimeDescription({}: Props) {
                   <li>
                     <Button
                       onClick={() =>
-                        navigate(
-                         `/watch?anime_episode=${id}-episode-1`
-                        )
+                        navigate(`/watch?anime_episode=${id}-episode-1`)
                       }
                       className="!bg-secondary !ring-0 !border-0"
                     >
@@ -150,7 +146,7 @@ function AnimeDescription({}: Props) {
                     </Button>
                   </li>
                 </ul>
-                <ul className="w-full text-base-white bg-base-black/30 h-full p-2 flex flex-col items-start justify-center gap-4">
+                <ul className="w-full text-base-black dark:text-base-white bg-base-black/30 h-full p-2 flex flex-col items-start justify-center gap-4">
                   <li className=" h-fit text-sm sm:text-base flex flex-col items-start justify-start">
                     <h4 className="font-bold">Overview:</h4>
                     <p className="max-h-28 overflow-y-auto scrollbar-h">

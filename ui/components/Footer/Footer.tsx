@@ -9,7 +9,7 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="w-full bg-base-white dark:bg-base-black text-base-black dark:text-base-white flex flex-col items-center justify-center gap-10 pt-10 bottom-0">
+    <footer className="w-full bg-base-black/10 dark:bg-base-black text-base-black dark:text-base-white flex flex-col items-center justify-center gap-10 pt-10 bottom-0">
       <div className="w-full px-5 md:px-20">
         <div className="w-full flex flex-col md:flex-row md:justify-between gap-9">
           <div className="w-full max-w-[170px] flex flex-col gap-3">
@@ -54,25 +54,19 @@ export default function Footer() {
             </a>
             <a
               href="tel:+2348109080838"
-              className="flex items-center gap-2 text-gray-300 text-md"
+              className="flex items-center gap-2 text-gray-800 dark:text-gray-300 text-md"
             >
               <Phone />
               <span>Phone:</span> +234 810 908 0838
             </a>
             <a
               href="www.github.com/p34-pac"
-              className="flex items-center gap-2 text-gray-300 text-md"
-            >
-              <GithubLogo />
-              <span>Github:</span> p34-pac
-            </a>
-            <a
-              href="https://www.github.com/p34-pac"
               className="flex items-center gap-2 text-gray-800 dark:text-gray-300 text-md"
             >
               <GithubLogo />
               <span>Github:</span> p34-pac
             </a>
+
             <a
               href="https://www.linkedin.com/in/paul-peter-eyinnaya?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
               className="flex items-center gap-2 text-gray-800 dark:text-gray-300 text-md"
