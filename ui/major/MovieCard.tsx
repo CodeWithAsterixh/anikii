@@ -1,7 +1,7 @@
 "use client";
 
 import clsx from "clsx";
-import Image from "next/image";
+
 import { useRouter } from "next/navigation";
 import React from "react";
 
@@ -20,14 +20,14 @@ function MovieCard({ isList, image, title, rate, id }: Props) {
     navigate(`/anime?anime_id=${id}`);
   }
   const imageComp = image && (
-    <Image
+    <img
       className="size-full object-cover object-center"
-      src={`api/images?url=${image}`}
+      src={image}
       alt={title ? title : ""}
       width={500}
       height={500}
-      quality={80}
-     placeholder="blur"
+   
+     loading="lazy"
     />
   );
   const titleComp = title ? title.split("(Dub)")[0].trimEnd() : "";

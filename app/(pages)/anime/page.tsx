@@ -9,7 +9,7 @@ import { SmileySad } from "@phosphor-icons/react/dist/ssr";
 import axios from "axios";
 import clsx from "clsx";
 import { Button } from "flowbite-react";
-import Image from "next/image";
+
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { HeadContent } from "../../../ui/HeadContent";
@@ -87,31 +87,31 @@ function AnimeDescription({}: Props) {
                   "brightness-50 blur-xl"
                 )}
               >
-                <Image
+                <img
                   className="size-full object-cover object-center"
-                  src={`api/images?url=${
+                  src={
                     details.bannerImage ? details.bannerImage : details.image
-                  }`}
+                  }
                   alt={details.name}
                   width={500}
                   height={500}
-                  priority
+                  
                 />
               </span>
               {/* ----------------------------- */}
 
               <div className="w-3/4 m-2 min-w-[80vw] min-[320px]:min-w-48 min-[498px]:w-36 sm:w-48 h-40 min-[498px]:h-52 sm:h-60 min-[498px]:!min-h-full relative border-4 border-base-white rounded-md shrink-0">
-                <Image
+                <img
                   className="size-full object-cover object-center"
-                  src={`api/images?url=${
+                  src={
                     details.coverImage
                       ? details.coverImage.extraLarge
                       : details.image
-                  }`}
+           }
                   alt={details.name}
                   width={500}
                   height={500}
-                  priority
+        
                 />
               </div>
               <article className="w-full h-fit flex  flex-col sm:flex-row items-center min-[498px]:items-start justify-start gap-2 ">

@@ -5,7 +5,9 @@ import { Button, Carousel as CarouselFlow } from "flowbite-react";
 import clsx from "clsx";
 import { glassMorphism } from "../styles/style";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
+
+
+
 
 import {
   CaretLeft,
@@ -37,16 +39,16 @@ function CarouselItem({ imgUrl, id, rate, title }: CarouselItemProp) {
     <div className="flex size-full items-end justify-end relative">
       <div className="size-full z-0 bg-gray-500 absolute top-0 left-0 flex items-center justify-center">
         {imgUrl ? (
-          <Image
+          <img
             className="size-full object-center object-cover"
 
-            src={`api/images?url=${imgUrl}`}
+            src={imgUrl}
 
             alt={title + " image"}
             width={500}
             height={500}
-            placeholder="blur"
-            quality={90}
+            loading="lazy"
+           
 
           />
         ) : (
