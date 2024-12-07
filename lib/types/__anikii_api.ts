@@ -41,7 +41,7 @@ export interface PopularList {
   title: string;
   id: string;
   image: string;
-  released: string;
+  released?: string;
 }
 
 export type AnimeMovie = PopularList;
