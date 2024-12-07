@@ -1,27 +1,24 @@
 "use client";
 
-import React from "react";
-
-import { AppDispatch, RootState } from "@/state/store";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
+import { AppDispatch, RootState } from "../../store/store";
+import AutoResetPagesScroll from "../../ui/components/AutoResetScroll/AutoResetScroll";
+import NavBar from "../../ui/components/NavBar/NavBar";
 import { useDispatch, useSelector } from "react-redux";
-import ThemeToggler from "@/ui/components/ThemeToggler";
-import { setTheme } from "@/state/reducers";
-import Header from "@/ui/components/Header";
-import Head from "next/head";
+import { setTheme } from "@/store/reducers/themeReducer";
+import MainHeader from "@/ui/components/mainHeader/MainHeader";
+
 type Props = {
-  children?: React.ReactNode;
+  children: React.ReactNode;
 };
 
-function Layout({ children }: Props) {
-  const { mode } = useSelector(
-    (state: RootState) => state.UserPreferences.themeMode
-  );
+export default function MainLayout({ children }: Props) {
+  const { mode } = useSelector((s: RootState) => s.ThemePreference);
 
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
     // Initial theme detection based on system preferences
-    dispatch(setTheme("auto")); // Dispatching to Redux or your state manager
+    dispatch(setTheme("auto"));
   }, [dispatch]);
 
   useEffect(() => {
@@ -37,27 +34,15 @@ function Layout({ children }: Props) {
     }
   }, [mode]);
   return (
-    <>
-      <Head>
-        <title>Anikii | Genjitsu wa kantan</title>
-        <meta
-          name="description"
-          content="Watch My Favorite Anime on Anikii with lesser ads and easy access."
-        />
-        <meta property="og:title" content="Anikii | Genjitsu wa kantan" />
-        <meta
-          property="og:description"
-          content="Watch My Favorite Anime on Anikii with lesser ads and easy access."
-        />
-        <meta property="og:image" content="www.anikii.vercel.app/anikii.jpg" />
-        <meta property="og:url" content="www.anikii.vercel.app" />
-      </Head>
-      <Header />
-      {children}
+    <div className="size-full overflow-y-auto relative isolate flex items-start justify-start gap-2 bg-square-grid dark:bg-square-grid-dark">
+      <AutoResetPagesScroll />
 
-      <ThemeToggler />
-    </>
+      <NavBar />
+      <main className="size-full relative z-0 overflow-y-auto flex flex-col gap-2 items-start justify-start">
+        <MainHeader />
+        {children}
+        {/* <Footer /> */}
+      </main>
+    </div>
   );
 }
-
-export default Layout;

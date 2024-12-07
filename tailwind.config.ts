@@ -1,13 +1,7 @@
 import type { Config } from "tailwindcss";
-import flowbite from "flowbite-react/tailwind";
 
 const config: Config = {
-  content: [
-    "./ui/**/*.{js,ts,jsx,tsx,mdx}",
-    "./ui/VideoPlayer/*.{js,ts,jsx,tsx,mdx}",
-    "./app/**/*.{js,ts,jsx,tsx,mdx}",
-    flowbite.content(),
-  ],
+  content: ["./ui/**/*.{js,ts,jsx,tsx,mdx}", "./app/**/*.{js,ts,jsx,tsx,mdx}"],
   theme: {
     extend: {
       colors: {
@@ -37,7 +31,7 @@ const config: Config = {
       },
     },
   },
-  plugins: [flowbite.plugin()],
+  plugins: [],
   darkMode: "selector",
 };
 export default config;

@@ -7,7 +7,6 @@ import React, {
   useState,
   ReactNode,
   useCallback,
-  useEffect,
 } from "react";
 import { createPortal } from "react-dom";
 
@@ -72,7 +71,7 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
       setOpenedModals((prev) => [...prev, newModal]);
       setIsExiting(false); // Reset exiting state
     },
-    [openedModals]
+    []
   );
 
   // Close modal with animation
@@ -85,11 +84,10 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
         const modal = name
           ? openedModals.filter((openedModal) => openedModal.name === name)[0]
           : openedModals.at(-1);
-        modal
-          ? modal.modalOptions.onClose
-            ? modal.modalOptions.onClose()
-            : null
-          : null;
+        if (modal && modal.modalOptions.onClose) {
+          modal.modalOptions.onClose();
+        }
+
         const filteredModal = name
           ? openedModals.filter((openedModal) => openedModal.name !== name)
           : openedModals.slice(0, -1);
@@ -98,7 +96,7 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
 
       return () => clearTimeout(to);
     },
-    [openedModals, isExiting]
+    [openedModals]
   );
 
   // Determine animation class based on screen size and exiting state
@@ -110,13 +108,13 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
       if (isMobile) {
         return _static ? "!animate-slide-down" : "animate-slide-up";
       } else {
-        return _static ? "!animate-fade-out" : "animate-fade-in";
+        return _static ? "!animate-slide-right" : "animate-slide-reset";
       }
     }
     if (isMobile) {
       return isExiting ? "!animate-slide-down" : "animate-slide-up";
     } else {
-      return isExiting ? "!animate-fade-out" : "animate-fade-in";
+      return isExiting ? "!animate-slide-right" : "animate-slide-reset";
     }
   };
 
@@ -130,7 +128,7 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
               <div
                 key={index}
                 className={clsx(
-                  `fixed inset-0 z-[10] bg-black bg-opacity-50 flex items-end justify-center min-[498px]:items-center`,
+                  `fixed inset-0 z-[1200] bg-black bg-opacity-50 flex items-end justify-center min-[498px]:items-center`,
                   openedModal.modalOptions.containerStyles
                 )}
               >

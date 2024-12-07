@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 :root {
-  --background: #E6E4DC;
-  --foreground: #2C2C2E;
+  --background: #e6e4dc;
+  --foreground: #2c2c2e;
 }
 /* Slide up from bottom of the screen */
 @keyframes slideUp {
@@ -89,31 +89,63 @@
     opacity: 0;
   }
 }
+@layer utilities {
+  .bg-square-grid {
+    background-image: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 4px,
+        rgba(0, 0, 0, 0.05) 5px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 4px,
+        rgba(0, 0, 0, 0.05) 5px
+      );
+    background-size: 5px 5px;
+  }
+
+  .bg-square-grid-dark {
+    background-image: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 4px,
+        rgba(255, 255, 255, 0.05) 5px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 4px,
+        rgba(255, 255, 255, 0.05) 5px
+      );
+    background-size: 5px 5px;
+  }
+}
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #272A2D;
-    --foreground: #ECECEC;
+    --background: #272a2d;
+    --foreground: #ececec;
   }
 }
-*::-webkit-scrollbar{
+*::-webkit-scrollbar {
   display: none;
 }
-.scrollbar-h::-webkit-scrollbar{
+.scrollbar-h::-webkit-scrollbar {
   display: block;
   width: 4px;
-
 }
-.scrollbar-h::-webkit-scrollbar-track{
+.scrollbar-h::-webkit-scrollbar-track {
   background: transparent;
 }
-.scrollbar-h::-webkit-scrollbar-thumb{
+.scrollbar-h::-webkit-scrollbar-thumb {
   display: block;
-  background: #E6E4DC;
+  background: #e6e4dc;
 }
 
 input[type="range"]::-webkit-slider-thumb {
-  background: #347CCB !important;
+  background: #347ccb !important;
 }
 body {
   color: var(--foreground);

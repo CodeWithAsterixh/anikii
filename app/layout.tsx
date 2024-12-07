@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import { ReduxProvider } from "@/state/provider";
-import { ModalProvider } from "@/ui/Modal/Modal";
+
 import { Toaster } from "react-hot-toast";
-import Footer from "@/ui/components/Footer/Footer";
+import { ReduxProvider } from "@/store/provider";
+import { ModalProvider } from "@/ui/Modal/Modal";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -31,14 +31,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased dark:bg-base-black bg-base-white`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gradient-to-b from-white to-base-white dark:from-black dark:to-base-black`}
       >
         <ReduxProvider>
-          <ModalProvider>
-            {children}
-            <Footer />
-          </ModalProvider>
-
+          <ModalProvider>{children}</ModalProvider>
           <Toaster />
         </ReduxProvider>
       </body>
