@@ -3,8 +3,8 @@
 import { getDetails } from "@/lib/mods/middlewares/getDetails";
 import { AnimeDetails, process } from "@/lib/types/__anikii_api";
 import Image from "@/ui/components/Image/Image";
-import { Box, Card, Chip, Container, Typography } from "@mui/material";
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { EpisodeSection } from "./EpisodesSection";
 
 type Props = {
   id: string;
@@ -49,234 +49,97 @@ function AnimeDetailsSection({ id }: Props) {
     console.log(datas?.data);
   }, [datas]);
   return (
-    <Box
-      component="section"
-      sx={{ bgcolor: "transparent", minHeight: "100vh" }}
-    >
+    <section className="bg-transparent min-h-screen">
       {/* Hero Section */}
-      <Box sx={{ position: "relative", height: { xs: "40vh", md: "60vh" } }}>
-        <Card sx={{ height: "100%" }}>
-          <Image
-            className="!size-full"
-            src={datas?.data?.image}
-            alt={datas?.data?.title}
-            width={600}
-            height={600}
-          />
-        </Card>
-        <Box
-          sx={{
-            position: "absolute",
-            inset: 0,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Typography
-            variant="h2"
-            sx={{
-              color: "white",
-              textAlign: "center",
-              px: 2,
-              fontSize: { xs: "2rem", md: "3rem" },
-              fontWeight: "bold",
-            }}
-          >
+      <div className="relative h-[40vh] md:h-[60vh]">
+        <div className="h-full">
+          {datas?.data?.image && (
+            <>
+              <Image
+                className="w-full h-full object-cover rounded-lg brightness-50"
+                src={datas?.data?.image}
+                alt={datas?.data?.title}
+              />
+            </>
+          )}
+        </div>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <h2 className="text-white text-center px-2 text-2xl sm:text-3xl font-bold">
             {datas?.data?.title}
-          </Typography>
-        </Box>
-      </Box>
+          </h2>
+        </div>
+      </div>
 
       {/* Details Section */}
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
+      <div className="container max-w-7xl py-4">
+        <div className="flex flex-wrap gap-4">
           {/* Type Section */}
-          <Box
-            sx={{
-              flex: 1,
-              minWidth: "250px",
-              p: 4,
-              bgcolor: "white",
-              borderRadius: 2,
-              boxShadow: 2,
-              display: "flex",
-              flexDirection: "column",
-              gap: 2,
-            }}
-          >
-            <Typography
-              variant="h6"
-              sx={{ color: "grey.700", fontWeight: "bold" }}
-            >
-              Type
-            </Typography>
-            <Typography variant="body1" sx={{ color: "grey.600" }}>
+          <div className="flex-1 min-w-[250px] p-4 bg-base-white dark:bg-base-black rounded-lg shadow-md">
+            <h6 className="text-gray-700 dark:text-gray-300 font-bold">Type</h6>
+            <p className="text-gray-600 dark:text-gray-400">
               {datas?.data?.type}
-            </Typography>
-          </Box>
+            </p>
+          </div>
 
           {/* Status Section */}
-          <Box
-            sx={{
-              flex: 1,
-              minWidth: "250px",
-              p: 4,
-              bgcolor: "white",
-              borderRadius: 2,
-              boxShadow: 2,
-              display: "flex",
-              flexDirection: "column",
-              gap: 2,
-            }}
-          >
-            <Typography
-              variant="h6"
-              sx={{ color: "grey.700", fontWeight: "bold" }}
-            >
+          <div className="flex-1 min-w-[250px] p-4 bg-base-white dark:bg-base-black rounded-lg shadow-md">
+            <h6 className="text-gray-700 dark:text-gray-300 font-bold">
               Status
-            </Typography>
-            <Typography variant="body1" sx={{ color: "grey.600" }}>
+            </h6>
+            <p className="text-gray-600 dark:text-gray-400">
               {datas?.data?.status}
-            </Typography>
-          </Box>
+            </p>
+          </div>
 
           {/* Released Section */}
-          <Box
-            sx={{
-              flex: 1,
-              minWidth: "250px",
-              p: 4,
-              bgcolor: "white",
-              borderRadius: 2,
-              boxShadow: 2,
-              display: "flex",
-              flexDirection: "column",
-              gap: 2,
-            }}
-          >
-            <Typography
-              variant="h6"
-              sx={{ color: "grey.700", fontWeight: "bold" }}
-            >
+          <div className="flex-1 min-w-[250px] p-4 bg-base-white dark:bg-base-black rounded-lg shadow-md">
+            <h6 className="text-gray-700 dark:text-gray-300 font-bold">
               Released
-            </Typography>
-            <Typography variant="body1" sx={{ color: "grey.600" }}>
+            </h6>
+            <p className="text-gray-600 dark:text-gray-400">
               {datas?.data?.released}
-            </Typography>
-          </Box>
-        </Box>
-      </Container>
+            </p>
+          </div>
+        </div>
+      </div>
 
       {/* Genres Section */}
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        <Box
-          sx={{
-            p: 4,
-            bgcolor: "white",
-            borderRadius: 2,
-            boxShadow: 2,
-            display: "flex",
-            flexDirection: "column",
-            gap: 2,
-          }}
-        >
-          <Typography
-            variant="h6"
-            sx={{ color: "grey.700", fontWeight: "bold" }}
-          >
-            Genres
-          </Typography>
-          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mt: 1 }}>
+      <div className="container max-w-7xl py-4">
+        <div className="p-4 bg-base-white dark:bg-base-black rounded-lg shadow-md">
+          <h6 className="text-gray-700 dark:text-gray-300 font-bold">Genres</h6>
+          <div className="flex flex-wrap gap-2 mt-2">
             {datas?.data?.genres.split(",").map((genre, idx) => (
-              <Chip
+              <span
                 key={idx}
-                label={genre.trim()}
-                sx={{
-                  bgcolor: "blue.100",
-                  color: "blue.800",
-                  borderRadius: "16px",
-                }}
-              />
+                className="bg-purple-100 dark:bg-purple-600 text-base-black dark:text-base-white py-1 px-3 rounded-full text-sm"
+              >
+                {genre.trim()}
+              </span>
             ))}
-          </Box>
-        </Box>
-      </Container>
+          </div>
+        </div>
+      </div>
 
       {/* Summary Section */}
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        <Box
-          sx={{
-            p: 4,
-            bgcolor: "white",
-            borderRadius: 2,
-            boxShadow: 2,
-          }}
-        >
-          <Typography
-            variant="h5"
-            sx={{ color: "grey.800", fontWeight: "bold" }}
-          >
+      <div className="container max-w-7xl py-4">
+        <div className="p-4 bg-base-white dark:bg-base-black rounded-lg shadow-md">
+          <h5 className="text-gray-800 dark:text-gray-100 font-bold">
             Summary
-          </Typography>
-          <Typography
-            variant="body1"
-            sx={{ color: "grey.600", mt: 2, lineHeight: 1.6 }}
-          >
+          </h5>
+          <p className="text-gray-600 dark:text-gray-400 mt-2 leading-relaxed">
             {datas?.data?.summary}
-          </Typography>
-        </Box>
-      </Container>
+          </p>
+        </div>
+      </div>
 
       {/* Additional Info Section */}
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
-          {/* Total Episodes Section */}
-          <Box
-            sx={{
-              flex: 1,
-              minWidth: "250px",
-              p: 4,
-              bgcolor: "white",
-              borderRadius: 2,
-              boxShadow: 2,
-            }}
-          >
-            <Typography
-              variant="h6"
-              sx={{ color: "grey.700", fontWeight: "bold" }}
-            >
-              Total Episodes
-            </Typography>
-            <Typography variant="body1" sx={{ color: "grey.600" }}>
-              {datas?.data?.totalEpisodes}
-            </Typography>
-          </Box>
-
-          {/* Other Name Section */}
-          <Box
-            sx={{
-              flex: 1,
-              minWidth: "250px",
-              p: 4,
-              bgcolor: "white",
-              borderRadius: 2,
-              boxShadow: 2,
-            }}
-          >
-            <Typography
-              variant="h6"
-              sx={{ color: "grey.700", fontWeight: "bold" }}
-            >
-              Other Name
-            </Typography>
-            <Typography variant="body1" sx={{ color: "grey.600" }}>
-              {datas?.data?.otherName}
-            </Typography>
-          </Box>
-        </Box>
-      </Container>
-    </Box>
+      {datas?.data?.totalEpisodes && (
+        <EpisodeSection
+          id={id}
+          totalEpisodes={parseInt(datas?.data?.totalEpisodes)}
+        />
+      )}
+    </section>
   );
 }
 

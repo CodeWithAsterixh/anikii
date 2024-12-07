@@ -3,6 +3,7 @@
 import { getStreamInfo } from "@/lib/mods/middlewares/getStreamInfo";
 import { process, StreamInfo } from "@/lib/types/__anikii_api";
 import AnimeStreamSection from "@/ui/sections/popularSection/AnimeStreamSection";
+import PopularSection from "@/ui/sections/popularSection/PopularSection";
 import { useParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 type Props = object;
@@ -48,6 +49,13 @@ export default function AnimeDetails({}: Props) {
   return (
     <div className="w-full h-fit">
       {datas?.data && <AnimeStreamSection data={datas.data} />}
+      <PopularSection
+        heading={{
+          done: "People are watching",
+          loading: "Loading Popular anime",
+          notFound: "No Popular anime available",
+        }}
+      />
     </div>
   );
 }

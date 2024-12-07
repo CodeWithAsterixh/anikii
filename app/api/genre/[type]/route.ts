@@ -4,11 +4,11 @@ import { fetchData } from "@/lib/helpers/fetchHelpers";
 import { parser } from "@/lib/helpers/parsingHelpers";
 import { validatePageNumber } from "@/lib/helpers/validationHelpers";
 import { GenreResult } from "@/lib/types/__anikii_api";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
-  req: Request,
-  { params }: { params: { type: string } }
+  req: NextRequest,
+  { params }: { params: Promise<{ type: string }> }
 ) {
   const param = await params;
   const { searchParams } = new URL(req.url); // Extract query params from request

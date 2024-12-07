@@ -3,11 +3,11 @@ import { __BASE_URL__ } from "@/lib/constants/baseurl";
 import { fetchData } from "@/lib/helpers/fetchHelpers";
 import { parser } from "@/lib/helpers/parsingHelpers";
 import { AnimeDetails } from "@/lib/types/__anikii_api";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
-  req: Request,
-  { params }: { params: { id: string } }
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const param = await params;
 

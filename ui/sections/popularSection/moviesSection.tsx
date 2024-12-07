@@ -1,34 +1,20 @@
 "use client";
 
-import { getPopular } from "@/lib/mods/middlewares/getPopulars";
-import { PopularList, process } from "@/lib/types/__anikii_api";
+import { getMovies } from "@/lib/mods/middlewares/getMovies";
+import { AnimeMovie, process } from "@/lib/types/__anikii_api";
 import { updateKeyForExtra } from "@/ui/components/AnimeCard/AnimeCard";
 import AnimeGrid, {
   AnimeGridSkeleton,
 } from "@/ui/components/AnimeList/AnimeGrid";
 import AnimeGrouper from "@/ui/components/AnimeList/AnimeGrouper";
 import React, { useCallback, useEffect, useState } from "react";
-interface popular {
-  data?: PopularList[];
+interface movies {
+  data?: AnimeMovie[];
   load?: process;
 }
 
-export default function PopularSection({
-  page = 1,
-  heading = {
-    done: "Popular anime",
-    loading: "Loading Popular anime",
-    notFound: "No Popular anime available",
-  },
-}: {
-  page?: number;
-  heading?: {
-    done: string;
-    loading: string;
-    notFound: string;
-  };
-}) {
-  const [datas, setDatas] = useState<popular>();
+export default function MoviesSection({ page = 1 }: { page?: number }) {
+  const [datas, setDatas] = useState<movies>();
 
   const loadPopular = useCallback(async () => {
     let timing = 0;
@@ -37,7 +23,7 @@ export default function PopularSection({
       load: "loading",
     }));
     try {
-      const data = await getPopular(page);
+      const data = await getMovies(page);
       setDatas({
         data,
         load: "done",
@@ -63,8 +49,12 @@ export default function PopularSection({
     <AnimeGrouper
       header={
         datas?.data
-          ? `${datas.data.length > 0 ? heading.done : heading.notFound}`
-          : heading.loading
+          ? `${
+              datas.data.length > 0
+                ? "Anime Movies"
+                : "No anime movies available"
+            }`
+          : "Loading Anime Movies"
       }
     >
       {datas?.data ? (

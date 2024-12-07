@@ -5,10 +5,7 @@ import { parser } from "@/lib/helpers/parsingHelpers";
 import { StreamInfo } from "@/lib/types/__anikii_api";
 import { NextResponse } from "next/server";
 
-export async function GET(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
+export async function GET({ params }: { params: Promise<{ id: string }> }) {
   const param = await params;
 
   try {
