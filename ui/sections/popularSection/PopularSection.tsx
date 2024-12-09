@@ -1,15 +1,16 @@
 "use client";
 
 import { getPopular } from "@/lib/mods/middlewares/getPopulars";
-import { PopularList, process } from "@/lib/types/__anikii_api";
+import { PagedRouteResult, process } from "@/lib/types/__anikii_api";
 import { updateKeyForExtra } from "@/ui/components/AnimeCard/AnimeCard";
 import AnimeGrid, {
   AnimeGridSkeleton,
 } from "@/ui/components/AnimeList/AnimeGrid";
 import AnimeGrouper from "@/ui/components/AnimeList/AnimeGrouper";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { Suspense, useCallback, useEffect, useState } from "react";
+import AnimeCategSkeleton from "./VideoLoader";
 interface popular {
-  data?: PopularList[];
+  data?: PagedRouteResult;
   load?: process;
 }
 
@@ -60,20 +61,36 @@ export default function PopularSection({
   }, [loadPopular]);
 
   return (
-    <AnimeGrouper
-      header={
-        datas?.data
-          ? `${datas.data.length > 0 ? heading.done : heading.notFound}`
-          : heading.loading
+    <Suspense
+      fallback={
+        <AnimeCategSkeleton
+          heading={{ loading: "Loading Popular anime ..." }}
+        />
       }
     >
-      {datas?.data ? (
-        <AnimeGrid
-          animes={updateKeyForExtra(datas.data, "released", "extra")}
-        />
-      ) : (
-        <AnimeGridSkeleton />
-      )}
-    </AnimeGrouper>
+      <AnimeGrouper
+        header={
+          datas?.data
+            ? `${
+                datas.data.animeItem.length > 0
+                  ? heading.done
+                  : heading.notFound
+              }`
+            : heading.loading
+        }
+      >
+        {datas?.data ? (
+          <AnimeGrid
+            animes={updateKeyForExtra(
+              datas.data.animeItem,
+              "released",
+              "extra"
+            )}
+          />
+        ) : (
+          <AnimeGridSkeleton />
+        )}
+      </AnimeGrouper>
+    </Suspense>
   );
 }

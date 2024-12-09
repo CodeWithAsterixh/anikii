@@ -12,7 +12,7 @@ export async function GET(
   const param = await params;
 
   try {
-    const url = `${__BASE_URL__}category/${param.id}`;
+    const url = `${__BASE_URL__}videos/${param.id}`;
     const html = await fetchData(url);
     const result: AnimeDetails = parser.animeDetails(html);
     if (!result) {

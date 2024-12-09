@@ -1,14 +1,19 @@
-// Define the structure for the Anime Details data
+import { pagesLeft } from "../helpers/parsers/pagesLeft";
+
 export interface AnimeDetails {
-  title: string;
-  image: string | undefined;
-  type: string;
-  summary: string;
-  released: string;
-  genres: string;
-  status: string;
-  totalEpisodes: string;
-  otherName: string;
+  title: string; // Title of the anime
+  episode: string; // Current episode number or details
+  description: string; // Synopsis of the anime
+  videoUrl: string; // URL of the iframe video source
+  image: string; // Thumbnail or poster image URL
+  releaseDate: string; // Release date of the current episode
+  episodes: Episode[]; // List of all episodes
+}
+export interface Episode {
+  title: string; // Episode title
+  url: string; // URL to watch the episode
+  imageUrl: string; // Thumbnail image for the episode
+  releaseDate: string; // Release date of the episode
 }
 
 export interface StreamLink {
@@ -26,28 +31,22 @@ export interface StreamInfo {
   downloadSrc?: string;
 }
 
-export interface Recommended {
-  title: string;
-  id: string;
-  image: string;
-  episode: string;
-}
 export interface DownloadLinks {
   direct: Record<string, string>[];
   mirror: Record<string, string>[];
 }
 
-export interface PopularList {
+export interface AnimeItem {
   title: string;
   id: string;
   image: string;
   released?: string;
 }
 
-export type AnimeMovie = PopularList;
-export type NewSeason = PopularList;
-export type GenreResult = PopularList;
-export type SearchResult = PopularList;
+export interface PagedRouteResult {
+  animeItem: AnimeItem[];
+  pages: pagesLeft;
+}
 
 export interface filterOptions {
   keyword: string;

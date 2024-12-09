@@ -1,11 +1,11 @@
-import { Recommended } from "@/lib/types/__anikii_api";
+import { AnimeItem } from "@/lib/types/__anikii_api";
 import cheerio from "../cheerio";
 
 export function parseRecommended(html: string) {
   const $ = cheerio.load(html); // Load the HTML content using Cheerio
 
   // Define the result array that will hold the parsed data
-  const result: Recommended[] = [];
+  const result: AnimeItem[] = [];
 
   // Iterate through each li tag inside the ul with class 'menu_recent'
   $(".menu_recent ul li").each((i, el) => {
@@ -16,11 +16,11 @@ export function parseRecommended(html: string) {
       ?.css("background")
       ?.replace(/^url\(["']?/, "")
       .replace(/["']?\)$/, ""); // Extract the background image URL
-    const episode = $(el).find(".time_2").text().trim(); // Extract the episode number
+    const released = $(el).find(".time_2").text().trim(); // Extract the episode number
 
-    if (title && id && image && episode) {
+    if (title && id && image && released) {
       // Push the extracted data into the result array
-      result.push({ title, id, image, episode });
+      result.push({ title, id, image, released });
     }
   });
 

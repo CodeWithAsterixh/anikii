@@ -1,15 +1,16 @@
 "use client";
 
 import { getMovies } from "@/lib/mods/middlewares/getMovies";
-import { AnimeMovie, process } from "@/lib/types/__anikii_api";
+import { PagedRouteResult, process } from "@/lib/types/__anikii_api";
 import { updateKeyForExtra } from "@/ui/components/AnimeCard/AnimeCard";
 import AnimeGrid, {
   AnimeGridSkeleton,
 } from "@/ui/components/AnimeList/AnimeGrid";
 import AnimeGrouper from "@/ui/components/AnimeList/AnimeGrouper";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { Suspense, useCallback, useEffect, useState } from "react";
+import AnimeCategSkeleton from "./VideoLoader";
 interface movies {
-  data?: AnimeMovie[];
+  data?: PagedRouteResult;
   load?: process;
 }
 
@@ -46,24 +47,34 @@ export default function MoviesSection({ page = 1 }: { page?: number }) {
   }, [loadPopular]);
 
   return (
-    <AnimeGrouper
-      header={
-        datas?.data
-          ? `${
-              datas.data.length > 0
-                ? "Anime Movies"
-                : "No anime movies available"
-            }`
-          : "Loading Anime Movies"
+    <Suspense
+      fallback={
+        <AnimeCategSkeleton heading={{ loading: "Loading movies ..." }} />
       }
     >
-      {datas?.data ? (
-        <AnimeGrid
-          animes={updateKeyForExtra(datas.data, "released", "extra")}
-        />
-      ) : (
-        <AnimeGridSkeleton />
-      )}
-    </AnimeGrouper>
+      <AnimeGrouper
+        header={
+          datas?.data
+            ? `${
+                datas.data.animeItem.length > 0
+                  ? "Anime Movies"
+                  : "No anime movies available"
+              }`
+            : "Loading Anime Movies"
+        }
+      >
+        {datas?.data ? (
+          <AnimeGrid
+            animes={updateKeyForExtra(
+              datas.data.animeItem,
+              "released",
+              "extra"
+            )}
+          />
+        ) : (
+          <AnimeGridSkeleton />
+        )}
+      </AnimeGrouper>
+    </Suspense>
   );
 }

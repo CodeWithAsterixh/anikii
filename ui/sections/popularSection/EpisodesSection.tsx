@@ -1,32 +1,36 @@
 "use client";
 
+import { Episode } from "@/lib/types/__anikii_api";
 import { RootState } from "@/store/store";
-import { Button, Pagination } from "@mui/material";
+import Image from "@/ui/components/Image/Image";
+import { Pagination } from "@mui/material";
 import Link from "next/link";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 
 export const EpisodeSection = ({
   totalEpisodes,
-  id,
+  episodes,
 }: {
   totalEpisodes: number;
-  id: string;
+  episodes: Episode[];
 }) => {
   const { mode } = useSelector((s: RootState) => s.ThemePreference);
 
-  // Define the number of episodes per page (range)
-  const episodesPerRange = 20;
+  // Define the number of episodes per page
+  const episodesPerPage = 20;
 
   // State to manage the current page
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Calculate the total number of pages (ranges)
-  const totalPages = Math.ceil(totalEpisodes / episodesPerRange);
+  // Calculate the total number of pages
+  const totalPages = Math.ceil(totalEpisodes / episodesPerPage);
 
-  // Calculate the start and end episode numbers based on the current page
-  const start = (currentPage - 1) * episodesPerRange + 1;
-  const end = Math.min(currentPage * episodesPerRange, totalEpisodes);
+  // Get the current range of episodes for the page
+  const currentEpisodes = episodes.slice(
+    (currentPage - 1) * episodesPerPage,
+    currentPage * episodesPerPage
+  );
 
   return (
     <div className="flex-1 min-w-[250px] p-4 bg-base-white dark:bg-base-black rounded-lg shadow-md">
@@ -34,24 +38,37 @@ export const EpisodeSection = ({
         Total Episodes ({totalEpisodes})
       </h6>
 
-      {/* Display episodes in the current range */}
-      <div className="gap-2 mt-4 grid grid-cols-[repeat(auto-fill,minmax(6rem,1fr))]">
-        {Array.from({ length: end - start + 1 }, (_, idx) => start + idx).map(
-          (ep) => (
-            <Link
-              key={ep}
-              href={`/stream/${id}-episode-${ep}`}
-              className="w-full"
-            >
-              <Button className="!text-gray-600 dark:!text-gray-200 !bg-neutral-300 dark:!bg-neutral-600 transition-colors py-1 px-3 rounded-md">
-                EP | {ep}
-              </Button>
-            </Link>
-          )
-        )}
+      {/* Episodes Grid */}
+      <div className="gap-4 mt-4 grid grid-cols-[repeat(auto-fill,minmax(9rem,1fr))]">
+        {currentEpisodes.map((episode, idx) => (
+          <Link
+            key={idx}
+            href={episode.url}
+            className="w-full block bg-white dark:bg-base-black rounded-lg shadow-md overflow-hidden hover:scale-105 transition-transform"
+          >
+            <Image
+              src={episode.imageUrl}
+              alt={episode.title}
+              className="w-full h-28 object-cover"
+            />
+            <div className="p-4">
+              <h4 className="text-gray-700 dark:text-gray-300 font-semibold">
+                Ep{" "}
+                {
+                  episode.title.toLowerCase().split("episode")[
+                    episode.title.toLowerCase().split("episode").length - 1
+                  ]
+                }
+              </h4>
+              <p className="text-gray-500 dark:text-gray-400 text-sm mt-2">
+                Released: {new Date(episode.releaseDate).toDateString()}
+              </p>
+            </div>
+          </Link>
+        ))}
       </div>
 
-      {/* Display current page and total pages */}
+      {/* Pagination Controls */}
       <section className="w-full flex items-center justify-center pt-7 py-3">
         <Pagination
           count={totalPages}

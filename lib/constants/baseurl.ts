@@ -1,1 +1,1 @@
-export const __BASE_URL__ = "https://gogoanime3.cc/";
+export const __BASE_URL__ = "https://s3embtaku.pro/";

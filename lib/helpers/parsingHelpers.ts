@@ -5,7 +5,8 @@ import { parseAnimeDetails } from "./parsers/animeDetails";
 import { parseGenres } from "./parsers/genereResults";
 import { parseStreamingInfo } from "./parsers/streamingInfo";
 import { parseRecommended } from "./parsers/recommendation";
-import { parsePopularList } from "./parsers/popular";
+import { animeItemList } from "./parsers/popular";
+import { parsePagesLeft } from "./parsers/pagesLeft";
 
 class Parser {
   animeDetails(html: string) {
@@ -21,11 +22,14 @@ class Parser {
   downloadLink(html: string) {
     return parseDownloadLinks(html);
   }
-  popularList(html: string) {
-    return parsePopularList(html);
+  animeItems(html: string) {
+    return animeItemList(html);
   }
   genres(html: string) {
     return parseGenres(html);
+  }
+  pagesLeft(html: string) {
+    return parsePagesLeft(html);
   }
 }
 

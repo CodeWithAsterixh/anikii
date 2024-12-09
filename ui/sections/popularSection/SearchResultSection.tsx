@@ -8,7 +8,8 @@ import { search, searchFilters } from "@/lib/mods/middlewares/search";
 import { process } from "@/lib/types/__anikii_api";
 import { updateKeyForExtra } from "@/ui/components/AnimeCard/AnimeCard";
 import AnimeCategoryGrouper from "@/ui/components/AnimeList/AnimeCategoryGrouper";
-import { useCallback, useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useState } from "react";
+import AnimeCategSkeleton from "./VideoLoader";
 interface popular {
   data: GroupedResult;
   load?: process;
@@ -50,10 +51,20 @@ export default function SearchResultsSection(filters: searchFilters) {
   }, [loadPopular]);
 
   return (
-    <AnimeCategoryGrouper
-      loading={datas?.load}
-      groupedData={datas?.data}
-      keyWord={filters.keyWord}
-    />
+    <Suspense
+      fallback={
+        <AnimeCategSkeleton
+          heading={{
+            loading: `Loading search result for "${filters.keyWord}" ...`,
+          }}
+        />
+      }
+    >
+      <AnimeCategoryGrouper
+        loading={datas?.load}
+        groupedData={datas?.data}
+        keyWord={filters.keyWord}
+      />{" "}
+    </Suspense>
   );
 }

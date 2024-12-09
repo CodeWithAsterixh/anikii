@@ -3,8 +3,10 @@
 import { getDetails } from "@/lib/mods/middlewares/getDetails";
 import { AnimeDetails, process } from "@/lib/types/__anikii_api";
 import Image from "@/ui/components/Image/Image";
-import { useCallback, useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useState } from "react";
+import AnimeCategSkeleton from "./VideoLoader";
 import { EpisodeSection } from "./EpisodesSection";
+import { parseAndFormatDates } from "@/lib/mods/functions/formatComplexDate";
 
 type Props = {
   id: string;
@@ -49,97 +51,68 @@ function AnimeDetailsSection({ id }: Props) {
     console.log(datas?.data);
   }, [datas]);
   return (
-    <section className="bg-transparent min-h-screen">
-      {/* Hero Section */}
-      <div className="relative h-[40vh] md:h-[60vh]">
-        <div className="h-full">
+    <Suspense
+      fallback={
+        <AnimeCategSkeleton
+          heading={{ loading: "Loading anime information ..." }}
+        />
+      }
+    >
+      <section className=" min-h-screen">
+        {/* Hero Section */}
+        <div className="relative h-[40vh] md:h-[60vh]">
           {datas?.data?.image && (
-            <>
-              <Image
-                className="w-full h-full object-cover rounded-lg brightness-50"
-                src={datas?.data?.image}
-                alt={datas?.data?.title}
-              />
-            </>
+            <Image
+              className="w-full h-full object-cover rounded-lg brightness-50"
+              src={datas?.data?.image}
+              alt={datas?.data?.title}
+            />
+          )}
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+            <h1 className="text-white text-3xl sm:text-5xl font-extrabold drop-shadow-lg">
+              {datas?.data?.title}
+            </h1>
+            <p className="text-gray-200 mt-2 text-lg">{datas?.data?.episode}</p>
+          </div>
+        </div>
+
+        {/* Content Section */}
+        <div className="container max-w-7xl mx-auto py-8 px-4">
+          {/* Details Row */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="p-6 bg-white dark:bg-base-black rounded-lg shadow-lg">
+              <h4 className="text-gray-700 dark:text-gray-300 font-semibold">
+                Last Released
+              </h4>
+              <p className="text-gray-600 dark:text-gray-400">
+                {datas?.data?.releaseDate &&
+                  parseAndFormatDates(datas?.data?.releaseDate)[0]}
+              </p>
+            </div>
+          </div>
+
+          {/* Genres Section */}
+
+          {/* Summary Section */}
+          <div className="mt-8">
+            <h3 className="text-gray-800 dark:text-white text-xl font-bold">
+              Summary
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400 mt-4 leading-relaxed">
+              {datas?.data?.description}
+            </p>
+          </div>
+
+          {/* Episode Listing */}
+          {datas?.data?.episodes && (
+            <EpisodeSection
+              episodes={datas.data.episodes}
+              totalEpisodes={datas.data.episodes.length}
+            />
           )}
         </div>
-        <div className="absolute inset-0 flex items-center justify-center">
-          <h2 className="text-white text-center px-2 text-2xl sm:text-3xl font-bold">
-            {datas?.data?.title}
-          </h2>
-        </div>
-      </div>
-
-      {/* Details Section */}
-      <div className="container max-w-7xl py-4">
-        <div className="flex flex-wrap gap-4">
-          {/* Type Section */}
-          <div className="flex-1 min-w-[250px] p-4 bg-base-white dark:bg-base-black rounded-lg shadow-md">
-            <h6 className="text-gray-700 dark:text-gray-300 font-bold">Type</h6>
-            <p className="text-gray-600 dark:text-gray-400">
-              {datas?.data?.type}
-            </p>
-          </div>
-
-          {/* Status Section */}
-          <div className="flex-1 min-w-[250px] p-4 bg-base-white dark:bg-base-black rounded-lg shadow-md">
-            <h6 className="text-gray-700 dark:text-gray-300 font-bold">
-              Status
-            </h6>
-            <p className="text-gray-600 dark:text-gray-400">
-              {datas?.data?.status}
-            </p>
-          </div>
-
-          {/* Released Section */}
-          <div className="flex-1 min-w-[250px] p-4 bg-base-white dark:bg-base-black rounded-lg shadow-md">
-            <h6 className="text-gray-700 dark:text-gray-300 font-bold">
-              Released
-            </h6>
-            <p className="text-gray-600 dark:text-gray-400">
-              {datas?.data?.released}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Genres Section */}
-      <div className="container max-w-7xl py-4">
-        <div className="p-4 bg-base-white dark:bg-base-black rounded-lg shadow-md">
-          <h6 className="text-gray-700 dark:text-gray-300 font-bold">Genres</h6>
-          <div className="flex flex-wrap gap-2 mt-2">
-            {datas?.data?.genres.split(",").map((genre, idx) => (
-              <span
-                key={idx}
-                className="bg-purple-100 dark:bg-purple-600 text-base-black dark:text-base-white py-1 px-3 rounded-full text-sm"
-              >
-                {genre.trim()}
-              </span>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Summary Section */}
-      <div className="container max-w-7xl py-4">
-        <div className="p-4 bg-base-white dark:bg-base-black rounded-lg shadow-md">
-          <h5 className="text-gray-800 dark:text-gray-100 font-bold">
-            Summary
-          </h5>
-          <p className="text-gray-600 dark:text-gray-400 mt-2 leading-relaxed">
-            {datas?.data?.summary}
-          </p>
-        </div>
-      </div>
-
-      {/* Additional Info Section */}
-      {datas?.data?.totalEpisodes && (
-        <EpisodeSection
-          id={id}
-          totalEpisodes={parseInt(datas?.data?.totalEpisodes)}
-        />
-      )}
-    </section>
+      </section>
+    </Suspense>
   );
 }
 

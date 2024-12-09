@@ -1,27 +1,29 @@
-import { PopularList } from "@/lib/types/__anikii_api";
+import { AnimeItem } from "@/lib/types/__anikii_api";
 import cheerio from "../cheerio";
 
-export function parsePopularList(html: string) {
+export function animeItemList(html: string): AnimeItem[] {
   const $ = cheerio.load(html); // Load the HTML string with Cheerio
-  const animeList: PopularList[] = [];
+  const animeList: AnimeItem[] = [];
 
-  // Select all the <li> elements under the .items class
-  $(".last_episodes .items li").each((_, element) => {
-    const title = $(element).find(".name a").text().trim();
-    const url = $(element).find(".name a").attr("href") || "";
-    const idspl = url.split("/");
-    const id = idspl[idspl.length - 1];
-    const image = $(element).find(".img a img").attr("src") || "";
-    const released = $(element)
-      .find(".released")
-      .text()
-      .replace("Released:", "")
-      .trim();
+  // Select all <li> elements under the .listing.items class
+  $(".listing.items .video-block").each((_, element) => {
+    // Extract title
+    const title = $(element).find(".name").text().trim();
+
+    // Extract URL and ID
+    const url = $(element).find("a").attr("href") || "";
+    const id = url.split("/").pop() || ""; // Extract the last segment of the URL
+
+    // Extract image
+    const image = $(element).find(".picture img").attr("src") || "";
+
+    // Extract release date
+    const released = $(element).find(".meta .date").text().trim();
 
     // Push the anime details into the array
     animeList.push({
       title,
-      id, // Assuming a base URL
+      id,
       image,
       released,
     });
