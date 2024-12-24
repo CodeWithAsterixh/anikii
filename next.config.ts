@@ -16,6 +16,18 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "gogocdn.net",
       },
+      {
+        protocol: "https",
+        hostname: "cache.anicdn.stream",
+      },
+      {
+        protocol: "https",
+        hostname: "s4.anilist.co",
+      },
+      {
+        protocol: "https",
+        hostname: "img1.ak.crunchyroll.com",
+      },
     ],
   },
 };

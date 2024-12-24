@@ -1,1 +1,1 @@
-export const __BASE_URL__ = "https://s3embtaku.pro/";
+export const __BASEURL__ = process.env.API_ANIKII_BASE_URL;

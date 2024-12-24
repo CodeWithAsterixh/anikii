@@ -6,7 +6,11 @@ import clsx from "clsx";
 
 type Props = {
   children?: React.ReactNode;
-  header?: string;
+  header?: {
+    loaded?: string;
+    loading?: string;
+    error?: string;
+  };
   link?: {
     url: Url;
     label?: string;
@@ -29,7 +33,7 @@ export default function AnimeGrouper({
     <Container
       component="section"
       className={clsx(
-        "!w-full !shadow-none !flex !flex-col !gap-2 !mb-3 !box-border",
+        "!w-full !shadow-none !flex !flex-col !gap-2 last:!mb-16 !box-border",
         sxClasses?.containerClass
       )}
     >
@@ -51,15 +55,15 @@ export default function AnimeGrouper({
             sxClasses?.headingClass
           )}
         >
-          {header}
+          {header?.loaded || header?.loading || header?.error}
         </Typography>
-        {link && (
+        {!(header?.error || header?.loading) && link && (
           <Link
             className={clsx(
               "!text-neutral-700 dark:!text-neutral-300",
               sxClasses?.LinkClass
             )}
-            href={"/browser/v131.0.1.tar"}
+            href={link.url}
             download
           >
             {link.label ? link.label : link.url.toString()}

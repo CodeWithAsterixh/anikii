@@ -55,13 +55,13 @@ const Carousel: React.FC<CarouselProps> = ({
   return (
     <div
       className={clsx(
-        "relative isolate w-full overflow-hidden pt-1 bg-white dark:bg-black",
+        "relative isolate w-full pt-1",
         stylings?.container?.className
       )}
     >
       {backdropEffect?.colors && (
         <div
-          className="size-full opacity-50 duration-500 scale-[.75] delay-200 top-1/2 -translate-y-1/2 rounded-full blur-3xl absolute inset-0 -z-20"
+          className="size-full opacity-50 duration-500 scale-[.80] sm:scale-[.75] delay-200 top-1/2 -translate-y-1/2 rounded-full blur-3xl absolute inset-0 -z-20"
           style={{
             backgroundColor: backdropEffect?.colors[activeStep],
           }}
@@ -150,7 +150,10 @@ const Carousel: React.FC<CarouselProps> = ({
               width: "8px",
             },
             ".MuiMobileStepper-dotActive": {
-              backgroundColor: "#ef4444 ",
+              backgroundColor:
+                backdropEffect && backdropEffect?.colors
+                  ? backdropEffect?.colors[activeStep]
+                  : "#ef4444 ",
               width: "20px",
               borderRadius: "4px",
               transition: "width",

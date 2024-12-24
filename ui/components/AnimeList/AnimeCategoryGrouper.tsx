@@ -3,12 +3,12 @@ import React from "react";
 import AnimeGrouper from "./AnimeGrouper";
 import AnimeList, { AnimeListSkeleton } from "./AnimeList";
 import AnimeGrid, { AnimeGridSkeleton } from "./AnimeGrid";
-import { process } from "@/lib/types/__anikii_api";
+import { responseStatus } from "@/store/reducers/listReducer";
 
 type Props = {
   groupedData?: GroupedResult;
   keyWord?: string;
-  loading?: process;
+  loading?: responseStatus;
 };
 
 const AnimeCategoryGrouper: React.FC<Props> = ({
@@ -20,17 +20,29 @@ const AnimeCategoryGrouper: React.FC<Props> = ({
   if (Array.isArray(groupedData)) {
     return (
       <AnimeGrouper
-        header={
-          groupedData && loading === "done"
-            ? `${groupedData.length} anime ${
-                keyWord ? `matches "${keyWord}"` : "found"
-              }`
-            : `Searching ${keyWord ? `for "${keyWord}"` : "..."}`
-        }
+        header={{
+          error:
+            loading === "loading" ? `Error searching for "${keyWord}"` : "",
+          loaded:
+            loading === "done"
+              ? `${groupedData.length} anime ${
+                  keyWord ? `matches "${keyWord}"` : "found"
+                }`
+              : "",
+          loading:
+            loading === "loading"
+              ? `Searching ${keyWord ? `for "${keyWord}"` : "..."}`
+              : "",
+        }}
         sxClasses={{
           navContainerClass: "!px-0",
         }}
       >
+        {/* groupedData && loading === "done"
+            ? `${groupedData.length} anime ${
+                keyWord ? `matches "${keyWord}"` : "found"
+              }`
+            : `Searching ${keyWord ? `for "${keyWord}"` : "..."}` */}
         {groupedData && groupedData.length > 0 ? (
           <AnimeGrid animes={groupedData} />
         ) : (
@@ -44,14 +56,20 @@ const AnimeCategoryGrouper: React.FC<Props> = ({
   return (
     <>
       <AnimeGrouper
-        header={
-          groupedData && loading === "done"
-            ? `${Object.values(groupedData).reduce(
-                (total, items) => total + items.length,
-                0
-              )} anime ${keyWord ? `matches "${keyWord}"` : "found"}`
-            : `Searching ${keyWord ? `for "${keyWord}"` : "..."}`
-        } // Capitalize the category name
+        header={{
+          error:
+            loading === "loading" ? `Error searching for "${keyWord}"` : "",
+          loaded:
+            loading === "done"
+              ? `${groupedData && groupedData.length} anime ${
+                  keyWord ? `matches "${keyWord}"` : "found"
+                }`
+              : "",
+          loading:
+            loading === "loading"
+              ? `Searching ${keyWord ? `for "${keyWord}"` : "..."}`
+              : "",
+        }}
         sxClasses={{
           containerClass: "!px-2",
           navContainerClass: "!px-0",
@@ -61,12 +79,14 @@ const AnimeCategoryGrouper: React.FC<Props> = ({
           Object.entries(groupedData).map(([key, items]) => (
             <AnimeGrouper
               key={key}
-              header={`${key.charAt(0).toUpperCase() + key.slice(1)} (${
-                items.length
-              } animes)`} // Capitalize the category name
+              header={{
+                loaded: `${key.charAt(0).toUpperCase() + key.slice(1)} (${
+                  items.length
+                } animes)`,
+              }} // Capitalize the category name
               sxClasses={{
                 containerClass:
-                  "!px-2 !bg-base-white/30 dark:!bg-base-black/30 !backdrop-blur-md !rounded-md",
+                  "!px-2 !bg-base-white/30 dark:!bg-base-black/30 !w-fit !max-w-full !backdrop-blur-md !rounded-md",
                 navContainerClass: "!px-0",
               }}
             >

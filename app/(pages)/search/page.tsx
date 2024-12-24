@@ -1,16 +1,41 @@
 "use client";
 
-import SearchResultsSection from "@/ui/sections/popularSection/SearchResultSection";
-import { useSearchParams } from "next/navigation";
+import { AnimeGridSkeleton } from "@/ui/components/AnimeList/AnimeGrid";
+import AnimeGrouper from "@/ui/components/AnimeList/AnimeGrouper";
+import Pagination from "@/ui/components/pagination/Pagination";
+import useSearch from "@/ui/hooks/useSearchHook";
+import SearchResultSection from "@/ui/sections/searchSection/SearchResultSection";
+import { Suspense } from "react";
+
 type Props = object;
 
-export default function Search({}: Props) {
-  const params = useSearchParams();
-  const keyword = params.get("for");
-
+export default function Season({}: Props) {
+  const { response } = useSearch();
   return (
     <div className="w-full h-fit">
-      <SearchResultsSection keyWord={keyword ? keyword : undefined} />
+      <Suspense
+              fallback={
+                <AnimeGrouper
+                  header={{
+                    loading: "Loading ...",
+                  }}
+                >
+                  <AnimeGridSkeleton />
+                </AnimeGrouper>
+              }
+            >
+              <SearchResultSection />
+            </Suspense>
+      <Pagination
+        page={
+          response.pageInfo
+            ? response.pageInfo
+            : {
+                currentPage: 0,
+                lastPage: 0,
+              }
+        }
+      />
     </div>
   );
 }

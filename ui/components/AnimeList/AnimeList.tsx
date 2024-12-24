@@ -3,27 +3,23 @@
 import { Container } from "@mui/material";
 import AnimeCard from "../AnimeCard/AnimeCard";
 import AnimeCardSkeleton from "../AnimeCard/AnimeCardSkeleton";
+import { ReleasesType } from "@/lib/types/anime/__releases";
 
 type Props = {
-  animes: {
-    image?: string;
-    title?: string;
-    extra?: string;
-    id?: string;
-  }[];
+  animes: ReleasesType[];
 };
 
 export default function AnimeList({ animes }: Props) {
   return (
-    <Container className="!w-full !px-0 !py-3 !shadow-none flex gap-2 overflow-x-auto">
+    <Container className="!w-full !px-0 !py-3  !shadow-none !flex !gap-2 !overflow-x-auto !snap-x !snap-mandatory">
       {animes &&
         animes.map((anime, index) => (
           <AnimeCard
             key={index}
-            {...anime}
+            anime={anime}
             sx={{
               cardProps: {
-                className: "!shrink-0 !w-40",
+                className: "!shrink-0 !w-40 !snap-center",
               },
             }}
           />
@@ -34,7 +30,7 @@ export default function AnimeList({ animes }: Props) {
 
 export function AnimeListSkeleton() {
   return (
-    <Container className="!w-full !px-0 !py-3 !shadow-none flex gap-2 overflow-x-auto">
+    <Container className="!w-full !px-0 !py-3 !shadow-none flex gap-2 overflow-x-hidden">
       <AnimeCardSkeleton
         sx={{
           cardProps: {

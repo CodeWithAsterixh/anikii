@@ -1,40 +1,30 @@
-// app/api/popular/route.ts
-import { __BASE_URL__ } from "@/lib/constants/baseurl";
-import { fetchData } from "@/lib/helpers/fetchHelpers";
-import { pagesLeft } from "@/lib/helpers/parsers/pagesLeft";
-import { parser } from "@/lib/helpers/parsingHelpers";
-import { AnimeItem, PagedRouteResult } from "@/lib/types/__anikii_api";
-import { NextResponse } from "next/server";
+import { __BASEURL__ } from "@/lib/constants/baseurl";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url); // Extract query params from request
-  const page = searchParams.get("page") || "1"; // Default to page 1 if not provided
-  console.log(1);
+export async function GET(req: NextRequest) {
+  const url = new URL(req.url);
+  const page = url.searchParams.get("page") || "1";
+  const endPoint = `/popular?page=${page}`;
+
   try {
-    // Construct the URL for the API call
-    const url = `${__BASE_URL__}/popular?page=${page}`;
+    const res = await fetch(__BASEURL__ + endPoint);
 
-    // Fetch data from the source URL
-    const html = await fetchData(url);
-
-    // Parse the response to extract recommendations
-    const itemRes: AnimeItem[] = parser.animeItems(html);
-    const pages: pagesLeft = parser.pagesLeft(html);
-    const result: PagedRouteResult = {
-      animeItem: itemRes,
-      pages,
-    };
-
-    if (!result.animeItem || result.animeItem.length === 0) {
-      return NextResponse.json({ error: "No anime found" }, { status: 404 });
+    // Check if the response is OK
+    if (!res.ok) {
+      return NextResponse.json(
+        { error: `Failed to fetch data: ${res.statusText}` },
+        { status: res.status }
+      );
     }
 
-    // Return the parsed result as JSON
-    return NextResponse.json({ result });
+    const data = await res.json();
+    return NextResponse.json(data);
   } catch (error) {
-    // Return a structured error response
-    const errorMessage =
-      error instanceof Error ? error.message : "An unknown error occurred";
+    // Narrow the type of error to ensure proper typing
+    let errorMessage = "An unexpected error occurred";
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
 
     return NextResponse.json({ error: errorMessage }, { status: 500 });
   }

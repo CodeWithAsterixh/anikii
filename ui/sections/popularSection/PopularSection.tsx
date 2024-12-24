@@ -1,96 +1,77 @@
 "use client";
-
-import { getPopular } from "@/lib/mods/middlewares/getPopulars";
-import { PagedRouteResult, process } from "@/lib/types/__anikii_api";
-import { updateKeyForExtra } from "@/ui/components/AnimeCard/AnimeCard";
 import AnimeGrid, {
   AnimeGridSkeleton,
 } from "@/ui/components/AnimeList/AnimeGrid";
 import AnimeGrouper from "@/ui/components/AnimeList/AnimeGrouper";
-import React, { Suspense, useCallback, useEffect, useState } from "react";
-import AnimeCategSkeleton from "./VideoLoader";
-interface popular {
-  data?: PagedRouteResult;
-  load?: process;
-}
+import AnimeList, {
+  AnimeListSkeleton,
+} from "@/ui/components/AnimeList/AnimeList";
+import AnimeListReloader from "@/ui/components/AnimeList/Reloader";
+import usePopular from "@/ui/hooks/usePopularHook";
+import { usePathname, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 
-export default function PopularSection({
-  page = 1,
-  heading = {
-    done: "Popular anime",
-    loading: "Loading Popular anime",
-    notFound: "No Popular anime available",
-  },
-}: {
-  page?: number;
-  heading?: {
-    done: string;
-    loading: string;
-    notFound: string;
-  };
-}) {
-  const [datas, setDatas] = useState<popular>();
+export default function PopularSection() {
+  const { fetchPopular, response } = usePopular();
+  const query = useSearchParams();
+  const page = parseInt(query.get("page") || "1");
 
-  const loadPopular = useCallback(async () => {
-    let timing = 0;
-    setDatas((dt) => ({
-      ...dt,
-      load: "loading",
-    }));
-    try {
-      const data = await getPopular(page);
-      setDatas({
-        data,
-        load: "done",
-      });
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (error) {
-      if (timing < 4) {
-        loadPopular();
-        timing++;
-      } else {
-        setDatas((dt) => ({
-          ...dt,
-          load: "error",
-        }));
-      }
-    }
-  }, [page]);
+  const pathName = usePathname();
+
   useEffect(() => {
-    loadPopular();
-  }, [loadPopular]);
-
+    fetchPopular(page);
+  }, [fetchPopular, page]);
   return (
-    <Suspense
-      fallback={
-        <AnimeCategSkeleton
-          heading={{ loading: "Loading Popular anime ..." }}
-        />
+    <AnimeGrouper
+      header={{
+        error:
+          !response.ok && response.status === "error"
+            ? "Some error occurred, please reload"
+            : undefined,
+        loaded: response.status === "done" ? "Popular this season" : undefined,
+        loading:
+          response.status === "loading"
+            ? "Loading popular this season"
+            : undefined,
+      }}
+      link={
+        pathName !== "/popular"
+          ? {
+              label: "See all",
+              url: "/popular",
+            }
+          : undefined
       }
     >
-      <AnimeGrouper
-        header={
-          datas?.data
-            ? `${
-                datas.data.animeItem.length > 0
-                  ? heading.done
-                  : heading.notFound
-              }`
-            : heading.loading
-        }
-      >
-        {datas?.data ? (
-          <AnimeGrid
-            animes={updateKeyForExtra(
-              datas.data.animeItem,
-              "released",
-              "extra"
-            )}
+      {pathName !== "/popular" ? (
+        response.ok ? (
+          response.data.length > 0 ? (
+            <AnimeList animes={response.data} />
+          ) : (
+            <AnimeListSkeleton />
+          )
+        ) : (
+          <AnimeListReloader
+            variant="scroll"
+            reloader={() => {
+              fetchPopular();
+            }}
           />
+        )
+      ) : response.ok ? (
+        response.data.length > 0 ? (
+          <AnimeGrid animes={response.data} />
         ) : (
           <AnimeGridSkeleton />
-        )}
-      </AnimeGrouper>
-    </Suspense>
+        )
+      ) : (
+        <AnimeListReloader
+          variant="grid"
+          reloader={() => {
+            fetchPopular();
+          }}
+        />
+      )}
+    </AnimeGrouper>
   );
 }

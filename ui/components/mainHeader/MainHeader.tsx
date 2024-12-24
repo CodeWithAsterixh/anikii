@@ -1,19 +1,22 @@
 "use client";
 
 import { RootState } from "@/store/store";
-import { AppBar } from "@mui/material";
+import { AppBar, Breadcrumbs, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 import SearchBtn from "../SearchBtn/SearchBtn";
 import clsx from "clsx";
 import { buildSearchUrl, searchFilters } from "@/lib/mods/middlewares/search";
-import { useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import Link from "next/link";
 
 type Props = object;
 
 export default function MainHeader({}: Props) {
   const { size } = useSelector((s: RootState) => s.sidebar);
   const router = useRouter();
+  const pathUrl = usePathname();
+  const [paths, setPaths] = useState<string[]>([]);
   const handleSearch = useCallback(
     (filters: searchFilters) => {
       const url = buildSearchUrl(filters);
@@ -21,6 +24,14 @@ export default function MainHeader({}: Props) {
     },
     [router]
   );
+  useEffect(() => {
+    const paths = pathUrl.split("/").filter((p) => p !== "");
+    setPaths(paths);
+  }, [pathUrl]);
+  useEffect(() => {
+    const paths = pathUrl.split("/").filter((p) => p !== "");
+    setPaths(paths);
+  }, [pathUrl]);
 
   return (
     <AppBar
@@ -34,8 +45,31 @@ export default function MainHeader({}: Props) {
       )}
     >
       {size === "small" && (
-        <h1 className="font-mono overflow-hidden text-lg min-[498px]:text-xl sm:text-2xl text-black dark:text-white">
-          Anikii
+        <h1 className="font-mono overflow-hidden text-lg min-[498px]:!text-xl sm:!text-2xl">
+          {
+            <Breadcrumbs className="!text-black/70 dark:!text-white/70 *:!max-h-[calc(1.5rem_*_2)] sm:*:!max-h-[calc(2.2rem_*_2)] overflow-hidden" aria-label="breadcrumb">
+              <Link href="/" className="text-black/70 dark:text-white/70">
+                Anikii
+              </Link>
+              {paths.length>0&&paths
+                .slice(0, paths.length > 2 ? paths.length - 2 : 1)
+                .map((path, ind) => (
+                  <Link
+                    key={ind}
+                    className="text-black/70 dark:text-white/70"
+                    href={`/${paths.slice(0, (ind+1))}`}
+                  >
+                    {path}
+                  </Link>
+                ))}
+              {paths.length>0&&<Typography
+                sx={{ color: "text.primary" }}
+                className="text-black dark:text-white"
+              >
+                {paths[paths.length - 1]}
+              </Typography>}
+            </Breadcrumbs>
+          }
         </h1>
       )}
       <SearchBtn onSearch={(keyWord) => handleSearch({ keyWord })} />

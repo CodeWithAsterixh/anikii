@@ -1,21 +1,20 @@
-type Item = {
-  image?: string;
-  title?: string;
-  extra?: string;
-  id?: string;
-};
-export type GroupedResult = Record<string, Item[]> | Item[];
+import { ReleasesType } from "@/lib/types/anime/__releases";
 
-export function groupByTitle(array: Item[]): GroupedResult {
-  const result: Record<string, Item[]> = {};
+export type GroupedResult = Record<string, ReleasesType[]> | ReleasesType[];
+
+export function groupByTitle(array: ReleasesType[]): GroupedResult {
+  const result: Record<string, ReleasesType[]> = {};
   const keyCount: Record<string, number> = {};
 
   // Step 1: Identify unique base keys
-  array.forEach(({ title }) => {
-    if (title) {
-      const key = title.includes(":")
-        ? title.split(":")[0].trim().toLowerCase()
-        : title.trim().toLowerCase();
+  array.forEach(({ title }, index) => {
+    const eitherTitle =
+      title.english || title.romaji || `No title: anime result #${index}`;
+
+    if (eitherTitle) {
+      const key = eitherTitle.includes(":")
+        ? eitherTitle.split(":")[0].trim().toLowerCase()
+        : eitherTitle.trim().toLowerCase();
       keyCount[key] = (keyCount[key] || 0) + 1;
     }
   });
@@ -24,8 +23,11 @@ export function groupByTitle(array: Item[]): GroupedResult {
   const mainKeys = Object.keys(keyCount).filter((key) => keyCount[key] > 1);
 
   // Step 3: Group by exact key matches without merging unrelated keys
-  array.forEach((obj) => {
-    const title = obj.title;
+  array.forEach((obj, index) => {
+    const title =
+      obj.title.english ||
+      obj.title.romaji ||
+      `No title: anime result #${index}`;
 
     if (title) {
       const titleKey = title.includes(":")
@@ -49,7 +51,10 @@ export function groupByTitle(array: Item[]): GroupedResult {
           ? title.slice(matchedKey.length + 1).trim()
           : title;
 
-      result[matchedKey].push({ ...obj, title: newTitle });
+      result[matchedKey].push({
+        ...obj,
+        title: { english: newTitle, romaji: newTitle },
+      });
     } else {
       // Handle items with no title
       if (!result["others"]) {
@@ -59,26 +64,36 @@ export function groupByTitle(array: Item[]): GroupedResult {
     }
   });
 
-  // Step 4: Keep unrelated keys distinct, no reassigning
+  // Step 4: If "others" is the only category, skip sorting and return
+  const keys = Object.keys(result);
+  if (keys.length === 1 && keys[0] === "others") {
+    return result["others"];
+  }
+
+  // Step 5: Sort "others" alphabetically if it exists
   if (result["others"]) {
     result["others"].sort((a, b) => {
-      if (!a.title) return 1;
-      if (!b.title) return -1;
-      return a.title.localeCompare(b.title);
+      const aTtile = a.title.english || a.title.romaji;
+      const bTtile = b.title.english || b.title.romaji;
+      if (!aTtile) return 1;
+      if (!bTtile) return -1;
+      return aTtile.localeCompare(bTtile);
     });
   }
 
-  // Step 5: Sort each array by title alphabetically
+  // Step 6: Sort each array by title alphabetically
   Object.keys(result).forEach((key) => {
     result[key].sort((a, b) => {
-      if (!a.title) return 1;
-      if (!b.title) return -1;
-      return a.title.localeCompare(b.title);
+      const aTtile = a.title.english || a.title.romaji;
+      const bTtile = b.title.english || b.title.romaji;
+      if (!aTtile) return 1;
+      if (!bTtile) return -1;
+      return aTtile.localeCompare(bTtile);
     });
   });
 
-  // Step 6: Ensure "others" is the last category
-  const sortedResult: Record<string, Item[]> = {};
+  // Step 7: Ensure "others" is the last category
+  const sortedResult: Record<string, ReleasesType[]> = {};
   const otherItems = result["others"];
   delete result["others"]; // Temporarily remove "others"
 
@@ -93,10 +108,9 @@ export function groupByTitle(array: Item[]): GroupedResult {
     sortedResult["others"] = otherItems;
   }
 
-  // Step 7: If only "others" exists, return it directly
-  const keys = Object.keys(sortedResult);
-  if (keys.length === 1 && keys[0] === "others") {
-    return sortedResult.others || [];
+  // Step 8: If only "others" exists, return it directly
+  if (Object.keys(sortedResult).length === 1 && sortedResult["others"]) {
+    return sortedResult.others;
   }
 
   return sortedResult;
