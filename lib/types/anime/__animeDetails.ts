@@ -104,3 +104,32 @@ export interface StreamingLink {
     data: AnimeData;
   }
   
+
+
+  export type CharacterData = {
+    result: {
+      pageInfo: {
+        lastPage: number;
+        currentPage: number;
+      };
+      characters: {
+        id: number;
+        name: string | null;
+        image: {
+          medium: string;
+        };
+        gender: string;
+        role: string;
+        voiceActors: {
+          name: {
+            full: string;
+          };
+          languageV2: string;
+          image: {
+            medium: string;
+          };
+        }[];
+      }[];
+    };
+  };
+  

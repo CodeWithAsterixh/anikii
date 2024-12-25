@@ -1,9 +1,9 @@
 "use client";
 
-import AnimeDetailsTabs from "@/ui/components/AnimeCard/AnimeDetailsTabs";
-import AnimeInfoCard from "@/ui/components/AnimeCard/AnimeInfoCard";
-import AnimeInfoStream from "@/ui/components/AnimeCard/AnimeInfoStream";
-import AnimeInfoStreamLoader from "@/ui/components/AnimeCard/AnimeInfoStreamSkeleton";
+import AnimeDetailsTabs from "@/ui/sections/AnimeInfo/AnimeDetailsTabs";
+import AnimeInfoCard from "@/ui/sections/AnimeInfo/AnimeInfoCard";
+import AnimeInfoStream from "@/ui/sections/AnimeInfo/AnimeInfoStream";
+import AnimeInfoStreamLoader from "@/ui/sections/AnimeInfo/AnimeInfoStreamSkeleton";
 import AnimeListReloader from "@/ui/components/AnimeList/Reloader";
 import useAnimeInfos from "@/ui/hooks/useAnimeInfos";
 import { useParams } from "next/navigation";

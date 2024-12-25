@@ -1,20 +1,22 @@
 "use client";
 
 import { RootState } from "@/store/store";
-import AnimeDetailsTabs from "@/ui/components/AnimeCard/AnimeDetailsTabs";
-import AnimeInfoStream from "@/ui/components/AnimeCard/AnimeInfoStream";
-import AnimeInfoStreamLoader from "@/ui/components/AnimeCard/AnimeInfoStreamSkeleton";
-import AnimeViewer from "@/ui/components/AnimeCard/AnimeViewer";
+import AnimeDetailsTabs from "@/ui/sections/AnimeInfo/AnimeDetailsTabs";
+import AnimeInfoStream from "@/ui/sections/AnimeInfo/AnimeInfoStream";
+import AnimeInfoStreamLoader from "@/ui/sections/AnimeInfo/AnimeInfoStreamSkeleton";
+import AnimeViewer from "@/ui/sections/AnimeInfo/AnimeViewer";
 import AnimeListReloader from "@/ui/components/AnimeList/Reloader";
 import useAnimeInfos from "@/ui/hooks/useAnimeInfos";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import CharacterList from "@/ui/sections/AnimeInfo/Characters";
 
 type Props = object;
 
 export default function Watch({}: Props) {
-  const { responseStream,fetchInfoStream } = useAnimeInfos();
+  const { responseStream, fetchInfoStream, characters, fetchInfoCasts } =
+    useAnimeInfos();
   const currentlyPlayed = useSelector((s: RootState) => s.currentlyPlayed);
 
   const { id } = useParams();
@@ -25,21 +27,34 @@ export default function Watch({}: Props) {
       const idNum = parseInt(id);
       if (!isNaN(idNum)) {
         setIdNum(idNum);
-        if(!responseStream.data){
+        if (!responseStream.data) {
           fetchInfoStream(idNum);
+        }
+        if (!characters) {
+          fetchInfoCasts(idNum);
         }
       }
     }
-  }, [fetchInfoStream, id, responseStream.data]);
-  
-
-
+  }, [characters, fetchInfoCasts, fetchInfoStream, id, responseStream.data]);
 
   return (
     <div className="w-full h-fit pb-10 px-2">
-      <AnimeViewer type={currentlyPlayed.data?.type} src={currentlyPlayed.data?.url}/>
+      <AnimeViewer
+        type={currentlyPlayed.data?.type}
+        src={currentlyPlayed.data?.url}
+      />
       <AnimeDetailsTabs
-        casts={<>casts</>}
+        casts={
+          characters?.ok && characters.status == "done" ? (
+            !characters?.data ? (
+              "Loading casts"
+            ) : (
+              <CharacterList data={characters.data} />
+            )
+          ) : (
+            "Loading casts"
+          )
+        }
         stream={
           responseStream.status === "done" ? (
             responseStream.data && <AnimeInfoStream {...responseStream.data} />
