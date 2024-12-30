@@ -128,7 +128,7 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
               <div
                 key={index}
                 className={clsx(
-                  `fixed inset-0 z-[1200] bg-black bg-opacity-50 flex items-end justify-center min-[498px]:items-center`,
+                  `fixed inset-0 z-[1200] !bg-black !bg-opacity-50 flex items-end justify-center min-[498px]:items-center`,
                   openedModal.modalOptions.containerStyles
                 )}
               >
@@ -136,7 +136,7 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
 
                 {openedModal.modalOptions.closeOutClick && (
                   <div
-                    className="absolute inset-0 z-[-1]"
+                    className="absolute inset-0 z-[-1] !bg-black !bg-opacity-50"
                     onClick={() => closeModal()}
                   />
                 )}

@@ -6,6 +6,8 @@ import { seasons as season } from "@/lib/types/__anikii_api";
 import { setSideBarSize } from "@/store/reducers/sideBarReducer";
 import { setTheme } from "@/store/reducers/themeReducer";
 import { AppDispatch, RootState } from "@/store/store";
+import { useModal } from "@/ui/Modal/Modal";
+import FavoriteModal from "@/ui/sections/FavoriteModal";
 import {
   Accordion,
   AccordionDetails,
@@ -23,8 +25,8 @@ import {
   BiSolidTimer,
   BiTrendingUp
 } from "react-icons/bi";
-import { BsFlower3, BsMoon, BsSun, BsSunsetFill } from "react-icons/bs";
-import { FaCanadianMapleLeaf, FaSnowflake, FaTags } from "react-icons/fa";
+import { BsFlower3, BsMoonFill, BsSunFill, BsSunsetFill } from "react-icons/bs";
+import { FaCanadianMapleLeaf, FaHandHoldingHeart, FaSnowflake, FaTags } from "react-icons/fa";
 import {
   GoClockFill,
   GoSidebarCollapse,
@@ -151,6 +153,7 @@ export const SeasonIcon = ({ season }: { season: season }) => {
 function NavBar({}: Props) {
   const { size } = useSelector((s: RootState) => s.sidebar);
   const { mode } = useSelector((s: RootState) => s.ThemePreference);
+  const {openModal} = useModal()
   const dispatch = useDispatch<AppDispatch>();
   //   sidebar toggler
   const handleToggleSideBarSize = useCallback(() => {
@@ -167,6 +170,17 @@ function NavBar({}: Props) {
       dispatch(setTheme("dark"));
     }
   }, [dispatch, mode]);
+  const handleOpenFavoriteModal = useCallback(() => {
+    openModal(
+      <FavoriteModal/>,
+      {
+        closeOutClick:true,
+        containerStyles: "!p-0",
+        boxStyles:"!px-0 !gap-2 !pt-2 !pb-0 !h-[80vh] !w-[500px] !justify-start",
+      },
+      "favoriteModal"
+    )
+  }, [openModal]);
 
   return (
     <aside
@@ -271,13 +285,13 @@ function NavBar({}: Props) {
             icon={<GoClockFill />}
             text="Seasons"
             title="click to drop down Seasons"
-            path={`/popular/releases/seasons`}
+            path="/popular/releases/seasons"
           >
             {seasons.map((season,id) => (
               <NavBarLink
                 key={season}
                 bgColor={seasonColors[id]}
-                path={`/popular/releases/seasons/${season}`}
+                path={`/popular/releases/season/${season}`}
                 icon={<SeasonIcon season={season} />}
                 text={season.toWellFormed()}
                 title={`Find anime in ${season}`}
@@ -301,12 +315,12 @@ function NavBar({}: Props) {
               "w-full !bg-black/20 dark:!bg-white/20 !text-base-black dark:!text-white",
               {
                 "!px-0 !py-3 *:!m-0 !min-w-fit": size === "small",
-                "!p-2": size === "full",
+                "!p-2 !px-3": size === "full",
               }
             )}
             startIcon={
               <i className="text-sm min-[498px]:text-lg sm:text-xl">
-                {mode === "dark" ? <BsMoon /> : <BsSun />}
+                {mode === "dark" ? <BsMoonFill /> : <BsSunFill />}
               </i>
             }
             onClick={handleToggleTheme}
@@ -314,6 +328,27 @@ function NavBar({}: Props) {
             {size === "full" && (
               <strong className="size-full text-left text-sm min-[498px]:text-lg">
                 {mode === "dark" ? "Light" : "Dark"} Theme
+              </strong>
+            )}
+          </Button>
+          <Button
+            className={clsx(
+              "w-full !bg-black/20 dark:!bg-white/20 !text-base-black dark:!text-white",
+              {
+                "!px-0 !py-3 *:!m-0 !min-w-fit": size === "small",
+                "!p-2 !px-3": size === "full",
+              }
+            )}
+            startIcon={
+              <i className="text-sm min-[498px]:text-lg sm:text-xl">
+                <FaHandHoldingHeart/>
+              </i>
+            }
+            onClick={handleOpenFavoriteModal}
+          >
+            {size === "full" && (
+              <strong className="size-full text-left text-sm min-[498px]:text-lg">
+                My favorites
               </strong>
             )}
           </Button>

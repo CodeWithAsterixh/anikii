@@ -13,6 +13,7 @@ import {
   SeasonedAnyRed,
   SeasonedRed,
 } from "./reducers/listReducer";
+import { UserTracker } from "./reducers/trackingReducer";
 
 const store = configureStore({
   reducer: {
@@ -28,6 +29,7 @@ const store = configureStore({
     AnimeDetails:AnimeDetailsRed,
     AnimeStream:AnimeStreamRed,
     currentlyPlayed:AnimeStreamerRed,
+    UserTracker
   },
 });
 

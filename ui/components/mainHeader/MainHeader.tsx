@@ -57,7 +57,7 @@ export default function MainHeader({}: Props) {
                   <Link
                     key={ind}
                     className="text-black/70 dark:text-white/70"
-                    href={`/${paths.slice(0, (ind+1))}`}
+                    href={`/${paths.slice(0, (ind+1)).join("/")}`}
                   >
                     {path}
                   </Link>

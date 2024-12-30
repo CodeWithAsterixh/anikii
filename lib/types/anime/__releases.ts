@@ -38,3 +38,15 @@ export interface ReleasesType {
     episode: number;
   } | null; // Nullable if there is no next airing episode
 }
+
+export interface MiniAnimeInfo {
+  id: number;
+  title?: {
+    romaji: string;
+    english: string | null; // Nullable if no English title is available
+  };
+  coverImage?: {
+    extraLarge: string;
+    medium: string;
+  };
+}

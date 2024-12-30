@@ -2,14 +2,15 @@
 
 import { getSeasonInfo } from "@/lib/mods/functions/getSeasonInfo";
 import { ReleasesType } from "@/lib/types/anime/__releases";
+import useTracker from "@/ui/hooks/useTracker";
 import { Card, IconButton, Typography } from "@mui/material";
 import clsx from "clsx";
 import { ImageProps } from "next/image";
 import Link from "next/link";
 import React, { Fragment } from "react";
 import { BiHeart } from "react-icons/bi";
+import { BsFillHeartFill, BsPlayCircleFill } from "react-icons/bs";
 import Image from "../Image/Image";
-import { BsPlayCircleFill } from "react-icons/bs";
 type Props = {
   anime: ReleasesType;
   id?: string;
@@ -45,6 +46,8 @@ export function updateKeyForExtra<T>(
   }
 }
 export default function AnimeCard({ anime, sx }: Props) {
+  const {trackable,handleAddToFavorite,handleRemoveFromFavorite} = useTracker()  
+
   return (
     <Card
       className={clsx(
@@ -83,8 +86,15 @@ export default function AnimeCard({ anime, sx }: Props) {
           </Typography>
         </span>
         <span className="w-full relative z-10 bg-gradient-to-t from-black to-transparent px-2 py-1 flex items-center justify-between">
-          <IconButton className="text-white">
-            <BiHeart />
+          <IconButton className="text-white" onClick={()=>{
+            if(!trackable.favorite.find(f => f.id===anime.id)){
+              handleAddToFavorite(anime)
+            }else{
+              handleRemoveFromFavorite(anime.id)
+            }
+          }}>
+            
+            {trackable.favorite.find(f => f.id===anime.id)?<BsFillHeartFill />:<BiHeart />}
           </IconButton>
           <Typography
             variant="caption"
