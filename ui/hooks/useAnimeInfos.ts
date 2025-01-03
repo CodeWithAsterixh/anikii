@@ -153,6 +153,8 @@ export default function useAnimeInfos() {
         } else {
           dispatch(addAnimeStreamSub(anime.data[0].result));
         }
+        console.log(anime.data[0].result)
+
 
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {

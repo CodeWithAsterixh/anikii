@@ -23,7 +23,7 @@ export default function Genres_GENRE({}: Props) {
     responseStream,
     recommendationsInfo,
     fetchRecommendations,
-    fetchInfoStreamEp
+    fetchInfoStreamEp,
   } = useAnimeInfos();
   const currentlyPlayed = useSelector((s: RootState) => s.currentlyPlayed);
   const { id,ep } = useParams();
@@ -36,29 +36,25 @@ export default function Genres_GENRE({}: Props) {
       const idNum = parseInt(id);
       if (!isNaN(idNum)) {
         setIdNum(idNum);
-        if (responseStream.status !== "done") {
-          fetchInfoStream(idNum);
-        }
+        fetchInfoStream(idNum);
+        fetchInfoCasts(idNum);
+        fetchRecommendations(idNum);
 
-        if (characters.data.length <= 0) {
-          fetchInfoCasts(idNum);
-        }
-        if (recommendationsInfo.data.length <= 0) {
-          fetchRecommendations(idNum)
-        }
+  
         if (typeof ep === "string") {
           const epNum = parseInt(ep);
           if (!isNaN(epNum)) {
-            const isDub = dub === "true" ? true : false;
-    
-            fetchInfoStreamEp(idNum, epNum,isDub);
-    
-        }
+            const isDub = dub === "true";
+            fetchInfoStreamEp(idNum, epNum, isDub);
           }
+        }
       }
     }
-  }, [fetchInfoCasts, fetchInfoStream, id, responseStream.data, characters.data, recommendationsInfo.data, fetchRecommendations, responseStream.status, ep, dub, fetchInfoStreamEp]);
-
+  }, [dub, ep, fetchInfoCasts, fetchInfoStream, fetchInfoStreamEp, fetchRecommendations, id]);
+  useEffect(() => {
+    console.log(responseStream)
+  }, [responseStream])
+  
   return (
     <div className="w-full h-fit pb-10 px-2">
       <AnimeViewer
