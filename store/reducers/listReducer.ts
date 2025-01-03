@@ -1,5 +1,5 @@
 import { seasons } from "@/lib/types/__anikii_api";
-import { AnimeInfo, AnimeProps } from "@/lib/types/anime/__animeDetails";
+import { AnimeData, AnimeInfo, AnimeProps, StreamingEpisode } from "@/lib/types/anime/__animeDetails";
 import { ReleasesType } from "@/lib/types/anime/__releases";
 import { createSlice } from "@reduxjs/toolkit";
 
@@ -220,7 +220,7 @@ export const AnimeDetailsRed = AnimeDetails.reducer;
 // stream info
 
 export interface StreamInfoRes {
-  data?: AnimeProps;
+  data: AnimeProps;
   ok: boolean;
   status: responseStatus;
 }
@@ -228,19 +228,39 @@ export interface StreamInfoRes {
 const streamInit: StreamInfoRes = {
   ok: true,
   status: "not initiated",
+  data:{
+    streamingEpisodesSub:[],
+    streamingEpisodesDub:[],
+    data:{
+      episodes:0,
+      streamingEpisodes:[],
+      externalLinks:[]
+    }
+  }
 };
 
 const AnimeStream = createSlice({
   name: "stream",
   initialState:streamInit,
   reducers: {
-    setAnimeStream: (state, { payload }: { payload: StreamInfoRes }) => {
+    setAnimeStreamProccess: (state, { payload }: { payload: StreamInfoRes }) => {
       return payload;
+    },
+    setAnimeStreamMain: (state, { payload }: { payload: AnimeData }) => {
+      state.data.data = payload;
+    },
+    addAnimeStreamSub: (state, { payload }: { payload:StreamingEpisode }) => {
+      const subs = [...state.data.streamingEpisodesSub,payload];
+      state.data.streamingEpisodesSub = subs;
+    },
+    addAnimeStreamDub: (state, { payload }: { payload: StreamingEpisode }) => {
+      const dubs = [...state.data.streamingEpisodesDub,payload];
+      state.data.streamingEpisodesDub = dubs;
     },
   },
 });
 
-export const { setAnimeStream } = AnimeStream.actions;
+export const { setAnimeStreamMain,addAnimeStreamDub,addAnimeStreamSub,setAnimeStreamProccess } = AnimeStream.actions;
 
 export const AnimeStreamRed = AnimeStream.reducer;
 

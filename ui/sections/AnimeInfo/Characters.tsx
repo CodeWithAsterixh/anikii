@@ -1,70 +1,63 @@
+import Image from "@/ui/components/Image/Image";
+import { useModal } from "@/ui/Modal/Modal";
+import { Card, Typography } from "@mui/material";
 import React from "react";
 import { CharacterData } from "../../../lib/types/anime/__animeDetails";
-import Image from "@/ui/components/Image/Image";
-
+import CharacterModal from "./CharacterModal";
 
 type Props = {
-  data: CharacterData;
+  data: CharacterData[];
 };
 
 const CharacterList: React.FC<Props> = ({ data }) => {
+  const { openModal } = useModal();
+
+  const toggleOpenCharacterModal = (
+    id: string | number,
+    character: CharacterData
+  ) => {
+    openModal(
+      <CharacterModal character={character} length={data.length} />,
+      {
+        closeOutClick: true,
+        containerStyles: "!p-0",
+        boxStyles:
+          "!px-0 !box-border !gap-2 !pt-2 sm:!pt-0 sm:!pb-0 !h-[80vh] !w-[500px] !justify-start dark:bg-black",
+      },
+      `character-${id}`
+    );
+  };
+
   return (
-    <div className="p-4 bg-black text-white rounded-lg shadow-lg">
-      <h2 className="text-2xl font-bold mb-4">Characters</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {data.result.characters.map((character) => (
-          <div
-            key={character.id}
-            className="bg-white text-black p-4 rounded-lg shadow-md flex flex-col items-center"
+    <div className="p-4 bg-white dark:bg-black text-black dark:text-white rounded-lg shadow-lg">
+      <Typography variant="h4" className="!text-2xl !font-bold !mb-4">
+        Characters
+      </Typography>
+      <div className="grid grid-cols-[repeat(auto-fill,minmax(8rem,1fr))] gap-4">
+        {data.map((character, index) => (
+          <Card
+            key={index}
+            className="!relative hover:!scale-95 !duration-200 !bg-neutral-200 dark:!bg-base-black !text-black dark:!text-white !p-4 !rounded-lg !shadow-md !flex !flex-col !items-center !cursor-pointer"
+            onClick={() => toggleOpenCharacterModal(character.id, character)}
           >
             {/* Character Image */}
             <Image
               src={character.image.medium}
               alt={character.name || "Unknown Character"}
-              className="w-32 h-32 object-cover rounded-full mb-4"
+              className="!size-16 !object-cover !rounded-full !mb-2"
               width={500}
               height={500}
             />
             {/* Character Name */}
-            <h3 className="text-lg font-bold">
-              {character.name || "Unknown Character"}
-            </h3>
-            {/* Character Role */}
-            <p className="text-sm text-gray-600">{character.role}</p>
-            {/* Gender */}
-            <p className="text-sm text-gray-600">{character.gender}</p>
-
-            {/* Voice Actors */}
-            <div className="mt-4">
-              <h4 className="text-sm font-semibold mb-2">Voice Actors</h4>
-              {character.voiceActors.map((actor, index) => (
-                <div key={index} className="flex items-center gap-2 mb-2">
-                  {/* Voice Actor Image */}
-                  <Image
-                    src={actor.image.medium}
-                    alt={actor.name.full}
-                    className="w-10 h-10 object-cover rounded-full"
-                    width={500}
-                    height={500}
-                    />
-                  <div>
-                    {/* Voice Actor Name */}
-                    <p className="text-sm font-medium">{actor.name.full}</p>
-                    {/* Voice Actor Language */}
-                    <p className="text-xs text-gray-500">{actor.languageV2}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+            {character.name&&<Typography
+              variant="h6"
+              className="!text-lg !w-full !font-bold !text-center !line-clamp-1"
+              noWrap
+            >
+              {character.name}
+            </Typography>}
+          </Card>
         ))}
-      </div>
-      {/* Pagination Info */}
-      <div className="mt-6 text-center">
-        <p>
-          Page {data.result.pageInfo.currentPage} of{" "}
-          {data.result.pageInfo.lastPage}
-        </p>
       </div>
     </div>
   );

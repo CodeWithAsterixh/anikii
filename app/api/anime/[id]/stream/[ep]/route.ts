@@ -6,7 +6,7 @@ export async function GET(
   { params }: { params: Promise<{ id: string; ep: string }> }
 ) {
   const { id, ep } = await params;
-  const endPoint = `/anime/${id}/stream/${ep}`; // Replace with your API endpoint
+  const endPoint = `/anime/${id}/stream/ep/${ep}`; // Replace with your API endpoint
 
   try {
     const res = await fetch(__BASEURL__ + endPoint);

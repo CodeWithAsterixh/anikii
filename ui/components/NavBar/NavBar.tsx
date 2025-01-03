@@ -7,7 +7,7 @@ import { setSideBarSize } from "@/store/reducers/sideBarReducer";
 import { setTheme } from "@/store/reducers/themeReducer";
 import { AppDispatch, RootState } from "@/store/store";
 import { useModal } from "@/ui/Modal/Modal";
-import FavoriteModal from "@/ui/sections/FavoriteModal";
+import FavoriteModal from "@/ui/sections/favoriteSection/FavoriteModal";
 import {
   Accordion,
   AccordionDetails,

@@ -104,15 +104,12 @@ export interface StreamingLink {
     data: AnimeData;
   }
   
+  
+  
 
 
   export type CharacterData = {
-    result: {
-      pageInfo: {
-        lastPage: number;
-        currentPage: number;
-      };
-      characters: {
+
         id: number;
         name: string | null;
         image: {
@@ -129,7 +126,6 @@ export interface StreamingLink {
             medium: string;
           };
         }[];
-      }[];
-    };
-  };
+      };
+  ;
   

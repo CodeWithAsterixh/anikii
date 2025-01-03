@@ -1,25 +1,29 @@
 "use client";
 
 import { RootState } from "@/store/store";
+import AnimeListReloader from "@/ui/components/AnimeList/Reloader";
+import useAnimeInfos from "@/ui/hooks/useAnimeInfos";
 import AnimeDetailsTabs from "@/ui/sections/AnimeInfo/AnimeDetailsTabs";
 import AnimeInfoStream from "@/ui/sections/AnimeInfo/AnimeInfoStream";
 import AnimeInfoStreamLoader from "@/ui/sections/AnimeInfo/AnimeInfoStreamSkeleton";
 import AnimeViewer from "@/ui/sections/AnimeInfo/AnimeViewer";
-import AnimeListReloader from "@/ui/components/AnimeList/Reloader";
-import useAnimeInfos from "@/ui/hooks/useAnimeInfos";
+import CharacterList from "@/ui/sections/AnimeInfo/Characters";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import CharacterList from "@/ui/sections/AnimeInfo/Characters";
 
 type Props = object;
 
-export default function Watch({}: Props) {
-  const { responseStream, fetchInfoStream, characters, fetchInfoCasts } =
-    useAnimeInfos();
+export default function Genres_GENRE({}: Props) {
+  const {
+    characters,
+    fetchInfoCasts,
+    fetchInfo,
+    fetchInfoStream,
+    responseStream,
+  } = useAnimeInfos();
   const currentlyPlayed = useSelector((s: RootState) => s.currentlyPlayed);
-
-  const { id } = useParams();
+  const { id} = useParams();
   const [idNum, setIdNum] = useState<number>();
 
   useEffect(() => {
@@ -27,15 +31,12 @@ export default function Watch({}: Props) {
       const idNum = parseInt(id);
       if (!isNaN(idNum)) {
         setIdNum(idNum);
-        if (!responseStream.data) {
-          fetchInfoStream(idNum);
-        }
-        if (!characters) {
-          fetchInfoCasts(idNum);
-        }
+        fetchInfo(idNum);
+        fetchInfoStream(idNum);
+        fetchInfoCasts(idNum);
       }
     }
-  }, [characters, fetchInfoCasts, fetchInfoStream, id, responseStream.data]);
+  }, [fetchInfo, fetchInfoCasts, fetchInfoStream, id]);
 
   return (
     <div className="w-full h-fit pb-10 px-2">
@@ -45,19 +46,31 @@ export default function Watch({}: Props) {
       />
       <AnimeDetailsTabs
         casts={
-          characters?.ok && characters.status == "done" ? (
-            !characters?.data ? (
-              "Loading casts"
-            ) : (
-              <CharacterList data={characters.data} />
-            )
+          characters?.data ? (
+            <CharacterList data={characters.data} />
           ) : (
-            "Loading casts"
+            <AnimeInfoStreamLoader
+              reloader={
+                <AnimeListReloader
+                  reloader={() => {
+                    if (idNum) {
+                      fetchInfoCasts(idNum);
+                    }
+                  }}
+                />
+              }
+              status={characters?.status || "loading"}
+            />
           )
         }
         stream={
           responseStream.status === "done" ? (
-            responseStream.data && <AnimeInfoStream {...responseStream.data} />
+            responseStream.data && (
+              <AnimeInfoStream
+                id={idNum ? idNum : 1}
+                data={responseStream.data}
+              />
+            )
           ) : (
             <AnimeInfoStreamLoader
               reloader={

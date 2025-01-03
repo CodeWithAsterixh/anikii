@@ -5,7 +5,7 @@ import { responseStatus } from "@/store/reducers/listReducer";
 
 const AnimeInfoStreamLoader: React.FC<{status:responseStatus, reloader:React.ReactNode}> = ({status,reloader}) => {
   return (
-    <Box className="!p-4 !bg-white dark:!bg-black !rounded-lg !shadow-lg !isolate !text-white !relative">
+    <Box className="!p-4 !bg-white dark:!bg-black !shadow-lg !isolate !text-white !relative">
         {/* reloader */}
         {status==="error"&&reloader}
       {/* Loader for Title */}

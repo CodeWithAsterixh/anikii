@@ -8,11 +8,12 @@ import AnimeListReloader from "@/ui/components/AnimeList/Reloader";
 import useAnimeInfos from "@/ui/hooks/useAnimeInfos";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import CharacterList from "@/ui/sections/AnimeInfo/Characters";
 
 type Props = object;
 
 export default function Genres_GENRE({}: Props) {
-  const { response, fetchInfo, fetchInfoStream, responseStream } =
+  const { characters,fetchInfoCasts,response, fetchInfo, fetchInfoStream, responseStream } =
     useAnimeInfos();
   const { id } = useParams();
   const [idNum, setIdNum] = useState<number>();
@@ -24,9 +25,12 @@ export default function Genres_GENRE({}: Props) {
         setIdNum(idNum);
         fetchInfo(idNum);
         fetchInfoStream(idNum);
+        fetchInfoCasts(idNum);
       }
     }
-  }, [fetchInfo, fetchInfoStream, id]);
+  }, [fetchInfo, fetchInfoCasts, fetchInfoStream, id]);
+
+  
 
 
   return (
@@ -45,10 +49,21 @@ export default function Genres_GENRE({}: Props) {
         }
       />
       <AnimeDetailsTabs
-        casts={<>casts</>}
+        casts={characters?.data?<CharacterList data={characters.data} />:<AnimeInfoStreamLoader
+        reloader={
+          <AnimeListReloader
+            reloader={() => {
+              if (idNum) {
+                fetchInfoCasts(idNum);
+              }
+            }}
+          />
+        }
+        status={characters?.status||"loading"}
+      />}
         stream={
           responseStream.status === "done" ? (
-            responseStream.data && <AnimeInfoStream {...responseStream.data} />
+            responseStream.data && <AnimeInfoStream  id={idNum?idNum:1} data={responseStream.data} />
           ) : (
             <AnimeInfoStreamLoader
               reloader={

@@ -89,6 +89,7 @@ export default function AnimeCard({ anime, sx }: Props) {
           <IconButton className="text-white" onClick={()=>{
             if(!trackable.favorite.find(f => f.id===anime.id)){
               handleAddToFavorite(anime)
+              console.log(1)
             }else{
               handleRemoveFromFavorite(anime.id)
             }

@@ -1,10 +1,12 @@
 import { __BASEURL__ } from "@/lib/constants/baseurl";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: NextRequest) {
-  const url = new URL(req.url);
-  const page = url.searchParams.get("page") || "1";
-  const endPoint = `/popular?page=${page}`;
+export async function GET(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string; ep: string }> }
+) {
+  const { id, ep } = await params;
+  const endPoint = `/anime/${id}/stream/ep/${ep}/dub`; // Replace with your API endpoint
 
   try {
     const res = await fetch(__BASEURL__ + endPoint);
@@ -25,7 +27,7 @@ export async function GET(req: NextRequest) {
     if (error instanceof Error) {
       errorMessage = error.message;
     }
-    console.log(error);
+
     return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

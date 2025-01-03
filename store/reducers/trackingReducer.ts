@@ -37,10 +37,12 @@ const UserTracking = createSlice({
     modifyFavorite: (state, { payload }: { payload: payloadData }) => {
       switch (payload.type) {
         case "ADD":
-          state.favorite.push(payload.data);
+          const updated = [...state.favorite, payload.data];
+          state.favorite = updated;
           break;
         case "REMOVE":
-          state.favorite.filter(f => f.id !== payload.data.id);
+          const filtered = state.favorite.filter(f => f.id !== payload.data.id);
+          state.favorite = filtered;
           break;
         default:
           break;

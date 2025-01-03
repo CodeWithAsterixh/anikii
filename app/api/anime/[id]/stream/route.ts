@@ -6,10 +6,12 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const endPoint = `/anime/${id}/stream`; // Replace with your API endpoint
+  const endPoint = `/anime/${id}/stream`;
+  const endPoint2 = `/anime/${id}/stream/external`;
 
   try {
     const res = await fetch(__BASEURL__ + endPoint);
+    const resExt = await fetch(__BASEURL__ + endPoint2);
 
     // Check if the response is OK
     if (!res.ok) {
@@ -20,7 +22,13 @@ export async function GET(
     }
 
     const data = await res.json();
-    return NextResponse.json(data);
+    const data2 = await resExt.json();
+    const episodes = data2[0].result.anime_info.episodes;
+    const result = {
+      ...data[0].result,
+      episodes,
+    }
+    return NextResponse.json(result);
   } catch (error) {
     // Narrow the type of error to ensure proper typing
     let errorMessage = "An unexpected error occurred";
