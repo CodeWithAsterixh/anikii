@@ -1,7 +1,7 @@
 import { seasons } from "@/lib/types/__anikii_api";
-import { AnimeData, AnimeInfo, AnimeProps, StreamingEpisode } from "@/lib/types/anime/__animeDetails";
+import { AnimeData, AnimeInfo, AnimeProps, CharacterData, StreamingEpisode } from "@/lib/types/anime/__animeDetails";
 import { ReleasesType } from "@/lib/types/anime/__releases";
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export type responseStatus =
   | "loading"
@@ -294,3 +294,55 @@ const AnimeStreamer = createSlice({
 export const { setCurrentlyPlayed } = AnimeStreamer.actions;
 
 export const AnimeStreamerRed = AnimeStreamer.reducer;
+
+
+
+// character info
+export interface CharacterState extends responseInfo {
+  data: CharacterData[];
+}
+const characterInit: CharacterState = {
+  ok: true,
+  status: 'not initiated',
+  data: [],
+  pageInfo: undefined,
+};
+
+const characterSlice = createSlice({
+  name: 'characters',
+  initialState: characterInit,
+  reducers: {
+    setCharacters: (state, action: PayloadAction<CharacterState>) => {
+      return action.payload;
+    },
+  },
+});
+
+
+export const { setCharacters } = characterSlice.actions;
+
+export const characterSliceRed = characterSlice.reducer;
+
+// recommended info
+
+const recommendedInit: ReleasesRes = {
+  ok: true,
+  status: 'not initiated',
+  data: [],
+  pageInfo: undefined,
+};
+
+const recommendedSlice = createSlice({
+  name: 'characters',
+  initialState: recommendedInit,
+  reducers: {
+    setRecommendations: (state, { payload }: { payload: ReleasesRes })  => {
+      return payload;
+    },
+  },
+});
+
+
+export const { setRecommendations } = recommendedSlice.actions;
+
+export const recommendedSliceRed = recommendedSlice.reducer;

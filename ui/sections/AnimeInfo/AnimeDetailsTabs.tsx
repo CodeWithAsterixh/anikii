@@ -6,7 +6,7 @@ import React, { useState } from "react";
 
 
 
-type tabs = "stream" | "casts";
+type tabs = "stream" | "casts"| "recommendations";
 type Props = {
     [K in tabs]: React.ReactNode;
   };
@@ -41,7 +41,7 @@ export default function AnimeDetailsTabs(props: Props) {
     setExtraTabs(newValue);
   };
   const tabs:tabs[] = [
-    "stream","casts"
+    "stream","casts","recommendations"
   ];
   return (
     <div className="w-full">

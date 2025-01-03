@@ -12,6 +12,8 @@ import {
   SearchRed,
   SeasonedAnyRed,
   SeasonedRed,
+  characterSliceRed,
+  recommendedSliceRed
 } from "./reducers/listReducer";
 import { UserTracker } from "./reducers/trackingReducer";
 
@@ -29,7 +31,9 @@ const store = configureStore({
     AnimeDetails:AnimeDetailsRed,
     AnimeStream:AnimeStreamRed,
     currentlyPlayed:AnimeStreamerRed,
-    UserTracker
+    UserTracker,
+    castsInfo:characterSliceRed,
+    recommendationsInfo:recommendedSliceRed
   },
 });
 

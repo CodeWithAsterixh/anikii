@@ -39,17 +39,19 @@ const AnimeInfoStream: React.FC<{ data: AnimeProps; id: number }> = ({
   ];
   const Episodes = ({
     sx,
+    type="sub"
   }: {
     sx?: {
       containerClass?: string;
       text1Class?: string;
       text2Class?: string;
     };
+    type:"sub"|"dub"
   }) => (
     <div className="w-full grid grid-cols-[repeat(auto-fill,minmax(5rem,1fr))] gap-2">
       {Array.from({ length: lengths.max - lengths.min }).map((_, index) => (
         <Link
-          href={`/anime/${id}/watch/${lengths.min + index + 1}`}
+          href={type==="sub"?`/anime/${id}/watch/${lengths.min + index + 1}`:`/anime/${id}/watch/${lengths.min + index + 1}?dub=true`}
           className={clsx(
             "flex items-center cursor-pointer justify-center gap-1 bg-black/30 dark:bg-white/30 p-2 rounded-md backdrop-blur-md",
             sx?.containerClass
@@ -171,6 +173,7 @@ const AnimeInfoStream: React.FC<{ data: AnimeProps; id: number }> = ({
             </h2>
             <EpisodesRange />
             <Episodes
+            type="sub"
               sx={{
                 containerClass: "!bg-blue-600/30",
               }}
@@ -186,6 +189,7 @@ const AnimeInfoStream: React.FC<{ data: AnimeProps; id: number }> = ({
             </h2>
             <EpisodesRange />
             <Episodes
+            type="dub"
               sx={{
                 containerClass: "!bg-red-600/30",
               }}

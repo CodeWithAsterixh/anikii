@@ -48,9 +48,9 @@ const AnimeInfoCard: React.FC<AnimeCardProps> = ({ anime,status,reloader }) => {
             className="!size-full blur-md"
           />
         </div>}
-      <div className="flex flex-col lg:flex-row">
+      <div className="flex flex-col sm:grid grid-cols-[300px,1fr] sm:items-stretch gap-4">
         {/* Cover Image */}
-        <div className="flex-shrink-0 h-40 max-h-[40vh] lg:mr-4 mb-4 lg:mb-0 overflow-hidden rounded-md">
+        <div className="flex-shrink-0 h-full sm:w-full overflow-hidden rounded-md">
           <Image
             src={anime.data.coverImage.extraLarge}
             alt={anime.data.title.romaji}

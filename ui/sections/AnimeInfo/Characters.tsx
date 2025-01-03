@@ -1,17 +1,23 @@
+import { pageInfo } from "@/store/reducers/listReducer";
 import Image from "@/ui/components/Image/Image";
+import Pagination from "@/ui/components/pagination/Pagination";
 import { useModal } from "@/ui/Modal/Modal";
 import { Card, Typography } from "@mui/material";
-import React from "react";
+import React, { useCallback } from "react";
 import { CharacterData } from "../../../lib/types/anime/__animeDetails";
 import CharacterModal from "./CharacterModal";
+import useAnimeInfos from "@/ui/hooks/useAnimeInfos";
 
 type Props = {
   data: CharacterData[];
+  pageInfo?:pageInfo;
+  id:number
 };
 
-const CharacterList: React.FC<Props> = ({ data }) => {
+const CharacterList: React.FC<Props> = ({ data,pageInfo,id }) => {
   const { openModal } = useModal();
-
+  const {fetchInfoCasts} = useAnimeInfos()
+  
   const toggleOpenCharacterModal = (
     id: string | number,
     character: CharacterData
@@ -27,9 +33,18 @@ const CharacterList: React.FC<Props> = ({ data }) => {
       `character-${id}`
     );
   };
+  
+   
+    const handleNextPage = useCallback(
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      (_: unknown, page: number) => {
+        fetchInfoCasts(id,page);
+      },
+      [fetchInfoCasts, id]
+    );
 
   return (
-    <div className="p-4 bg-white dark:bg-black text-black dark:text-white rounded-lg shadow-lg">
+    <div className="p-4 bg-white dark:bg-black text-black dark:text-white shadow-lg">
       <Typography variant="h4" className="!text-2xl !font-bold !mb-4">
         Characters
       </Typography>
@@ -43,22 +58,39 @@ const CharacterList: React.FC<Props> = ({ data }) => {
             {/* Character Image */}
             <Image
               src={character.image.medium}
-              alt={character.name || "Unknown Character"}
+              alt={
+                character.name.userPreferred ||
+                character.name.full ||
+                "Unknown Character"
+              }
               className="!size-16 !object-cover !rounded-full !mb-2"
               width={500}
               height={500}
             />
             {/* Character Name */}
-            {character.name&&<Typography
-              variant="h6"
-              className="!text-lg !w-full !font-bold !text-center !line-clamp-1"
-              noWrap
-            >
-              {character.name}
-            </Typography>}
+            {character.name && (
+              <Typography
+                variant="h6"
+                className="!text-lg !w-full !font-bold !text-center !line-clamp-1"
+                noWrap
+              >
+                {character.name.userPreferred ||
+                  character.name.full ||
+                  "Unknown Character"}
+              </Typography>
+            )}
           </Card>
         ))}
       </div>
+      <Pagination
+      onChange={handleNextPage}
+        page={
+          pageInfo?pageInfo: {
+                currentPage: 0,
+                lastPage: 0,
+              }
+        }
+      />
     </div>
   );
 };

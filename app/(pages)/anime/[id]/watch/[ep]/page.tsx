@@ -8,7 +8,8 @@ import AnimeInfoStream from "@/ui/sections/AnimeInfo/AnimeInfoStream";
 import AnimeInfoStreamLoader from "@/ui/sections/AnimeInfo/AnimeInfoStreamSkeleton";
 import AnimeViewer from "@/ui/sections/AnimeInfo/AnimeViewer";
 import CharacterList from "@/ui/sections/AnimeInfo/Characters";
-import { useParams } from "next/navigation";
+import Recommendations from "@/ui/sections/AnimeInfo/Recommendations";
+import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -18,12 +19,16 @@ export default function Genres_GENRE({}: Props) {
   const {
     characters,
     fetchInfoCasts,
-    fetchInfo,
     fetchInfoStream,
     responseStream,
+    recommendationsInfo,
+    fetchRecommendations,
+    fetchInfoStreamEp
   } = useAnimeInfos();
   const currentlyPlayed = useSelector((s: RootState) => s.currentlyPlayed);
-  const { id} = useParams();
+  const { id,ep } = useParams();
+  const query = useSearchParams();
+    const dub = query.get("dub");
   const [idNum, setIdNum] = useState<number>();
 
   useEffect(() => {
@@ -31,12 +36,28 @@ export default function Genres_GENRE({}: Props) {
       const idNum = parseInt(id);
       if (!isNaN(idNum)) {
         setIdNum(idNum);
-        fetchInfo(idNum);
-        fetchInfoStream(idNum);
-        fetchInfoCasts(idNum);
+        if (responseStream.status !== "done") {
+          fetchInfoStream(idNum);
+        }
+
+        if (characters.data.length <= 0) {
+          fetchInfoCasts(idNum);
+        }
+        if (recommendationsInfo.data.length <= 0) {
+          fetchRecommendations(idNum)
+        }
+        if (typeof ep === "string") {
+          const epNum = parseInt(ep);
+          if (!isNaN(epNum)) {
+            const isDub = dub === "true" ? true : false;
+    
+            fetchInfoStreamEp(idNum, epNum,isDub);
+    
+        }
+          }
       }
     }
-  }, [fetchInfo, fetchInfoCasts, fetchInfoStream, id]);
+  }, [fetchInfoCasts, fetchInfoStream, id, responseStream.data, characters.data, recommendationsInfo.data, fetchRecommendations, responseStream.status, ep, dub, fetchInfoStreamEp]);
 
   return (
     <div className="w-full h-fit pb-10 px-2">
@@ -46,8 +67,14 @@ export default function Genres_GENRE({}: Props) {
       />
       <AnimeDetailsTabs
         casts={
-          characters?.data ? (
-            <CharacterList data={characters.data} />
+          characters.status === "done" &&
+          characters?.data &&
+          idNum !== undefined ? (
+            <CharacterList
+              id={idNum}
+              data={characters.data}
+              pageInfo={characters.pageInfo}
+            />
           ) : (
             <AnimeInfoStreamLoader
               reloader={
@@ -83,6 +110,26 @@ export default function Genres_GENRE({}: Props) {
                 />
               }
               status={responseStream.status}
+            />
+          )
+        }
+        recommendations={
+          recommendationsInfo.status === "done" &&
+          recommendationsInfo?.data &&
+          idNum !== undefined ? (
+            <Recommendations
+              id={idNum}
+              data={recommendationsInfo.data}
+              pageInfo={recommendationsInfo.pageInfo}
+            />
+          ) : (
+            <AnimeListReloader
+              variant="grid"
+              reloader={() => {
+                if (idNum) {
+                  fetchRecommendations(idNum);
+                }
+              }}
             />
           )
         }
