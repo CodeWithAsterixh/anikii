@@ -24,7 +24,7 @@ export async function GET(
     const data = await res.json();
     const data2 = await resExt.json();
     let episodes = data[0].result.episodes
-    if(data2[0]){
+    if(data2[0]&&!data2[0].result.error){
       episodes = data2[0].result.anime_info.episodes;
     }
     
