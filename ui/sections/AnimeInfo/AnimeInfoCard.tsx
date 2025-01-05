@@ -1,5 +1,5 @@
 import { AnimeInfo } from '@/lib/types/anime/__animeDetails';
-import { Chip } from '@mui/material';
+import { Chip, Typography } from '@mui/material';
 import Skeleton from '@mui/material/Skeleton';
 import React from 'react';
 import Image from '../../components/Image/Image';
@@ -17,13 +17,19 @@ const AnimeInfoCard: React.FC<AnimeCardProps> = ({ anime,status,reloader }) => {
     const {mode} = useSelector((s: RootState) => s.ThemePreference);
 
   if (status !=="done" || !anime?.data) {
+    console.log(anime)
     // Skeleton Loader for loading state
     return (
-      <div className="!p-4 !mb-5 !bg-gradient-to-r !relative !from-black/20 !to-black/35 !backdrop-blur-md dark:!from-black/80 dark:!to-black">
+      <div className="!p-4 !mb-5 !bg-gradient-to-r relative !from-black/20 !to-black/35 !backdrop-blur-md dark:!from-black/80 dark:!to-black">
         {/* reloader */}
         {(status==="error"&&!anime?.data) &&reloader}
         <Skeleton variant="rectangular" className="!w-full !h-64 !rounded-lg !bg-base-white dark:!bg-base-black" />
         <Skeleton variant="text" className="!mt-4 !w-3/4 !h-6 !rounded !bg-base-white dark:!bg-base-black" />
+        {
+          status ==="done" == !anime?.data&&<span className='w-fit block absolute bg-white/30 dark:bg-black/30 backdrop-blur-lg rounded-md p-2 top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2'>
+          <Typography className='!text-black dark:!text-white'>No detail available, please see other animes</Typography>
+        </span>
+        }
         <Skeleton variant="text" className="!mt-2 !w-1/2 !h-5 !rounded !bg-base-white dark:!bg-base-black" />
         <Skeleton variant="text" className="!mt-4 !w-full !h-4 !rounded !bg-base-white dark:!bg-base-black" />
       </div>

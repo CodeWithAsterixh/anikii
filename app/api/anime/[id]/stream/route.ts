@@ -23,7 +23,11 @@ export async function GET(
 
     const data = await res.json();
     const data2 = await resExt.json();
-    const episodes = data2[0].result.anime_info.episodes;
+    let episodes = data[0].result.episodes
+    if(data2[0]){
+      episodes = data2[0].result.anime_info.episodes;
+    }
+    
     const result = {
       ...data[0].result,
       episodes,
@@ -35,6 +39,7 @@ export async function GET(
     if (error instanceof Error) {
       errorMessage = error.message;
     }
+    
 
     return NextResponse.json({ error: errorMessage }, { status: 500 });
   }

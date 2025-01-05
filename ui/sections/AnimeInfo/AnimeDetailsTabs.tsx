@@ -54,6 +54,21 @@ export default function AnimeDetailsTabs(props: Props) {
           indicatorColor="primary"
           textColor="inherit"
           variant="fullWidth"
+          sx={{
+            ".MuiTabs-flexContainer":{
+              display:"flex",
+              overflowX:"auto",
+              width:"100%",
+              scrollSnapAlign: "x mandatory"
+
+            },
+            ".MuiButtonBase-root":{
+              flexGrow:"1 !important",
+              flexBasis:"200px !important",
+              minWidth:"fit-content !important",
+              scrollSnapAlign: "start"
+            }
+          }}
           className="!bg-white dark:!bg-black !rounded-t-md"
         >
           {tabs.map((tab) => (
@@ -62,7 +77,7 @@ export default function AnimeDetailsTabs(props: Props) {
               value={tab}
               label={tab}
               className={clsx("!py-4 !text-lg ", {
-                "text-blue-500 dark:!text-blue-300": extraTabs === tab,
+                "!text-blue-500 dark:!text-blue-300": extraTabs === tab,
                 "!text-black dark:!text-white": extraTabs !== tab,
               })}
               {...a11yProps(tab)}

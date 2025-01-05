@@ -41,8 +41,8 @@ export default function Genres_GENRE({}: Props) {
   }, [fetchInfo, fetchInfoCasts, fetchInfoStream, fetchRecommendations, id]);
 
   useEffect(() => {
-    console.log(characters);
-  }, [characters]);
+    console.log(recommendationsInfo);
+  }, [recommendationsInfo]);
 
   return (
     <div className="w-full h-fit pb-10 px-2">

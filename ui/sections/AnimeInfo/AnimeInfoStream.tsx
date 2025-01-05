@@ -119,6 +119,21 @@ const AnimeInfoStream: React.FC<{ data: AnimeProps; id: number }> = ({
           indicatorColor="primary"
           textColor="inherit"
           variant="fullWidth"
+          sx={{
+            ".MuiTabs-flexContainer":{
+              display:"flex",
+              overflowX:"auto",
+              width:"100%",
+              scrollSnapAlign: "x mandatory"
+
+            },
+            ".MuiButtonBase-root":{
+              flexGrow:"1 !important",
+              flexBasis:"200px !important",
+              minWidth:"fit-content !important",
+              scrollSnapAlign: "start"
+            }
+          }}
           className="!bg-white/30 dark:!bg-black/30 !backdrop-blur-lg"
         >
           {tabs.map((tab) => (
@@ -127,7 +142,7 @@ const AnimeInfoStream: React.FC<{ data: AnimeProps; id: number }> = ({
               value={tab.id}
               label={tab.label}
               className={clsx("!py-4 !text-lg ", {
-                "text-blue-500 dark:!text-blue-300": streamTabs === tab.id,
+                "!text-blue-500 dark:!text-blue-300": streamTabs === tab.id,
                 "!text-black dark:!text-white": streamTabs !== tab.id,
               })}
             />

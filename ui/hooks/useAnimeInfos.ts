@@ -200,12 +200,13 @@ export default function useAnimeInfos() {
         dispatch(setRecommendations({ ok: true, status: "loading", data: [] }));
         const anime = await anikiiApi<
           [
-            { result: { pageInfo: pageInfo; characters: ReleasesType[] } },
+            {pageInfo: pageInfo; recommendations: ReleasesType[] },
             number
           ]
         >(`/anime/${id}/recommended?page=${page}`);
-        const datas: ReleasesType[] = anime.data[0].result.characters;
-        const pageInfo = anime.data[0].result.pageInfo;
+        console.log(anime)
+        const datas: ReleasesType[] = anime.data[0].recommendations;
+        const pageInfo = anime.data[0].pageInfo;
         dispatch(
           setRecommendations({
             ok: true,
