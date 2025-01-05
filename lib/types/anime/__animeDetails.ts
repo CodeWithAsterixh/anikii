@@ -97,9 +97,8 @@ export interface AnimeData {
   externalLinks: ExternalLink[];
 }
 
+
 export interface AnimeProps {
-  streamingEpisodesSub: StreamingEpisode[];
-  streamingEpisodesDub: StreamingEpisode[];
   data: AnimeData;
 }
 

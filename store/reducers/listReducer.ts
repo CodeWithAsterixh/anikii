@@ -229,8 +229,6 @@ const streamInit: StreamInfoRes = {
   ok: true,
   status: "not initiated",
   data:{
-    streamingEpisodesSub:[],
-    streamingEpisodesDub:[],
     data:{
       episodes:0,
       streamingEpisodes:[],
@@ -249,18 +247,18 @@ const AnimeStream = createSlice({
     setAnimeStreamMain: (state, { payload }: { payload: AnimeData }) => {
       state.data.data = payload;
     },
-    addAnimeStreamSub: (state, { payload }: { payload:StreamingEpisode }) => {
-      const subs = [...state.data.streamingEpisodesSub,payload];
-      state.data.streamingEpisodesSub = subs;
-    },
-    addAnimeStreamDub: (state, { payload }: { payload: StreamingEpisode }) => {
-      const dubs = [...state.data.streamingEpisodesDub,payload];
-      state.data.streamingEpisodesDub = dubs;
-    },
+    // addAnimeStreamSub: (state, { payload }: { payload:StreamingEpisode }) => {
+    //   const subs = [...state.data.streamingEpisodesSub,payload];
+    //   state.data.streamingEpisodesSub = subs;
+    // },
+    // addAnimeStreamDub: (state, { payload }: { payload: StreamingEpisode }) => {
+    //   const dubs = [...state.data.streamingEpisodesDub,payload];
+    //   state.data.streamingEpisodesDub = dubs;
+    // },
   },
 });
 
-export const { setAnimeStreamMain,addAnimeStreamDub,addAnimeStreamSub,setAnimeStreamProccess } = AnimeStream.actions;
+export const { setAnimeStreamMain,setAnimeStreamProccess } = AnimeStream.actions;
 
 export const AnimeStreamRed = AnimeStream.reducer;
 
@@ -268,9 +266,12 @@ export const AnimeStreamRed = AnimeStream.reducer;
 
 export interface Streaming {
   data?: {
-    title: string;
-    type: string;
-    url: string;
+    srcs?: StreamingEpisode;
+    current?:{
+      title: string;
+      type: string;
+      url: string;
+    }  
   };
   status:responseStatus|"available"
   ok: boolean;

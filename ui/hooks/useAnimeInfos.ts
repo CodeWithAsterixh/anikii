@@ -7,13 +7,13 @@ import {
 } from "@/lib/types/anime/__animeDetails";
 import { ReleasesType } from "@/lib/types/anime/__releases";
 import {
-  addAnimeStreamDub,
-  addAnimeStreamSub,
+
   pageInfo,
   setAnimeDetails,
   setAnimeStreamMain,
   setAnimeStreamProccess,
   setCharacters,
+  setCurrentlyPlayed,
   setRecommendations,
 } from "@/store/reducers/listReducer";
 import { AppDispatch, RootState } from "@/store/store";
@@ -24,6 +24,7 @@ export default function useAnimeInfos() {
   const response = useSelector((s: RootState) => s.AnimeDetails);
   const responseStream = useSelector((s: RootState) => s.AnimeStream);
   const characters = useSelector((s: RootState) => s.castsInfo);
+  const streamer = useSelector((s: RootState) => s.currentlyPlayed);
   const recommendationsInfo = useSelector(
     (s: RootState) => s.recommendationsInfo
   );
@@ -130,44 +131,38 @@ export default function useAnimeInfos() {
   const fetchInfoStreamEp = useCallback(
     async (id: number, ep: number, isDub=false) => {
       dispatch(
-        setAnimeStreamProccess({
+        setCurrentlyPlayed({
           ok: true,
           status: "initiated",
-          data: defaultData,
         })
       );
       try {
-        dispatch(
-          setAnimeStreamProccess({
-            ok: true,
-            status: "loading",
-            data: defaultData,
-          })
-        );
+        dispatch(setCurrentlyPlayed({
+          ok: true,
+          status: "loading",
+        }));
         const anime = await anikiiApi<[{ result: StreamingEpisode }, number]>(
           `/anime/${id}/stream/${ep}${isDub ? "/dub" : ""}`
         );
 
-        if (isDub) {
-          dispatch(addAnimeStreamDub(anime.data[0].result));
-        } else {
-          dispatch(addAnimeStreamSub(anime.data[0].result));
-        }
-        console.log(anime.data[0].result)
+        dispatch(setCurrentlyPlayed({
+          ok: true,
+          status: "loading",
+          data: {
+            srcs:anime.data[0].result
+          },
+        }));
 
 
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
-        dispatch(
-          setAnimeStreamProccess({
-            ok: false,
-            status: "error",
-            data: defaultData,
-          })
-        );
+        dispatch(setCurrentlyPlayed({
+          ok: false,
+          status: "error",
+        }));
       }
     },
-    [defaultData, dispatch]
+    [dispatch]
   );
 
   const fetchInfoCasts = useCallback(
@@ -232,6 +227,7 @@ export default function useAnimeInfos() {
     characters,
     fetchRecommendations,
     recommendationsInfo,
-    fetchInfoStreamEp
+    fetchInfoStreamEp,
+    streamer
   };
 }

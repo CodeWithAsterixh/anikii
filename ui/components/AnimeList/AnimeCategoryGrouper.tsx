@@ -91,7 +91,9 @@ const AnimeCategoryGrouper: React.FC<Props> = ({
               }}
             >
               {items.length > 0 ? (
-                <AnimeList animes={items} />
+                key !=="others"?
+                <AnimeList animes={items} />:
+                <AnimeGrid animes={items} />
               ) : (
                 <AnimeListSkeleton />
               )}

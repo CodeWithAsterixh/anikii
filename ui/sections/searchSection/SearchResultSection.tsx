@@ -33,6 +33,9 @@ export default function SearchResultSection() {
             ? `Searching for "${keyword}" ...`
             : undefined,
       }}
+      sxClasses={{
+        containerClass:"!px-1 sm:!px-0"
+      }}
     >
       {response.ok ? (
         response.data.length > 0 ? (
