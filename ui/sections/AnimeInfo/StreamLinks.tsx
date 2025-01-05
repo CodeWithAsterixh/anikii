@@ -44,7 +44,7 @@ const StreamingSection: React.FC<StreamingSectionProps> = ({ episode, loading })
     
   if (!episode && loading) {
     return (
-      <div className="flex justify-center items-center h-64 bg-neutral-100 dark:bg-neutral-900">
+      <div className="flex justify-center items-center h-32 bg-neutral-100 dark:bg-neutral-900">
         <CircularProgress />
       </div>
     );

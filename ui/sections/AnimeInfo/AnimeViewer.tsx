@@ -57,7 +57,8 @@ export default function AnimeViewer({ src = "", type = "" }: Props) {
         }`}
         style={{ aspectRatio: "16 / 9" }}
       >
-        <iframe
+        
+        {src?<iframe
           ref={iframeRef}
           src={src}
           allowFullScreen
@@ -67,7 +68,9 @@ export default function AnimeViewer({ src = "", type = "" }: Props) {
           title="Embedded Video"
           onLoad={handleIframeLoad}
           onError={handleIframeError}
-        ></iframe>
+        ></iframe>:<div className="flex justify-center items-center h-32 bg-neutral-100 dark:bg-neutral-900">
+                <CircularProgress />
+              </div>}
       </div>
     </div>
   );
