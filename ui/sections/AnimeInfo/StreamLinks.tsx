@@ -69,7 +69,7 @@ const StreamingSection: React.FC<StreamingSectionProps> = ({ episode, loading })
       <h3 className="text-lg font-semibold text-neutral-800 dark:text-neutral-200">
         Episode: {episode?.episode_info.title}
       </h3>
-      <div className="mt-4 flex items-center justify-start gap-2">
+      <div className="mt-4 flex gap-2 flex-wrap">
         {episode && episode.stream_links.length > 0 ? (
           episode.stream_links.map((link, index) => (
             <button

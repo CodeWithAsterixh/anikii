@@ -48,7 +48,7 @@ export default function MainHeader({}: Props) {
         <h1 className="font-mono overflow-hidden text-lg min-[498px]:!text-xl sm:!text-2xl">
           {
             <Breadcrumbs className="!text-black/70 dark:!text-white/70 *:!max-h-[calc(1.5rem_*_2)] sm:*:!max-h-[calc(2.2rem_*_2)] overflow-hidden" aria-label="breadcrumb">
-              <Link href="/" className="text-black/70 dark:text-white/70">
+              <Link href="/" className="!text-black/70 dark:!text-white/70">
                 Anikii
               </Link>
               {paths.length>0&&paths
@@ -56,7 +56,7 @@ export default function MainHeader({}: Props) {
                 .map((path, ind) => (
                   <Link
                     key={ind}
-                    className="text-black/70 dark:text-white/70"
+                    className="!text-black/70 dark:!text-white/70"
                     href={`/${paths.slice(0, (ind+1)).join("/")}`}
                   >
                     {path}
@@ -64,7 +64,7 @@ export default function MainHeader({}: Props) {
                 ))}
               {paths.length>0&&<Typography
                 sx={{ color: "text.primary" }}
-                className="text-black dark:text-white"
+                className="!text-black dark:!text-white"
               >
                 {paths[paths.length - 1]}
               </Typography>}
