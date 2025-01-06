@@ -17,7 +17,6 @@ const AnimeInfoCard: React.FC<AnimeCardProps> = ({ anime,status,reloader }) => {
     const {mode} = useSelector((s: RootState) => s.ThemePreference);
 
   if (status !=="done" || !anime?.data) {
-    console.log(anime)
     // Skeleton Loader for loading state
     return (
       <div className="!p-4 !mb-5 !bg-gradient-to-r relative !from-black/20 !to-black/35 !backdrop-blur-md dark:!from-black/80 dark:!to-black">

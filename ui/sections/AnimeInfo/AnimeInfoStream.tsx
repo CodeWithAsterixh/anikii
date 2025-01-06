@@ -6,9 +6,17 @@ import { Tab, Tabs } from "@mui/material";
 import clsx from "clsx";
 import React, { useState } from "react";
 import { AiFillBilibili, AiFillYoutube } from "react-icons/ai";
-import { BsInfoCircleFill, BsTvFill, BsTwitterX } from "react-icons/bs";
+import {
+  BsFacebook,
+  BsGlobe2,
+  BsInfoCircleFill,
+  BsInstagram,
+  BsTvFill,
+  BsTwitterX,
+} from "react-icons/bs";
 import { AnimeProps } from "../../../lib/types/anime/__animeDetails";
 import Link from "next/link";
+import { FaTiktok } from "react-icons/fa";
 
 const AnimeInfoStream: React.FC<{ data: AnimeProps; id: number }> = ({
   data,
@@ -39,19 +47,23 @@ const AnimeInfoStream: React.FC<{ data: AnimeProps; id: number }> = ({
   ];
   const Episodes = ({
     sx,
-    type="sub"
+    type = "sub",
   }: {
     sx?: {
       containerClass?: string;
       text1Class?: string;
       text2Class?: string;
     };
-    type:"sub"|"dub"
+    type: "sub" | "dub";
   }) => (
     <div className="w-full grid grid-cols-[repeat(auto-fill,minmax(5rem,1fr))] gap-2">
       {Array.from({ length: lengths.max - lengths.min }).map((_, index) => (
         <Link
-          href={type==="sub"?`/anime/${id}/watch/${lengths.min + index + 1}`:`/anime/${id}/watch/${lengths.min + index + 1}?dub=true`}
+          href={
+            type === "sub"
+              ? `/anime/${id}/watch/${lengths.min + index + 1}`
+              : `/anime/${id}/watch/${lengths.min + index + 1}?dub=true`
+          }
           className={clsx(
             "flex items-center cursor-pointer justify-center gap-1 bg-black/30 dark:bg-white/30 p-2 rounded-md backdrop-blur-md",
             sx?.containerClass
@@ -90,7 +102,10 @@ const AnimeInfoStream: React.FC<{ data: AnimeProps; id: number }> = ({
             )}
             onClick={() => {
               setLengths({
-                max: data.data.episodes>100?(index + 1) * 100:data.data.episodes,
+                max:
+                  data.data.episodes > 100
+                    ? (index + 1) * 100
+                    : data.data.episodes,
                 min: index * 100,
               });
             }}
@@ -108,6 +123,14 @@ const AnimeInfoStream: React.FC<{ data: AnimeProps; id: number }> = ({
       )}
     </div>
   );
+
+  const socialMediaIcons: { [key: string]: React.ReactNode } = {
+    twitter: <BsTwitterX />,
+    facebook: <BsFacebook />,
+    instagram: <BsInstagram />,
+    tiktok: <FaTiktok />,
+    "": <BsGlobe2 />,
+  };
   return (
     <div className="p-0 bg-gradient-to-r isolate relative max-h-[calc(100vh_-_100px)] overflow-y-auto from-neutral-200 to-neutral-50 dark:from-neutral-900 dark:to-neutral-700">
       {/* Anime Title */}
@@ -120,19 +143,18 @@ const AnimeInfoStream: React.FC<{ data: AnimeProps; id: number }> = ({
           textColor="inherit"
           variant="fullWidth"
           sx={{
-            ".MuiTabs-flexContainer":{
-              display:"flex",
-              overflowX:"auto",
-              width:"100%",
-              scrollSnapAlign: "x mandatory"
-
+            ".MuiTabs-flexContainer": {
+              display: "flex",
+              overflowX: "auto",
+              width: "100%",
+              scrollSnapAlign: "x mandatory",
             },
-            ".MuiButtonBase-root":{
-              flexGrow:"1 !important",
-              flexBasis:"200px !important",
-              minWidth:"fit-content !important",
-              scrollSnapAlign: "start"
-            }
+            ".MuiButtonBase-root": {
+              flexGrow: "1 !important",
+              flexBasis: "200px !important",
+              minWidth: "fit-content !important",
+              scrollSnapAlign: "start",
+            },
           }}
           className="!bg-white/30 dark:!bg-black/30 !backdrop-blur-lg"
         >
@@ -188,7 +210,7 @@ const AnimeInfoStream: React.FC<{ data: AnimeProps; id: number }> = ({
             </h2>
             <EpisodesRange />
             <Episodes
-            type="sub"
+              type="sub"
               sx={{
                 containerClass: "!bg-blue-600/30",
               }}
@@ -204,7 +226,7 @@ const AnimeInfoStream: React.FC<{ data: AnimeProps; id: number }> = ({
             </h2>
             <EpisodesRange />
             <Episodes
-            type="dub"
+              type="dub"
               sx={{
                 containerClass: "!bg-red-600/30",
               }}
@@ -274,7 +296,9 @@ const AnimeInfoStream: React.FC<{ data: AnimeProps; id: number }> = ({
       )}
 
       {/* External Links */}
-      <div className="mt-6 p-4">
+      
+      {
+        data.data.externalLinks.length&&<div className="mt-6 p-4">
         <h3 className="text-lg text-gray-800 dark:text-gray-200">
           External Links
         </h3>
@@ -295,11 +319,38 @@ const AnimeInfoStream: React.FC<{ data: AnimeProps; id: number }> = ({
                 </>
               ) : link.type === "SOCIAL" ? (
                 <>
-                  Follow on Twitter{" "}
-                  <b className="text-neutral-600 dark:text-neutral-400 flex items-center justify-start gap-2">
-                    <BsTwitterX />
-                    {link.url.split("/")[link.url.split("/").length - 1]}
-                  </b>
+                  Follow on{" "}
+                  {(() => {
+                    const platform = link.url.includes("www")
+                      ? link.url
+                          .split("www.")
+                          .find((str) => !str.includes("//"))
+                          ?.split(".")[0]
+                      : link.url.split(".")[0].split("//")[
+                          link.url.split(".")[0].split("//").length - 1
+                        ];
+
+                    const capitalizedPlatform = platform?.replace(/^\w/, (c) =>
+                      c.toUpperCase()
+                    );
+                    const icon =
+                      socialMediaIcons[platform?.toLowerCase() || ""];
+
+                    return (
+                      <span className="flex items-center justify-start gap-2">
+                        {/* Fallback icon */}
+                        <b className="font-normal">{capitalizedPlatform}</b>
+                        {icon || (
+                          <span className="text-neutral-400">🌐</span>
+                        )}{" "}
+                        <b className="text-neutral-600 dark:text-neutral-400">
+                          {link.url.replace(/\/$/, "") // Remove trailing slash
+                            .split("/") // Split by '/'
+                            .pop()}
+                        </b>
+                      </span>
+                    );
+                  })()}
                 </>
               ) : (
                 <>
@@ -320,6 +371,7 @@ const AnimeInfoStream: React.FC<{ data: AnimeProps; id: number }> = ({
           </div>
         ))}
       </div>
+      }
     </div>
   );
 };

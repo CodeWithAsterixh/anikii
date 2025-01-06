@@ -199,7 +199,6 @@ export default function useAnimeInfos() {
             number
           ]
         >(`/anime/${id}/recommended?page=${page}`);
-        console.log(anime)
         const datas: ReleasesType[] = anime.data[0].recommendations;
         const pageInfo = anime.data[0].pageInfo;
         dispatch(

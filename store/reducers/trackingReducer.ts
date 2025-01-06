@@ -35,14 +35,24 @@ const UserTracking = createSlice({
       }
     },
     modifyFavorite: (state, { payload }: { payload: payloadData }) => {
+      const favoriteJson = localStorage.getItem("favorite");
+      const favoriteData =favoriteJson ? JSON.parse(favoriteJson) as MiniAnimeInfo[] : []
+      if(!favoriteData){
+        localStorage.setItem("favorite", JSON.stringify(state.favorite))
+      }
       switch (payload.type) {
         case "ADD":
-          const updated = [...state.favorite, payload.data];
+          const updated = [...favoriteData, payload.data];
+          localStorage.setItem("favorite", JSON.stringify(updated))
           state.favorite = updated;
           break;
         case "REMOVE":
-          const filtered = state.favorite.filter(f => f.id !== payload.data.id);
+          const filtered = favoriteData.filter((item) => item.id !== payload.data.id);
+          localStorage.setItem("favorite", JSON.stringify(filtered))
           state.favorite = filtered;
+          break;
+        case "UPDATE":
+          state.favorite = favoriteData;
           break;
         default:
           break;
