@@ -19,11 +19,11 @@ export interface dataWithPage extends responseInfo {
   pageInfo?: pageInfo;
 }
 export interface streamInfo {
-  currentlyPlayedSrc:{
+  currentlyPlayedSrc?:{
     name:string,
     url:string
   }
-  currentlyPlayedDetail:{
+  currentlyPlayedDetail?:{
     title:string,
     episodes:string
   }

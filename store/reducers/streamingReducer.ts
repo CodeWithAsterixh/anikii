@@ -1,14 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { dataWithPage, streamInfo } from "./__types";
-import { AnimeListItem } from "@/lib/types/anime/__animeListItem";
+import { streamInfo } from "./__types";
 
 
 const initialState: streamInfo = {
-   currentlyPlayed:{
-    srcName:"",
-    srcUrl:""
-   }
-  };
+  currentlyPlayedSrc:{
+    name:"",
+    url:""
+  }
+};
   
 
   const currentStreamInfo = createSlice({
