@@ -1,3 +1,5 @@
+import { mediaFormat } from "../__anikii_api";
+
 export interface CoverImage {
   cover_image_color: string;
     cover_image: string;
@@ -10,7 +12,7 @@ export interface CoverImage {
     episodes: number;
     status: string;
     coverImage: CoverImage;
-    format: string;
+    format: mediaFormat;
     popularity: number;
     averageScore: number;
     trending: number;
