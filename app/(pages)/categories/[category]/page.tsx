@@ -3,6 +3,7 @@
 import useQuery from "@/hooks/useQuery";
 import { dataWithPage } from "@/store/reducers/__types";
 import AnimeCard from "@/ui/components/AnimeCard/AnimeCard";
+import AnimeGrid from "@/ui/components/AnimeList/AnimeGrid";
 import Image from "@/ui/components/Image/Image";
 import Loader from "@/ui/components/Loader/Loader";
 import Pagination from "@/ui/components/pagination/Pagination";
@@ -58,9 +59,9 @@ export default function Category({}: Props) {
         </div>
 
         
-          {data?.data  ? <div className="w-full h-fit gap-2 p-2 grid grid-cols-[repeat(auto-fill,_minmax(150px,_1fr))] sm:grid-cols-[repeat(auto-fill,_minmax(200px,_1fr))] isolate z-0 mb-20">{
+          {data?.data  ? <AnimeGrid className="w-full h-fit gap-2 p-2 isolate z-0 mb-20">{
             data.data.map((d, i) => <AnimeCard anime={d} key={i} />)
-          }</div> : (
+          }</AnimeGrid> : (
             <div className="w-full flex items-center justify-center *:scale-75">
               <Loader />
             </div>
