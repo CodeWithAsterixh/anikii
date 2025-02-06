@@ -1,4 +1,4 @@
-import { ReleasesType } from "@/lib/types/anime/__releases";
+import { AnimeListItem } from "@/lib/types/anime/__animeListItem";
 
 /**
  * Calculate the Levenshtein distance between two strings.
@@ -59,9 +59,9 @@ function getFirstExistingValue<T>(obj: T, keyPaths: string[]): string | null {
  */
 export function sortReleasesByKey(
   target: string,
-  releases: ReleasesType[],
+  releases: AnimeListItem[],
   keyPaths: string[]
-): ReleasesType[] {
+): AnimeListItem[] {
   return releases.sort((a, b) => {
     const valueA = getFirstExistingValue(a, keyPaths) || ""; // Fallback to an empty string
     const valueB = getFirstExistingValue(b, keyPaths) || ""; // Fallback to an empty string
