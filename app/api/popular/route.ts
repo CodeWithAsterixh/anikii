@@ -25,7 +25,7 @@ export async function GET(req: NextRequest) {
     if (error instanceof Error) {
       errorMessage = error.message;
     }
-
+    console.log(error);
     return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
