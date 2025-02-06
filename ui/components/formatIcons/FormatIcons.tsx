@@ -1,4 +1,4 @@
-import { mediaFormat } from "@/lib/types/anime/__releases";
+import { mediaFormat } from "@/lib/types/__anikii_api";
 import React from "react";
 import {
   BiBookAlt,

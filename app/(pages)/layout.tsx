@@ -3,10 +3,11 @@
 import React, { useEffect } from "react";
 import { AppDispatch, RootState } from "../../store/store";
 import AutoResetPagesScroll from "../../ui/components/AutoResetScroll/AutoResetScroll";
-import NavBar from "../../ui/components/NavBar/NavBar";
 import { useDispatch, useSelector } from "react-redux";
 import { setTheme } from "@/store/reducers/themeReducer";
 import MainHeader from "@/ui/components/mainHeader/MainHeader";
+import NavBar from "@/ui/components/NavBar/NavBar";
+import { useIsMobile } from "@/hooks/useMobile";
 
 type Props = {
   children: React.ReactNode;
@@ -14,6 +15,7 @@ type Props = {
 
 export default function MainLayout({ children }: Props) {
   const { mode } = useSelector((s: RootState) => s.ThemePreference);
+  const isMobile = useIsMobile()
 
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
@@ -34,11 +36,12 @@ export default function MainLayout({ children }: Props) {
     }
   }, [mode]);
   return (
-    <div className="size-full overflow-y-auto relative isolate flex items-start justify-start gap-2 bg-square-grid dark:bg-square-grid-dark">
+    <div className="size-full overflow-y-auto relative isolate bg-accent">
       <AutoResetPagesScroll />
 
-      <NavBar />
-      <main className="size-full relative z-0 overflow-y-auto flex flex-col gap-2 items-start justify-start">
+      
+      {isMobile&&<NavBar />}
+      <main className="size-full relative z-0 overflow-y-auto flex flex-col items-start justify-start">
         <MainHeader />
         {children}
         {/* <Footer /> */}

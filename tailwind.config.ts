@@ -5,18 +5,15 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        background: "#e6e4dc",
+        foreground: "#2c2c2e",
         "base-black": "#272A2D",
-        primary: "#347CCB",
-        secondary: "#EB5B38",
-        tertiary: "#75E2FF",
-        "base-white": "#E6E4DC",
-        "light-primary": "#4B616B",
-        "fade-white": "#ECECEC",
-        "fade-black": "#2C2C2E",
-        "fade-off-white": "#999292",
-        "complement-primary": "#244D61",
+        primary: "#e08e79",
+        secondary: "#e76b4f",
+        accent: "#fff6f1",
+        tertiary: "#3a001e",
+        
+
       },
       animation: {
         "spin-slow": "spin 3s linear infinite",

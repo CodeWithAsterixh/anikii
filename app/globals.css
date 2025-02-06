@@ -5,6 +5,10 @@
 :root {
   --background: #e6e4dc;
   --foreground: #2c2c2e;
+  --primary: #e08e79;
+  --secondary: #e76b4f;
+  --accent: #fff6f1;
+  --tertiary: #3a001e;
 }
 /* Slide up from bottom of the screen */
 @keyframes slideUp {

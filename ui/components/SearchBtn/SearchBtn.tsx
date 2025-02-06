@@ -32,18 +32,18 @@ export default function SearchBtn({ onSearch }: Props) {
         slotProps={{
           htmlInput: {
             className:
-              "!py-2 !text-black dark:!text-white !text-sm sm:!text-base",
+              "!py-2 !text-tertiary !text-sm sm:!text-base",
             placeholder: "Search anime (e.g, naruto)",
           },
           input: {
             className:
-              "!rounded-l-md !outline-base-black dark:!outline-base-white !rounded-r-none",
+              "!rounded-l-md !outline-tertiary !rounded-r-none !border-tertiary",
           },
         }}
       />
       <IconButton
         onClick={handleSearch}
-        className="!bg-base-black/10 dark:!bg-base-white/10 !rounded-l-none !rounded-r-md !text-xl sm:!text-2xl !text-black dark:!text-white"
+        className="!bg-primary !rounded-l-none  !rounded-r-md !text-xl sm:!text-2xl !text-accent"
       >
         <BiSearchAlt />
       </IconButton>

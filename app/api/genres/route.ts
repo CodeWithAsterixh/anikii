@@ -15,8 +15,11 @@ export async function GET() {
       );
     }
 
+    // loop through genres and create a new array of genres
+    // const subItems = a
+
     const data = await res.json();
-    return NextResponse.json(data);
+    return NextResponse.json(data[0]);
   } catch (error) {
     // Narrow the type of error to ensure proper typing
     let errorMessage = "An unexpected error occurred";

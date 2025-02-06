@@ -55,7 +55,7 @@ const Carousel: React.FC<CarouselProps> = ({
   return (
     <div
       className={clsx(
-        "relative isolate w-full pt-1",
+        "relative isolate w-full max-w-[calc(100vw)] pt-1 min-h-[50vh]  rounded-lg",
         stylings?.container?.className
       )}
     >
@@ -80,6 +80,7 @@ const Carousel: React.FC<CarouselProps> = ({
           display: "flex",
           alignItems: "center",
           width: "80%",
+          paddingTop:"20px",
           ...stylings?.SwipeableViewsContainer?.styling,
         }}
       >
@@ -108,7 +109,7 @@ const Carousel: React.FC<CarouselProps> = ({
       <button
         onClick={handleBack}
         className={clsx(
-          "absolute top-1/2 left-3 -translate-y-1/2 z-20 p-2 focus:!outline-0 text-black bg-white rounded-full shadow-md hover:bg-gray-200",
+          "absolute top-1/2 left-1 sm:left-3 -translate-y-1/2 z-20 p-4 focus:!outline-0 text-tertiary bg-accent rounded-full shadow-md hover:bg-primary",
           stylings?.buttons?.left?.className
         )}
         aria-label="Previous"
@@ -118,7 +119,7 @@ const Carousel: React.FC<CarouselProps> = ({
       <button
         onClick={handleNext}
         className={clsx(
-          "absolute top-1/2 right-3 -translate-y-1/2 z-20 p-2 focus:!outline-0 text-black bg-white rounded-full shadow-md hover:bg-gray-200",
+          "absolute top-1/2 right-1 sm:right-3 -translate-y-1/2 z-20 p-4 focus:!outline-0 text-tertiary bg-accent rounded-full shadow-md hover:bg-primary",
           stylings?.buttons?.right?.className
         )}
         aria-label="Next"

@@ -1,35 +1,19 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { UserThemePreferences } from "./reducers/themeReducer";
+
 import { SideBarPreference } from "./reducers/sideBarReducer";
-import {
-  AnimeDetailsRed,
-  AnimeStreamerRed,
-  AnimeStreamRed,
-  GenresListRed,
-  GenresRed,
-  NewReleasesRed,
-  PopularRed,
-  SearchRed,
-  SeasonedAnyRed,
-  SeasonedRed,
-} from "./reducers/listReducer";
+import { UserThemePreferences } from "./reducers/themeReducer";
 import { UserTracker } from "./reducers/trackingReducer";
+import { GenreListAnimeRed, GenreListRed } from "./reducers/animeListReducer";
+import { currentStreamInfoRed } from "./reducers/streamingReducer";
 
 const store = configureStore({
   reducer: {
     ThemePreference: UserThemePreferences,
     sidebar: SideBarPreference,
-    Popular: PopularRed,
-    Releases: NewReleasesRed,
-    Season: SeasonedRed,
-    Season_SEASON: SeasonedAnyRed,
-    SearchResult: SearchRed,
-    Genres:GenresRed,
-    GenresList:GenresListRed,
-    AnimeDetails:AnimeDetailsRed,
-    AnimeStream:AnimeStreamRed,
-    currentlyPlayed:AnimeStreamerRed,
-    UserTracker
+    UserTracker,
+    GenreList:GenreListRed,
+    GenreListAnime:GenreListAnimeRed,
+    currentStreamInfo:currentStreamInfoRed
   },
 });
 

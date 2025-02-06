@@ -1,11 +1,9 @@
 "use client";
 
-import { pageInfo } from "@/store/reducers/listReducer";
-import { RootState } from "@/store/store";
+import { pageInfo } from "@/store/reducers/__types";
 import { Pagination as PaginationComp } from "@mui/material";
 import { useRouter } from "next/navigation";
-import React, { Suspense, useCallback, useDeferredValue } from "react";
-import { useSelector } from "react-redux";
+import { Suspense, useCallback, useDeferredValue } from "react";
 
 type Props = {
   onChange?: (_: unknown, page: number) => void;
@@ -13,7 +11,6 @@ type Props = {
 };
 
 export default function Pagination({ onChange, page }: Props) {
-  const { mode } = useSelector((s: RootState) => s.ThemePreference);
   const router = useRouter();
   const currentPage = useDeferredValue(page.currentPage);
   const handleNavPage = useCallback(
@@ -29,8 +26,8 @@ export default function Pagination({ onChange, page }: Props) {
   );
 
   return page.currentPage ? (
-    <footer className="w-full flex items-center justify-center sticky bottom-5 pt-5">
-      <div className="w-fit p-4 bg-base-black/30 dark:bg-base-white/30 backdrop-blur-lg rounded-full">
+    <footer className="w-full flex items-center justify-center fixed top-[calc(100vh-6rem)] pt-5">
+      <div className="w-fit p-4 bg-tertiary/30 backdrop-blur-3xl rounded-full">
         <Suspense fallback={""}>
           <PaginationComp
             count={page.lastPage}
@@ -38,19 +35,19 @@ export default function Pagination({ onChange, page }: Props) {
             page={currentPage}
             boundaryCount={2}
             onChange={handleNavPage}
-            className="!text-black dark:!text-white"
+            className="!text-white"
             sx={{
               "& .MuiPaginationItem-root": {
-                color: mode === "light" ? "black" : "white",
+                color:"var(--accent)",
                 "&:hover": {
-                  color: mode === "light" ? "black" : "white",
+                  color: "var(--accent)",
                 },
               },
               "& .MuiPaginationItem-root.Mui-selected": {
-                color: mode === "light" ? "white" : "black",
-                backgroundColor: mode === "light" ? "black" : "white",
+                color: "white",
+                backgroundColor: "var(--tertiary)",
                 "&:hover": {
-                  backgroundColor: mode === "light" ? "black" : "white",
+                  backgroundColor: "var(--tertiary)",
                 },
               },
             }}

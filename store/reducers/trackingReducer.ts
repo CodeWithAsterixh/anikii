@@ -1,11 +1,11 @@
 // currently played
 
-import { MiniAnimeInfo } from "@/lib/types/anime/__releases";
+import { AnimeListItem } from "@/lib/types/anime/__animeListItem";
 import { createSlice } from "@reduxjs/toolkit";
 
 interface init {
-  favorite: MiniAnimeInfo[];
-  recentlyPlayed: MiniAnimeInfo[];
+  favorite: AnimeListItem[];
+  recentlyPlayed: AnimeListItem[];
 }
 
 const initialState: init = {
@@ -14,7 +14,7 @@ const initialState: init = {
 };
 
 interface payloadData {
-  data: MiniAnimeInfo;
+  data: AnimeListItem;
   type: "ADD" | "REMOVE" | "UPDATE";
 }
 

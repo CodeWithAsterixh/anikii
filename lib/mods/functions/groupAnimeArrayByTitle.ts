@@ -1,15 +1,15 @@
-import { ReleasesType } from "@/lib/types/anime/__releases";
+import { AnimeListItem } from "@/lib/types/anime/__animeListItem";
 
-export type GroupedResult = Record<string, ReleasesType[]> | ReleasesType[];
+export type GroupedResult = Record<string, AnimeListItem[]> | AnimeListItem[];
 
-export function groupByTitle(array: ReleasesType[]): GroupedResult {
-  const result: Record<string, ReleasesType[]> = {};
+export function groupByTitle(array: AnimeListItem[]): GroupedResult {
+  const result: Record<string, AnimeListItem[]> = {};
   const keyCount: Record<string, number> = {};
 
   // Step 1: Identify unique base keys
   array.forEach(({ title }, index) => {
     const eitherTitle =
-      title.english || title.romaji || `No title: anime result #${index}`;
+      title || `No title: anime result #${index}`;
 
     if (eitherTitle) {
       const key = eitherTitle.includes(":")
@@ -25,8 +25,7 @@ export function groupByTitle(array: ReleasesType[]): GroupedResult {
   // Step 3: Group by exact key matches without merging unrelated keys
   array.forEach((obj, index) => {
     const title =
-      obj.title.english ||
-      obj.title.romaji ||
+      obj.title||
       `No title: anime result #${index}`;
 
     if (title) {
@@ -53,7 +52,7 @@ export function groupByTitle(array: ReleasesType[]): GroupedResult {
 
       result[matchedKey].push({
         ...obj,
-        title: { english: newTitle, romaji: newTitle },
+        title:newTitle,
       });
     } else {
       // Handle items with no title
@@ -73,8 +72,8 @@ export function groupByTitle(array: ReleasesType[]): GroupedResult {
   // Step 5: Sort "others" alphabetically if it exists
   if (result["others"]) {
     result["others"].sort((a, b) => {
-      const aTtile = a.title.english || a.title.romaji;
-      const bTtile = b.title.english || b.title.romaji;
+      const aTtile = a.title;
+      const bTtile = b.title;
       if (!aTtile) return 1;
       if (!bTtile) return -1;
       return aTtile.localeCompare(bTtile);
@@ -84,8 +83,8 @@ export function groupByTitle(array: ReleasesType[]): GroupedResult {
   // Step 6: Sort each array by title alphabetically
   Object.keys(result).forEach((key) => {
     result[key].sort((a, b) => {
-      const aTtile = a.title.english || a.title.romaji;
-      const bTtile = b.title.english || b.title.romaji;
+      const aTtile = a.title;
+      const bTtile = b.title;
       if (!aTtile) return 1;
       if (!bTtile) return -1;
       return aTtile.localeCompare(bTtile);
@@ -93,7 +92,7 @@ export function groupByTitle(array: ReleasesType[]): GroupedResult {
   });
 
   // Step 7: Ensure "others" is the last category
-  const sortedResult: Record<string, ReleasesType[]> = {};
+  const sortedResult: Record<string, AnimeListItem[]> = {};
   const otherItems = result["others"];
   delete result["others"]; // Temporarily remove "others"
 

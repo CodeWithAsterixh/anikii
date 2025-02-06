@@ -1,40 +1,31 @@
 "use client";
 
-import { ReleasesType } from "@/lib/types/anime/__releases";
+import { AnimeListItem } from "@/lib/types/anime/__animeListItem";
 import { Button, Chip, IconButton, Typography } from "@mui/material";
 import clsx from "clsx";
-import { useState } from "react";
-import FormatIcons from "../formatIcons/FormatIcons";
-import Image from "../Image/Image";
 import { BiPlayCircle, BiPlus, BiSad } from "react-icons/bi";
 import { BsEmojiExpressionless, BsEmojiSmile } from "react-icons/bs";
 import { FaHashtag } from "react-icons/fa";
-import Link from "next/link";
+import FormatIcons from "../formatIcons/FormatIcons";
+import Image from "../Image/Image";
 
 type props = {
-  data: ReleasesType;
+  data: AnimeListItem;
   index?: number;
 };
 export default function CarouselItem({ data, index }: props) {
-  const [hovered, setHovered] = useState(false);
 
   return (
     <div
-      className="w-full relative h-80 flex isolate items-end justify-end flex-col text-white rounded-md overflow-hidden"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      className="w-full relative h-[50vh] flex isolate items-end justify-end flex-col text-white rounded-md overflow-hidden"
     >
       <Image
         alt="image of carousel"
-        src={data?.coverImage.extraLarge}
+        src={data?.coverImage.cover_image}
         width={700}
         height={700}
         className={clsx(
-          "size-full object-cover -z-10 object-center inset-0 absolute duration-500",
-          {
-            "brightness-[.3]": hovered,
-            "brightness-100": !hovered,
-          }
+          "size-full object-cover -z-10 brightness-[.3] object-center inset-0 absolute duration-500",
         )}
       />
       {/* upper info context */}
@@ -45,7 +36,7 @@ export default function CarouselItem({ data, index }: props) {
               <FormatIcons
                 props={{
                   style: {
-                    color: data.coverImage.color,
+                    color: data.coverImage.cover_image_color,
                   },
                 }}
                 format={data.format}
@@ -88,14 +79,14 @@ export default function CarouselItem({ data, index }: props) {
           component="p"
           className="!text-sm sm:!text-xl !font-bold !border-l-4 !p-2 !relative isolate !flex !flex-col !gap-2 !w-full overflow-hidden rounded-r-md"
           style={{
-            borderLeftColor: data.coverImage.color,
+            borderLeftColor: data.coverImage.cover_image_color,
           }}
         >
-          {data.title.english}
+          {data.title}
           <span
             className="block absolute size-full inset-0 -z-10 opacity-30"
             style={{
-              backgroundColor: data.coverImage.color,
+              backgroundColor: data.coverImage.cover_image_color,
               backdropFilter: " blur(100px)",
             }}
           ></span>
@@ -104,22 +95,13 @@ export default function CarouselItem({ data, index }: props) {
             component="strong"
             className="!text-sm !block sm:!text-xl !font-bold !text-gray-300 !border-t-4 !pt-2 before:content-['AKA:_'] before:!text-white"
             style={{
-              borderTopColor: data.coverImage.color,
+              borderTopColor: data.coverImage.cover_image_color,
             }}
           >
-            {data.title.romaji}
+            {data.title}
           </Typography>
         </Typography>
-        <div className="w-full h-fit flex items-center justify-start gap-2 overflow-x-auto">
-          {data.genres.map((g, i) => (
-            <Link key={i} href={`/genres/${g}`} className="!size-fit">
-              <Chip
-                className="!text-white !text-sm !font-bold !bg-base-black/50"
-                label={g}
-              />
-            </Link>
-          ))}
-        </div>
+
 
         <Chip
           className="!w-fit !text-white !text-sm !font-bold !bg-base-black/50"
@@ -146,7 +128,7 @@ export default function CarouselItem({ data, index }: props) {
             <span
               className="block absolute size-full inset-0 -z-10 invert"
               style={{
-                backgroundColor: data.coverImage.color,
+                backgroundColor: data.coverImage.cover_image_color,
                 backdropFilter: " blur(100px)",
               }}
             ></span>
