@@ -36,7 +36,7 @@ const UserTracking = createSlice({
     },
     modifyFavorite: (state, { payload }: { payload: payloadData }) => {
       const favoriteJson = localStorage.getItem("favorite");
-      const favoriteData =favoriteJson ? JSON.parse(favoriteJson) as MiniAnimeInfo[] : []
+      const favoriteData =favoriteJson ? JSON.parse(favoriteJson) as AnimeListItem[] : []
       if(!favoriteData){
         localStorage.setItem("favorite", JSON.stringify(state.favorite))
       }
