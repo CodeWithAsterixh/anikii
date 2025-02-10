@@ -5,6 +5,7 @@ import { UserThemePreferences } from "./reducers/themeReducer";
 import { UserTracker } from "./reducers/trackingReducer";
 import { GenreListAnimeRed, GenreListRed } from "./reducers/animeListReducer";
 import { currentStreamInfoRed } from "./reducers/streamingReducer";
+import { AnimeInfoRed } from "./reducers/animeDetailReducer";
 
 const store = configureStore({
   reducer: {
@@ -13,7 +14,8 @@ const store = configureStore({
     UserTracker,
     GenreList:GenreListRed,
     GenreListAnime:GenreListAnimeRed,
-    currentStreamInfo:currentStreamInfoRed
+    currentStreamInfo:currentStreamInfoRed,
+    AnimeInfo:AnimeInfoRed
   },
 });
 
