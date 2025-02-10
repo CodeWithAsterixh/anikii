@@ -1,63 +1,63 @@
+import { mediaFormat, seasons, status } from "../__anikii_api";
+import { CoverImage } from "./__animeListItem";
+
 export type AnimeInfo = {
-  data: {
-    id: number;
-    title: {
-      romaji: string;
-      english: string;
-      native: string;
-    };
-    description: string;
-    season: string;
-    seasonYear: number;
-    status: string;
-    type: string;
-    idMal: number;
-    trailer: {
-      id: string;
-      site: string;
-      thumbnail: string;
-    } | null;
-    coverImage: {
-      extraLarge: string;
-      medium: string;
-      color: string | null;
-    };
-    bannerImage: string | null;
-    popularity: number;
-    trending: number;
-    episodes: number;
-    updatedAt: number;
-    format: string;
-    startDate: {
-      year: number;
-      month: number;
-      day: number;
-    };
-    endDate: {
-      year: number;
-      month: number;
-      day: number;
-    } | null;
-    nextAiringEpisode: unknown | null;
-    tags: {
-      rank: number;
-      id: number;
-      name: string;
-      description: string;
-      category: string;
-    }[];
-    genres: string[];
+  id: number;
+  anime_id_external: anime_id_external;
+  title: {
+    romaji: string;
+    english: string;
   };
-  idSub: {
-    id_provider: {
-      idGogo: string;
-      idGogoDub: string;
-      idZoro: string;
-      idPahe: string;
-    };
-    is_dub: boolean;
+  synonyms:string[];
+  description: string;
+  season: {
+    type: seasons;
+    year: number;
   };
+  status: status;
+  type: string;
+  trailer: {
+    id: string;
+    site: string;
+    thumbnail: string;
+  } | null;
+  coverImage: CoverImage;
+  popularity: number;
+  averageScore: number;
+  trending: number;
+  episodes: number;
+  format: mediaFormat;
+  releaseDate: string;
+  nextAiringEpisode: nextAiringEpisode | null;
+  tags: animeTags[];
+  genres: string[];
+  studios:string[];
+  score_distribution:score_distribution[]
 };
+
+export interface score_distribution{
+  "score": number,
+  "amount": number
+}
+
+export interface anime_id_external {
+  idGogo: string;
+  idGogoDub: string;
+  idZoro: string;
+  idPahe: string;
+}
+export interface animeTags {
+  rank: number;
+  id: number;
+  name: string;
+  description: string;
+  category: string;
+}
+export interface nextAiringEpisode {
+  airingAt: number;
+  timeUntilAiring: number;
+  episode: number;
+}
 
 // types.ts
 export interface StreamingLink {
@@ -96,7 +96,6 @@ export interface AnimeData {
   }[];
   externalLinks: ExternalLink[];
 }
-
 
 export interface AnimeProps {
   data: AnimeData;

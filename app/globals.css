@@ -136,6 +136,13 @@
 *::-webkit-scrollbar {
   display: none;
 }
+*{
+  @apply duration-500 box-border
+  
+}
+.scrollbar-h{
+  padding-right: 5px;
+}
 .scrollbar-h::-webkit-scrollbar {
   display: block;
   width: 4px;
@@ -145,8 +152,11 @@
 }
 .scrollbar-h::-webkit-scrollbar-thumb {
   display: block;
-  background: #e6e4dc;
+  background: var(--tertiary);
+  border-radius: 9999px;
 }
+
+
 
 input[type="range"]::-webkit-slider-thumb {
   background: #347ccb !important;

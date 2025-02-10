@@ -6,6 +6,7 @@ export function groupByTitle(array: AnimeListItem[]): GroupedResult {
   const result: Record<string, AnimeListItem[]> = {};
   const keyCount: Record<string, number> = {};
 
+  if(!Array.isArray(array)) return array
   // Step 1: Identify unique base keys
   array.forEach(({ title }, index) => {
     const eitherTitle =
