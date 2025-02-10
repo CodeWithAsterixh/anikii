@@ -34,7 +34,7 @@ export default function Category({}: Props) {
      <div className="w-56  flex flex-col gap-2 overflow-hidden rounded-md shadow-md">
       {
         // eslint-disable-next-line @next/next/no-img-element
-        !data.trailer?.thumbnail?<img className="w-full h-28 object-cover object-center" src={data?.trailer?.thumbnail} alt={`thumbnail for ${data.title.english}`} />:<span className="w-full h-28 bg-tertiary/30"></span>
+        data.trailer?.thumbnail?<img className="w-full h-28 object-cover object-center" src={data?.trailer?.thumbnail} alt={`thumbnail for ${data.title.english}`} />:<span className="w-full h-28 bg-tertiary/30"></span>
       }
       <p className="p-2 break-all">{data.trailer?.site}</p>
      </div>
