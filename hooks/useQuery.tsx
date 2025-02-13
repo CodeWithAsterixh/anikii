@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { anikiiApi } from "@/lib/mods/requests/axios";
 import { responseInfo } from "@/store/reducers/__types";
 import { useCallback, useEffect, useState } from "react";
@@ -23,7 +24,6 @@ export default function useQuery<T>(endpoint: string, carryOn:boolean=true) {
         ok: false,
         status: "error",
       });
-      console.log(error);
     }
   }, []);
 
