@@ -22,7 +22,7 @@ export async function GET(
     }
 
     const data = await res.json();
-    return NextResponse.json(data[0]);
+    return NextResponse.json(data[0].characters);
   } catch (error) {
     // Narrow the type of error to ensure proper typing
     let errorMessage = "An unexpected error occurred";

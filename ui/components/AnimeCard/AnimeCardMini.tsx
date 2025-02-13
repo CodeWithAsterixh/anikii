@@ -8,7 +8,7 @@ type Props = {
 
 export default function AnimeCardMini({data}: Props) {
   return (
-    <Link href={`/categories/${data.id}`} className="w-full flex gap-2 items-center bg-primary/30 p-2 rounded-md">
+    <Link href={`/anime/${data.id}`} className="w-full flex gap-2 items-center bg-primary/30 p-2 rounded-md">
             <span className="size-14 bg-tertiary rounded-md shrink-0 overflow-hidden">
               <Image src={data.coverImage.cover_image} alt={data.title} width={200} height={200} className="size-full"/>
             </span>

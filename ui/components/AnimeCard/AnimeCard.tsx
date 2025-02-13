@@ -73,7 +73,7 @@ export default function AnimeCard({ anime,sx }: Props) {
 
         {/* play */}
         <Link
-          href={`/categories/${anime.id}`}
+          href={`/anime/${anime.id}`}
           className="absolute size-full inset-0 bg-transparent flex items-center justify-center group-hover:bg-black/30 opacity-0 group-hover:opacity-100 duration-500 z-10 rounded-md"
         >
           <BiPlayCircle className="text-3xl text-accent" />

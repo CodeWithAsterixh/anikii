@@ -92,9 +92,9 @@ export default function AnimeDetailsLayout({ children, id }: Props) {
           />
         </span>
 
-        <div className="w-full relative px-4 flex flex-col sm:grid grid-cols-[13rem,1fr] justify-between gap-4">
+        <div className="w-full relative px-4 flex flex-col sm:grid grid-cols-[20rem,1fr] justify-between gap-4">
           {/* main image */}
-          <span className="w-full sm:w-52 h-72  sm:min-h-72 sm:h-full block duration-500 group border-8 hover:border-4 rounded-lg shrink-0 !border-accent !bg-accent">
+          <span className="w-full h-72  sm:min-h-72 sm:h-full block duration-500 group border-8 hover:border-4 rounded-lg shrink-0 !border-accent !bg-accent">
             <Image
               src={data.coverImage.cover_image}
               alt={`image of anime titled ${data.title.english} or ${data.title.romaji}`}

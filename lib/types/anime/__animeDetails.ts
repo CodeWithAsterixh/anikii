@@ -102,25 +102,26 @@ export interface AnimeProps {
 }
 
 export type CharacterData = {
+  character:character,
+  voiceActors:voiceActor[]
+};
+
+
+export interface character {
   id: number;
-  name: {
-    full: string;
-    native: string;
-    alternative: string[];
-    userPreferred: string;
-  };
-  image: {
-    medium: string;
-  };
-  gender: string;
   role: string;
-  voiceActors: {
-    name: {
-      full: string;
-    };
-    languageV2: string;
-    image: {
-      medium: string;
-    };
-  }[];
+  name: string;
+  image: string;
+  gender: string;
+  description: string;
+  dateOfBirth: {
+      month: number;
+      day: number;
+  };
+  age: string;
+};
+export interface voiceActor{
+  name: string;
+  language: string;
+  image: string;
 };
