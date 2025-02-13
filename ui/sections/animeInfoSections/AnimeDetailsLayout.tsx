@@ -65,7 +65,7 @@ export default function AnimeDetailsLayout({ children, id }: Props) {
   if (res.status.status == "error") {
     return (
       <div className="w-full flex flex-col items-center justify-center *:scale-75">
-          <b>No "{tab.toLowerCase().replace("stream")}" content available at the moment</b>
+          <b>No content available at the moment</b>
           
         </div>
     );
