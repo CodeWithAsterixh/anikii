@@ -52,8 +52,12 @@ export default function WatchLayoutComp({ children }: Props) {
         status: subRes.status.status,
       },
     }));
-  }, [dubRes.data, dubRes.status.status, setState, watchRes.data, watchRes.status.status]);
+  }, [dubRes.data, dubRes.status.status, setState, subRes.data, subRes.status.status, watchRes.data, watchRes.status.status]);
 
+
+
+
+  
   return (
     <div className="w-full h-fit flex flex-col gap-4">
       <div className="w-full flex flex-col gap-2 min-[498px]:flex-row min-[498px]:items-center p-2 justify-between sticky top-36 bg-accent py-1 shadow-md">
@@ -79,7 +83,7 @@ export default function WatchLayoutComp({ children }: Props) {
         </div>
       ) :state[tab]?.status === "error"?
       <div className="w-full flex flex-col items-center justify-center *:scale-75">
-          <b>No "{tab.toLowerCase().replace("stream","")}" content available at the moment</b>
+          <b>No &quot;{tab.toLowerCase().replace("stream","")}&quot; content available at the moment</b>
           
         </div>
       : (
