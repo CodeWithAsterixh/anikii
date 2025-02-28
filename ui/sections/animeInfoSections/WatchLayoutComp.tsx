@@ -16,7 +16,7 @@ export default function WatchLayoutComp({ children }: Props) {
 
   const { state, setState } = useWatchContext();
   const watchRes = useQuery<AnimeData>(`/anime/${id}/stream`);
-  const dubRes = useQuery<StreamingEpisode>(`/anime/${id}/stream/1/dub`);
+  const dubRes = useQuery<StreamingEpisode>(`/anime/${id}/stream/1?type=dub`);
   const subRes = useQuery<StreamingEpisode>(`/anime/${id}/stream/1`);
   const [tab, setTab] = useState<"mainStream" | "dubStream" | "subStream">(
     "mainStream"
@@ -56,7 +56,7 @@ export default function WatchLayoutComp({ children }: Props) {
 
   return (
     <div className="w-full h-fit flex flex-col gap-4">
-      <div className="w-full flex flex-col gap-2 min-[498px]:flex-row min-[498px]:items-center p-2 justify-between sticky top-36 bg-accent py-1 shadow-md">
+      <div className="w-full flex flex-col gap-2 min-[498px]:flex-row min-[498px]:items-center p-2 justify-between sticky z-10 top-48 min-[498px]:top-32 bg-accent py-1 shadow-md">
         <div className="w-fit flex items-center justify-start gap-2">
         <h3 className="font-bold text-base min-[498px]:text-lg shrink-0">Watch anime</h3>
         <div className="w-fit flex max-w-full overflow-x-auto items-center justify-start gap-2 snap-x snap-mandatory *:snap-start">
@@ -78,8 +78,8 @@ export default function WatchLayoutComp({ children }: Props) {
           <Loader />
         </div>
       ) :state[tab]?.status === "error"?
-      <div className="w-full flex flex-col items-center justify-center *:scale-75">
-          <b>No "{tab.toLowerCase().replace("stream","")}" content available at the moment</b>
+      <div className="w-full flex flex-col items-center justify-center *:scale-75 z-0 relative">
+          <b>No &quot;{tab.toLowerCase().replace("stream","")}&quot; content available at the moment</b>
           
         </div>
       : (
