@@ -6,7 +6,9 @@ export async function GET(
   { params }: { params: Promise<{ id: string; ep: string }> }
 ) {
   const { id, ep } = await params;
-  const endPoint = `/anime/${id}/stream/ep/${ep}`; // Replace with your API endpoint
+  const url = new URL(req.url);
+  const type = url.searchParams.get("type")||"sub";
+  const endPoint = `/anime/${id}/stream/ep/${ep}?type=${type}`; // Replace with your API endpoint
 
   try {
     const res = await fetch(__BASEURL__ + endPoint);
@@ -20,7 +22,7 @@ export async function GET(
     }
 
     const data = await res.json();
-    return NextResponse.json(data);
+    return NextResponse.json(data[0]);
   } catch (error) {
     // Narrow the type of error to ensure proper typing
     let errorMessage = "An unexpected error occurred";

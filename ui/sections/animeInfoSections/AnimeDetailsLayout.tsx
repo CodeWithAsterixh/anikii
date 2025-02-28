@@ -88,8 +88,8 @@ export default function AnimeDetailsLayout({ children, id }: Props) {
               src={data.coverImage.bannerImage}
               alt={`cover image of anime titled ${data.title.english} or ${data.title.romaji}`}
               className="!size-full brightness-[.3]"
-              width={1000}
-              height={1000}
+              width={4000}
+              height={4000}
               fallback={
                 <span
                   style={{
@@ -108,8 +108,8 @@ export default function AnimeDetailsLayout({ children, id }: Props) {
                 src={data.coverImage.cover_image}
                 alt={`image of anime titled ${data.title.english} or ${data.title.romaji}`}
                 className="!size-full rounded-md duration-500 group-hover:shadow-lg shadow-base-black/30"
-                width={150}
-                height={300}
+                width={1000}
+                height={1000}
                 fallback={
                   <span
                     style={{
