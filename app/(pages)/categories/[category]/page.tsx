@@ -59,7 +59,7 @@ export default function Category({}: Props) {
         </div>
 
         
-          {data?.data  ? <AnimeGrid className="w-full h-fit gap-2 p-2 isolate z-0 mb-20">{
+          {data?.data  ? <AnimeGrid className="w-full h-fit gap-2 !p-2 isolate z-0 mb-20">{
             data.data.map((d, i) => <AnimeCard anime={d} key={i} />)
           }</AnimeGrid> : (
             <div className="w-full flex items-center justify-center *:scale-75">

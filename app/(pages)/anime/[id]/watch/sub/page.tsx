@@ -1,4 +1,5 @@
 "use client"
+
 import { StreamingEpisode } from '@/lib/types/anime/__animeDetails';
 import { useWatchContext } from '@/store/watchContext/watchPage';
 import VideoPlayer from '@/ui/components/Video/Video';
@@ -17,6 +18,8 @@ export default function SubPage() {
       setIsStreamAvailable(isAvailable?state.subStream?.data:false)
     }
   }, [state])
+
+
   
   return (
     <div className='p-2'>

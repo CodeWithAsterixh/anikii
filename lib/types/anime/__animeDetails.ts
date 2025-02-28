@@ -72,6 +72,7 @@ export interface EpisodeInfo {
 export interface AnimeInfoStream {
   title: string;
   category: string;
+  episodes:string
 }
 
 export interface StreamingEpisode {
@@ -88,13 +89,13 @@ export interface ExternalLink {
 
 export interface AnimeData {
   episodes: number;
-  streamingEpisodes: {
+  streamingEpisodes?: {
     title: string;
     thumbnail: string;
     url: string;
     site: string;
   }[];
-  externalLinks: ExternalLink[];
+  externalLinks?: ExternalLink[];
 }
 
 export interface AnimeProps {

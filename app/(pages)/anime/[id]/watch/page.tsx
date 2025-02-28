@@ -12,9 +12,10 @@ export default function Category({}: Props) {
   const {mainStream} = state
 
   return (
-    <div className="w-full h-fit grid p-2 gap-2 grid-cols-[repeat(auto-fill,_minmax(150px,_1fr))]">
-        {
-          mainStream?.data?.streamingEpisodes&&mainStream.data?.streamingEpisodes.map((ep,ind)=>(
+
+          mainStream?.data?.streamingEpisodes&&mainStream?.data?.streamingEpisodes.length>0?
+          (<div className="w-full h-fit grid p-2 gap-2 grid-cols-[repeat(auto-fill,_minmax(150px,_1fr))]">
+          {mainStream.data?.streamingEpisodes.map((ep,ind)=>(
             <Card key={ind} className="flex flex-col gap-2 pb-2 !bg-accent !shadow-none">
               <span className="w-full h-32 block rounded-t-md relative overflow-hidden">
               <Image src={ep.thumbnail} alt={ep.title} className="size-full" fallback={
@@ -29,8 +30,10 @@ export default function Category({}: Props) {
               </span>
               <strong className="text-xs">{ep.title}</strong>
             </Card>
-          ))
-        }
+          ))} </div>):<div className="w-full flex flex-col items-center justify-center *:scale-75">
+          <b>No Video content available at the moment</b>
+          
+
       </div>
   );
 }
