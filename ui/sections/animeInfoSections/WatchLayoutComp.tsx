@@ -3,7 +3,7 @@ import { AnimeData, StreamingEpisode } from "@/lib/types/anime/__animeDetails";
 import { useWatchContext } from "@/store/watchContext/watchPage";
 import Loader from "@/ui/components/Loader/Loader";
 import Link from "next/link";
-import { useParams, usePathname } from "next/navigation";
+import { useParams, usePathname, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 type Props = {
@@ -12,12 +12,14 @@ type Props = {
 
 export default function WatchLayoutComp({ children }: Props) {
   const { id } = useParams<{ id: string }>();
+  const searchParams = useSearchParams()
+  const currentEp = searchParams.get("ep")||1
   const pathName = usePathname();
 
   const { state, setState } = useWatchContext();
   const watchRes = useQuery<AnimeData>(`/anime/${id}/stream`);
-  const dubRes = useQuery<StreamingEpisode>(`/anime/${id}/stream/1?type=dub`);
-  const subRes = useQuery<StreamingEpisode>(`/anime/${id}/stream/1`);
+  const dubRes = useQuery<StreamingEpisode>(`/anime/${id}/stream/${currentEp}?type=dub`);
+  const subRes = useQuery<StreamingEpisode>(`/anime/${id}/stream/${currentEp}`);
   const [tab, setTab] = useState<"mainStream" | "dubStream" | "subStream">(
     "mainStream"
   );
@@ -72,7 +74,7 @@ export default function WatchLayoutComp({ children }: Props) {
         <span className="font-bold text-base">
           Episodes{" "}
           <i className="not-italic font-normal text-tertiary/60">
-            {state.mainStream?.data?.episodes}
+            {state.mainStream?.data?.episodes||state.mainStream?.data?.streamingEpisodes.length}
           </i>
         </span>
       </div>
