@@ -32,7 +32,7 @@ export default function SubPage() {
       setCurrentlyPlayed(
         isStrAv ? "live" : state.subStream?.data?.stream_links[0]
       );
-      setEpLen(state.mainStream?.data?.episodes||state.mainStream?.data?.streamingEpisodes.length||0)
+      setEpLen(state.mainStream?.data?.episodes||state.mainStream?.data?.streamingEpisodes?.length||0)
     }
   }, [state]);
 

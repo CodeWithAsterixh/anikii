@@ -34,7 +34,7 @@ export default function SubPage() {
         isStrAv ? "live" : state.dubStream?.data?.stream_links[0]
       );
     }
-    setEpLen(state.mainStream?.data?.episodes||state.mainStream?.data?.streamingEpisodes.length||0)
+    setEpLen(state.mainStream?.data?.episodes||state.mainStream?.data?.streamingEpisodes?.length||0)
 
   }, [state]);
 

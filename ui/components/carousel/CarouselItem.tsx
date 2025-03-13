@@ -8,6 +8,7 @@ import { BsEmojiExpressionless, BsEmojiSmile } from "react-icons/bs";
 import { FaHashtag } from "react-icons/fa";
 import FormatIcons from "../formatIcons/FormatIcons";
 import Image from "../Image/Image";
+import Link from "next/link";
 
 type props = {
   data: AnimeListItem;
@@ -121,9 +122,13 @@ export default function CarouselItem({ data, index }: props) {
         />
 
         <div className="w-full flex gap-2">
+          
+          <Link href={`/anime/${data.id}/watch`}>
           <Button variant="contained" startIcon={<BiPlayCircle />}>
-            Play now
+          Play now
           </Button>
+            
+            </Link>
           <IconButton className="!relative !isolate !overflow-hidden invert">
             <span
               className="block absolute size-full inset-0 -z-10 invert"
