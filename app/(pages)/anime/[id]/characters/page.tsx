@@ -63,7 +63,7 @@ export default function Category({}: Props) {
           </FormControl>
         </div>
       </div>
-      <div className="w-full grid grid-cols-2 p-2 gap-2">
+      <div className="w-full grid grid-col-1 sm:grid-cols-2 p-2 gap-2">
         <div className="w-full flex flex-col gap-2">
           {characters.data &&
             characters.data.characters

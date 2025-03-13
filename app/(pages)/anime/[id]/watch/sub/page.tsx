@@ -9,6 +9,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BiPlayCircle } from "react-icons/bi";
 
+
 export default function SubPage() {
   const params = useParams<{ id: string }>();
   const [currentlyPlayed, setCurrentlyPlayed] = useState<
@@ -34,6 +35,7 @@ export default function SubPage() {
       setEpLen(state.mainStream?.data?.episodes||state.mainStream?.data?.streamingEpisodes.length||0)
     }
   }, [state]);
+
 
   return (
     <div className="p-2">
