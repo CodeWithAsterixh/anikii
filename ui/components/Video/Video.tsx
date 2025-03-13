@@ -130,6 +130,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ src,name }) => {
     const a = document.createElement("a")
     a.href = src.replace("live","download")
     a.download = name+".mp4"
+    a.setAttribute("download", `${name}.mp4`)
 
     a.click()
   }
