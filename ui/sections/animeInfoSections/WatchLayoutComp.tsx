@@ -74,7 +74,7 @@ export default function WatchLayoutComp({ children }: Props) {
         <span className="font-bold text-base">
           Episodes{" "}
           <i className="not-italic font-normal text-tertiary/60">
-            {state.mainStream?.data?.episodes||state.mainStream?.data?.streamingEpisodes.length}
+            {state.mainStream?.data?.episodes||state.mainStream?.data?.streamingEpisodes?.length}
           </i>
         </span>
       </div>
