@@ -1,7 +1,7 @@
 import axios from "axios";
 import { __BASEURL__ } from "lib/constants/baseurl";
 
-const API_BASE_URL = __BASEURL__; // Default local backend
+const API_BASE_URL = __BASEURL__;
 
 export const api_client = axios.create({
   baseURL: API_BASE_URL,
