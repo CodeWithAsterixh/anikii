@@ -1,68 +1,49 @@
-import React, { useCallback, useMemo } from "react";
-import { AppLayout } from "../components/layout/app_layout";
-import { FeaturedCarousel, MovieList } from "../components/ui";
-import { HomeSkeleton, HomeError, HomeStats } from "../components/home";
-import { useHomeData } from "../../lib/providers/anikii/hooks";
-import type { Route } from "./+types/home";
+import { MainLayout } from "../layouts/main_layout";
+import { Carousel } from "../components/carousel/carousel";
+import { SectionTitle } from "../components/section_title/section_title";
+import { AnimeCard } from "../components/anime_card/anime_card";
+import { use_home } from "../hooks/use_home";
 
-export function meta({}: Route.MetaArgs) {
-  return [
-    { title: "Home - Anikii" },
-    { name: "description", content: "Welcome to Anikii - Your anime discovery platform" },
-  ];
-}
-
-const HomeComponent = () => {
-  const { data: homeData, loading: isLoading, error: hasError } = useHomeData();
-
-  const popularAnime = useMemo(() => homeData?.popular?.data || [], [homeData?.popular?.data]);
-  const recentReleases = useMemo(() => homeData?.releases?.data || [], [homeData?.releases?.data]);
-  const upcomingAnime = useMemo(() => homeData?.upcoming?.data || [], [homeData?.upcoming?.data]);
-  const featuredAnime = useMemo(() => popularAnime.slice(0, 5), [popularAnime]);
-
-  const handleRetry = useCallback(() => window.location.reload(), []);
-
-  if (isLoading) return <AppLayout><HomeSkeleton /></AppLayout>;
-  if (hasError) return <AppLayout><HomeError error={hasError} onRetry={handleRetry} /></AppLayout>;
+export default function Home() {
+  const { popular, trending, upcoming } = use_home();
 
   return (
-    <AppLayout>
-      {featuredAnime.length > 0 && (
-        <FeaturedCarousel animes={featuredAnime} autoPlay={true} interval={6000} showThumbnails={true} />
+    <MainLayout>
+      {trending.loading ? (
+        <div className="h-[400px] w-full bg-base-200 animate-pulse rounded-box mb-10" />
+      ) : (
+        <Carousel anime_list={trending.data?.data.data || []} />
       )}
 
-      <div className="space-y-8 mt-8 sm:mt-12 md:mt-16">
-        {popularAnime.length > 0 && (
-          <Section wrapperColor="primary" bgColor="base-100">
-            <MovieList animes={popularAnime.slice(0, 6)} title="🔥 Popular This Season" gridCols="lg" cardSize="md" />
-          </Section>
-        )}
+      <section className="mb-12">
+        <SectionTitle title="Popular Now" subtitle="Most watched anime this week" />
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6">
+          {popular.loading ? (
+            Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="aspect-[3/4] bg-base-200 animate-pulse rounded-box" />
+            ))
+          ) : (
+            popular.data?.data.data.map((anime) => (
+              <AnimeCard key={anime.id} anime={anime} />
+            ))
+          )}
+        </div>
+      </section>
 
-        {recentReleases.length > 0 && (
-          <Section wrapperColor="secondary" bgColor="base-100">
-            <MovieList animes={recentReleases.slice(0, 6)} title="✨ Recent Releases" gridCols="lg" cardSize="sm" />
-          </Section>
-        )}
-
-        {upcomingAnime.length > 0 && (
-          <Section wrapperColor="accent" bgColor="base-100">
-            <MovieList animes={upcomingAnime.slice(0, 8)} title="🎯 Recommended For You" gridCols="lg" cardSize="md" />
-          </Section>
-        )}
-      </div>
-
-      <HomeStats />
-    </AppLayout>
+      <section>
+        <SectionTitle title="Upcoming" subtitle="Anticipated releases" />
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6">
+          {upcoming.loading ? (
+            Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="aspect-[3/4] bg-base-200 animate-pulse rounded-box" />
+            ))
+          ) : (
+            upcoming.data?.data.data.map((anime) => (
+              <AnimeCard key={anime.id} anime={anime} />
+            ))
+          )}
+        </div>
+      </section>
+    </MainLayout>
   );
-};
-
-const Section = ({ children, wrapperColor }: { children: React.ReactNode; wrapperColor: string; bgColor: string }) => (
-  <div className="relative">
-    <div className="absolute inset-0 rounded-3xl opacity-10" style={{ backgroundColor: `var(--color-${wrapperColor})` }} />
-    <div className="relative backdrop-blur-xl rounded-3xl p-4 sm:p-6 md:p-8 border border-base-300/20 shadow-2xl bg-base-100/80">
-      {children}
-    </div>
-  </div>
-);
-
-export default React.memo(HomeComponent);
+}
