@@ -11,7 +11,7 @@ export default [
   route("anime/:id", "routes/anime_detail.tsx"),
   
   // Watch route
-  route("watch/:id/:ep", "routes/watch.tsx"),
+  route("anime/:id/watch/:ep", "routes/watch.tsx"),
   
   // 404 Not Found route - this should be the last route
   route("*", "routes/not_found.tsx"),

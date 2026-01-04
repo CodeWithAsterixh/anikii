@@ -49,7 +49,7 @@ export default function AnimeDetail() {
           <img 
             src={anime.coverImage?.cover_image || "/placeholder-anime.png"} 
             alt={title} 
-            className="w-full rounded-box shadow-xl border border-base-300/10"
+            className="w-full max-h-[50vh] object-cover object-center rounded-box shadow-xl border border-base-300/10"
             onError={(e) => (e.currentTarget.src = "/placeholder-anime.png")}
           />
         </div>

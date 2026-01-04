@@ -18,3 +18,19 @@ export const get_episode_extra = async (id: number, ep: number) => {
     `/anime/${id}/stream/ep/${ep}/extra`
   );
 };
+
+export const get_proxied_download_url = (id: number, ep: number, type: "sub" | "dub" = "sub") => {
+  return `${api_client.defaults.baseURL}/anime/${id}/stream/ep/${ep}/download?type=${type}`;
+};
+
+export const get_direct_download_url = (id: number, ep: number, type: "sub" | "dub" = "sub", provider?: string) => {
+  let url = `${api_client.defaults.baseURL}/anime/${id}/stream/ep/${ep}/download-direct?type=${type}`;
+  if (provider) url += `&provider=${provider}`;
+  return url;
+};
+
+export const get_live_stream_url = (id: number, ep: number, type: "sub" | "dub" = "sub", provider?: string) => {
+  let url = `${api_client.defaults.baseURL}/anime/${id}/stream/ep/${ep}/live?type=${type}`;
+  if (provider) url += `&provider=${provider}`;
+  return url;
+};

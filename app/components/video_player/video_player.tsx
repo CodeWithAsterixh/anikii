@@ -23,18 +23,34 @@ export function VideoPlayer({ src }: { src: string }) {
     );
   }
 
+  // Detect if source is a direct video link or needs an iframe
+  // Proxied links from Anikii backend usually contain "/stream/ep/" and "/download" or "/live"
+  const is_direct_video = src.includes("/download-direct") || src.includes("/live") || src.endsWith(".mp4") || src.endsWith(".m3u8");
+
   return (
     <div className="aspect-video w-full bg-black rounded-box overflow-hidden shadow-2xl relative">
-      <iframe
-        src={src}
-        className="w-full h-full"
-        allowFullScreen
-        scrolling="no"
-        frameBorder="0"
-        allow="autoplay; encrypted-media"
-        title="Anime Stream"
-        onError={() => set_error(true)}
-      />
+      {is_direct_video ? (
+        <video 
+          src={src} 
+          controls 
+          className="w-full h-full"
+          onError={() => set_error(true)}
+          autoPlay
+        >
+          Your browser does not support the video tag.
+        </video>
+      ) : (
+        <iframe
+          src={src}
+          className="w-full h-full"
+          allowFullScreen
+          scrolling="no"
+          frameBorder="0"
+          allow="autoplay; encrypted-media"
+          title="Anime Stream"
+          onError={() => set_error(true)}
+        />
+      )}
     </div>
   );
 }
