@@ -1,0 +1,339 @@
+@import "tailwindcss";
+
+@theme {
+  /* Font Configuration */
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  
+  /* Color Palette */
+  --color-base-100: oklch(14% 0.02 260); /* Deep dark blue-black */
+  --color-base-200: oklch(18% 0.02 260);
+  --color-base-300: oklch(22% 0.02 260);
+  --color-base-content: oklch(90% 0.01 260);
+  
+  --color-primary: oklch(65% 0.25 35); /* Vibrant Anime Orange-Red */
+  --color-primary-content: oklch(100% 0 0);
+  
+  --color-secondary: oklch(50% 0.15 260); /* Deep blue */
+  --color-secondary-content: oklch(100% 0 0);
+  
+  --color-accent: oklch(80% 0.2 90); /* Yellow accent */
+  --color-accent-content: oklch(20% 0.05 90);
+  --color-neutral: oklch(24.27% 0.057 59.825);
+  --color-neutral-content: oklch(93.203% 0.089 90.861);
+  --color-info: oklch(79.061% 0.121 237.133);
+  --color-info-content: oklch(15.812% 0.024 237.133);
+  --color-success: oklch(78.119% 0.192 132.154);
+  --color-success-content: oklch(15.623% 0.038 132.154);
+  --color-warning: oklch(86.127% 0.136 102.891);
+  --color-warning-content: oklch(17.225% 0.027 102.891);
+  --color-error: oklch(71.753% 0.176 22.568);
+  --color-error-content: oklch(14.35% 0.035 22.568);
+  
+  /* Spacing and Sizing */
+  --radius-selector: 0.25rem;
+  --radius-field: 0.5rem;
+  --radius-box: 1rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
+}
+
+/* Base styles */
+html,
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-base-100);
+  color: var(--color-base-content);
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+/* Mobile-first responsive design */
+@media (max-width: 640px) {
+  body {
+    font-size: 14px;
+  }
+  
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+/* Custom utility classes */
+@layer utilities {
+  .bg-theme-gradient {
+    background: linear-gradient(135deg, 
+      var(--color-primary) 0%, 
+      var(--color-secondary) 50%, 
+      var(--color-accent) 100%);
+  }
+  
+  .bg-theme-gradient-soft {
+    background: linear-gradient(135deg, 
+      oklch(from var(--color-primary) l c h / 0.1) 0%, 
+      oklch(from var(--color-secondary) l c h / 0.1) 50%, 
+      oklch(from var(--color-accent) l c h / 0.1) 100%);
+  }
+  
+  .text-theme-gradient {
+    background: linear-gradient(135deg, 
+      var(--color-primary) 0%, 
+      var(--color-white) 50%, 
+      var(--color-accent) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .border-theme-gradient {
+    border-image: linear-gradient(135deg, 
+      var(--color-primary) 0%, 
+      var(--color-secondary) 50%, 
+      var(--color-accent) 100%) 1;
+  }
+  
+  /* Backdrop blur utilities */
+  .backdrop-blur-theme {
+    backdrop-filter: blur(12px);
+    background: oklch(from var(--color-base-100) l c h / 0.8);
+  }
+  
+  /* Hover effects */
+  .hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 25px -5px oklch(from var(--color-neutral) l c h / 0.1), 
+                0 10px 10px -5px oklch(from var(--color-neutral) l c h / 0.04);
+  }
+}
+
+/* Smooth scrolling and transitions */
+* {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar for webkit browsers */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-base-200);
+}
+
+::-webkit-scrollbar-thumb {
+  background: oklch(from var(--color-primary) l c h / 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: oklch(from var(--color-primary) l c h / 0.5);
+}
+
+/* Animation keyframes */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite;
+}
+
+/* Focus styles */
+.focus-ring:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Mobile-first responsive utilities */
+@media (max-width: 640px) {
+  .mobile-text-sm {
+    font-size: 0.875rem;
+  }
+  
+  .mobile-text-base {
+    font-size: 1rem;
+  }
+  
+  .mobile-text-lg {
+    font-size: 1.125rem;
+  }
+  
+  .mobile-text-xl {
+    font-size: 1.25rem;
+  }
+  
+  .mobile-text-2xl {
+    font-size: 1.5rem;
+  }
+  
+  .mobile-text-3xl {
+    font-size: 1.875rem;
+  }
+  
+  .mobile-p-4 {
+    padding: 1rem;
+  }
+  
+  .mobile-p-6 {
+    padding: 1.5rem;
+  }
+  
+  .mobile-gap-3 {
+    gap: 0.75rem;
+  }
+  
+  .mobile-gap-4 {
+    gap: 1rem;
+  }
+  
+  .mobile-grid-cols-1 {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+  
+  .mobile-grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  
+  .mobile-space-y-4 > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 1rem;
+  }
+  
+  .mobile-space-x-2 > :not([hidden]) ~ :not([hidden]) {
+    margin-left: 0.5rem;
+  }
+  
+  .mobile-hidden {
+    display: none;
+  }
+  
+  .mobile-flex {
+    display: flex;
+  }
+  
+  .mobile-flex-col {
+    flex-direction: column;
+  }
+  
+  .mobile-items-center {
+    align-items: center;
+  }
+  
+  .mobile-justify-center {
+    justify-content: center;
+  }
+  
+  .mobile-text-center {
+    text-align: center;
+  }
+  
+  .mobile-w-full {
+    width: 100%;
+  }
+  
+  .mobile-h-8 {
+    height: 2rem;
+  }
+  
+  .mobile-h-10 {
+    height: 2.5rem;
+  }
+  
+  .mobile-rounded-lg {
+    border-radius: 0.5rem;
+  }
+  
+  .mobile-shadow-lg {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+  
+  .mobile-z-50 {
+    z-index: 50;
+  }
+  
+  .mobile-fixed {
+    position: fixed;
+  }
+  
+  .mobile-inset-0 {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+  
+  .mobile-backdrop-blur {
+    backdrop-filter: blur(8px);
+  }
+  
+  .mobile-transition-all {
+    transition: all 0.3s ease;
+  }
+  
+  .mobile-transform {
+    transform: translateZ(0);
+  }
+  
+  .mobile-scale-95 {
+    transform: scale(0.95);
+  }
+  
+  .mobile-scale-100 {
+    transform: scale(1);
+  }
+  
+  /* Additional utility classes for anime detail page */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+/* Touch-friendly button sizes for mobile */
+@media (max-width: 640px) {
+  .btn-mobile {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+  }
+  
+  .mobile-nav-item {
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    display: block;
+    width: 100%;
+    text-align: left;
+    border-radius: 0.5rem;
+    margin-bottom: 0.25rem;
+  }
+}
