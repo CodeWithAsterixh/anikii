@@ -1,32 +1,68 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 
 export interface IAsyncState<T> {
   data: T | null;
   loading: boolean;
   error: Error | null;
+  is_empty: boolean;
 }
 
-export function use_async<T>(asyncFunction: (...args: any[]) => Promise<T>) {
-  const [state, setState] = useState<IAsyncState<T>>({
-    data: null,
+export function use_async<T>(
+  asyncFunction: (...args: any[]) => Promise<T>,
+  options: { immediate?: boolean; initial_data?: T } = {}
+) {
+  const [state, set_state] = useState<IAsyncState<T>>({
+    data: options.initial_data || null,
     loading: false,
     error: null,
+    is_empty: false,
   });
+
+  const last_args = useRef<any[]>([]);
 
   const execute = useCallback(
     async (...args: any[]) => {
-      setState({ data: null, loading: true, error: null });
+      last_args.current = args;
+      set_state((prev) => ({ ...prev, loading: true, error: null }));
+      
       try {
         const response = await asyncFunction(...args);
-        setState({ data: response, loading: false, error: null });
+        
+        // Handle empty data patterns commonly found in APIs
+        const is_empty = !response || 
+          (Array.isArray(response) && response.length === 0) ||
+          (typeof response === 'object' && Object.keys(response).length === 0);
+
+        set_state({ 
+          data: response, 
+          loading: false, 
+          error: null, 
+          is_empty 
+        });
         return response;
       } catch (error: any) {
-        setState({ data: null, loading: false, error });
-        throw error;
+        set_state({ 
+          data: null, 
+          loading: false, 
+          error: error instanceof Error ? error : new Error(String(error)), 
+          is_empty: false 
+        });
+        return null;
       }
     },
     [asyncFunction]
   );
 
-  return { ...state, execute };
+  const retry = useCallback(() => {
+    return execute(...last_args.current);
+  }, [execute]);
+
+  return { 
+    ...state, 
+    execute, 
+    retry,
+    is_error: !!state.error,
+    is_loading: state.loading,
+    is_success: !!state.data && !state.error && !state.loading
+  };
 }
