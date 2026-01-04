@@ -34,7 +34,7 @@ export default function Home() {
            <ErrorView message="Failed to load trending anime" onRetry={trending.retry} />
         </div>
       ) : (
-        <Carousel anime_list={trending.data?.data?.data || []} />
+        <Carousel anime_list={trending.data?.data || []} />
       )}
 
       {/* Popular Section */}
@@ -51,7 +51,7 @@ export default function Home() {
                 <div key={i} className="aspect-[3/4] bg-base-200 animate-pulse rounded-box" />
               ))
             ) : (
-              popular.data?.data?.data.map((anime) => (
+              (popular.data?.data || []).map((anime) => (
                 <AnimeCard key={anime.id} anime={anime} />
               ))
             )}
@@ -73,7 +73,7 @@ export default function Home() {
             ) : upcoming.is_empty ? (
               <div className="col-span-full py-10 opacity-50 text-center">No upcoming releases found.</div>
             ) : (
-              upcoming.data?.data?.data.map((anime) => (
+              (upcoming.data?.data || []).map((anime) => (
                 <AnimeCard key={anime.id} anime={anime} />
               ))
             )}

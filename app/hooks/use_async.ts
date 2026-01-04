@@ -28,10 +28,15 @@ export function use_async<T>(
       try {
         const response = await asyncFunction(...args);
         
-        // Handle empty data patterns commonly found in APIs
-        const is_empty = !response || 
-          (Array.isArray(response) && response.length === 0) ||
-          (typeof response === 'object' && Object.keys(response).length === 0);
+        // Handle empty data patterns
+        // If it's an envelope { data: ... }, check the nested data
+        const payload = (response && typeof response === 'object' && 'data' in response) 
+          ? (response as any).data 
+          : response;
+
+        const is_empty = !payload || 
+          (Array.isArray(payload) && payload.length === 0) ||
+          (typeof payload === 'object' && Object.keys(payload).length === 0);
 
         set_state({ 
           data: response, 

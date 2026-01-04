@@ -5,6 +5,7 @@ import { SectionTitle } from "../components/section_title/section_title";
 import { use_search } from "../hooks/use_search";
 import { ErrorView } from "../components/status_views/error_view";
 import { EmptyState } from "../components/status_views/empty_state";
+import type { IAnime } from "~/types";
 
 export default function SearchPage() {
   const { data, is_loading, is_error, is_empty, retry, perform_search } = use_search();
@@ -29,10 +30,10 @@ export default function SearchPage() {
         <section>
           <SectionTitle 
             title="Search Results" 
-            subtitle={`Found ${data.data?.data?.length || 0} results`} 
+            subtitle={`Found ${(data.data || []).length} results`} 
           />
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6">
-            {data.data?.data?.map((anime) => (
+            {(data.data || []).map((anime: IAnime) => (
               <AnimeCard key={anime.id} anime={anime} />
             ))}
           </div>

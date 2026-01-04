@@ -14,7 +14,7 @@ export const get_recommended_anime = async (id: number, page = 1) => {
   if (!id || isNaN(id)) {
     throw new Error("Invalid anime ID provided");
   }
-  return api_client.get<any, IApiSuccessEnvelope<IPaginatedResponse<IAnime>>>(
+  return api_client.get<any, IApiSuccessEnvelope<IAnime[]>>(
     `/anime/${id}/recommended?page=${page}`
   );
 };

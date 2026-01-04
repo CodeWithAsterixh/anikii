@@ -102,11 +102,11 @@ export default function AnimeDetail() {
         )}
       </section>
 
-      {recommended.data?.data?.data && recommended.data.data.data.length > 0 && (
+      {recommended.data?.data && (recommended.data.data || []).length > 0 && (
         <section>
           <SectionTitle title="Recommended For You" />
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6">
-            {recommended.data.data.data.map((rec) => (
+            {(recommended.data.data || []).map((rec: any) => (
               <AnimeCard key={rec.id} anime={rec} />
             ))}
           </div>
