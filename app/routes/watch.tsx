@@ -35,22 +35,29 @@ export default function WatchPage() {
     // Add Anikii's own proxied and live streams to the server list
     const extended_links = [...base_links];
     
-    // extended_links.push({
-    //   name: "Anikii Direct",
-    //   url: get_direct_download_url(stream_type)
-    // });
+    extended_links.push({
+      name: "Anikii Direct",
+      url: get_direct_download_url(stream_type)
+    });
     
-    // extended_links.push({
-    //   name: "Anikii Live",
-    //   url: get_live_stream_url(stream_type)
-    // });
+    extended_links.push({
+      name: "Anikii Live",
+      url: get_live_stream_url(stream_type)
+    });
+
+    extended_links.push({
+      name: "Anikii Proxy",
+      url: get_proxied_download_url(stream_type)
+    });
 
     return extended_links;
-  }, [stream_type, sub_links, dub_links]);
+  }, [stream_type, sub_links, dub_links, get_direct_download_url, get_live_stream_url, get_proxied_download_url]);
 
-  const download_link = stream_type === "sub" 
+  const external_download_link = stream_type === "sub" 
     ? extra_data?.episodesSub?.download_link 
     : extra_data?.episodesDub?.download_link;
+
+  const download_link = external_download_link || get_proxied_download_url(stream_type);
 
 
   // Auto-select primary link when data loads or type changes
@@ -151,8 +158,11 @@ export default function WatchPage() {
 
         <div className="flex flex-col md:flex-row justify-between items-start gap-6 mb-10">
           <div className="flex-grow">
-            <h1 className="text-2xl font-bold mb-2 tracking-tight">
+            <h1 className="text-2xl font-bold mb-2 tracking-tight flex items-center gap-3">
               {anime_info?.title || `Episode ${episode_num}`}
+              {selected_source_name && (
+                <span className="badge badge-primary badge-sm font-bold">{selected_source_name}</span>
+              )}
             </h1>
             <div className="flex items-center gap-4 opacity-60 text-sm font-medium">
               <span className="flex items-center gap-1.5">
