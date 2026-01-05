@@ -35,18 +35,18 @@ export default function WatchPage() {
     // Add Anikii's own proxied and live streams to the server list
     const extended_links = [...base_links];
     
-    extended_links.push({
-      name: "Anikii Direct",
-      url: get_direct_download_url(stream_type)
-    });
+    // extended_links.push({
+    //   name: "Anikii Direct",
+    //   url: get_direct_download_url(stream_type)
+    // });
     
-    extended_links.push({
-      name: "Anikii Live",
-      url: get_live_stream_url(stream_type)
-    });
+    // extended_links.push({
+    //   name: "Anikii Live",
+    //   url: get_live_stream_url(stream_type)
+    // });
 
     return extended_links;
-  }, [stream_type, sub_links, dub_links, get_direct_download_url, get_live_stream_url]);
+  }, [stream_type, sub_links, dub_links]);
 
   const download_link = stream_type === "sub" 
     ? extra_data?.episodesSub?.download_link 
@@ -180,29 +180,7 @@ export default function WatchPage() {
               `}
             >
               <Download size={18} />
-              <span className="text-sm">External</span>
-            </a>
-
-            <a 
-              href={proxied_download_link}
-              target="_blank"
-              rel="noopener noreferrer"
-              title="Download via Anikii Proxy"
-              className="flex items-center justify-center gap-2 bg-primary/10 hover:bg-primary/20 text-primary px-6 py-3 rounded-full font-bold transition-all active:scale-95 flex-grow md:flex-grow-0 border border-primary/20"
-            >
-              <Download size={18} />
-              <span className="text-sm">Proxied</span>
-            </a>
-
-            <a 
-              href={direct_download_link}
-              target="_blank"
-              rel="noopener noreferrer"
-              title="Direct Stream Download"
-              className="flex items-center justify-center gap-2 bg-secondary/10 hover:bg-secondary/20 text-secondary px-6 py-3 rounded-full font-bold transition-all active:scale-95 flex-grow md:flex-grow-0 border border-secondary/20"
-            >
-              <Download size={18} />
-              <span className="text-sm">Direct</span>
+              <span className="text-sm">Download</span>
             </a>
           </div>
         </div>
