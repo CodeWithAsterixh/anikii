@@ -7,6 +7,7 @@ import { ErrorView } from "../components/status_views/error_view";
 import { VideoPlayer } from "../components/video_player/video_player";
 import { use_stream } from "../hooks/use_stream";
 import { MainLayout } from "../layouts/main_layout";
+import type { StreamType } from "../types";
 
 export default function WatchPage() {
   const { id, ep } = useParams();
@@ -20,38 +21,50 @@ export default function WatchPage() {
     get_live_stream_url 
   } = use_stream(anime_id, episode_num);
   
-  const [stream_type, setStreamType] = useState<"sub" | "dub">("sub");
+  const [stream_type, setStreamType] = useState<StreamType>("sub");
   const [stream_url, setStreamUrl] = useState<string>("");
   const [selected_source_name, setSelectedSourceName] = useState<string>("");
 
   const extra_data = episode_extra.data?.data;
-  const sub_links = extra_data?.episodesSub?.stream_links || [];
-  const dub_links = extra_data?.episodesDub?.stream_links || [];
-  const has_dub = Array.isArray(dub_links) && dub_links.length > 0;
+  const sub_data = extra_data?.episodesSub;
+  const dub_data = extra_data?.episodesDub;
+
+  const sub_links = sub_data?.stream_links || [];
+  const dub_links = dub_data?.stream_links || [];
+  
+  // HSUB links might come from sub_data or grouped separately
+  const hsub_links = sub_data?.links_hsub || [];
+
+  const has_dub = (Array.isArray(dub_links) && dub_links.length > 0) || (dub_data?.links_dub?.length > 0);
+  const has_hsub = Array.isArray(hsub_links) && hsub_links.length > 0;
 
   const current_links = useMemo(() => {
-    const base_links = stream_type === "sub" ? sub_links : dub_links;
+    let base_links: any[] = [];
+    if (stream_type === "sub") base_links = sub_links;
+    else if (stream_type === "dub") base_links = (dub_data as any)?.links_dub || dub_links;
+    else if (stream_type === "hsub") base_links = hsub_links;
     
-    // Add Anikii's own proxied and live streams to the server list
-    const extended_links = [...base_links];
+    // Filter for only HD-1 and HD-2, and ensure uniqueness
+    const filtered_map = new Map();
     
-    extended_links.push({
-      name: "Anikii Direct",
-      url: get_direct_download_url(stream_type)
-    });
-    
-    extended_links.push({
-      name: "Anikii Live",
-      url: get_live_stream_url(stream_type)
-    });
+    if (Array.isArray(base_links)) {
+      base_links.forEach((link: any) => {
+        const name = link.name?.toUpperCase();
+        if ((name === "HD-1" || name === "HD-2") && !filtered_map.has(name)) {
+          filtered_map.set(name, link);
+        }
+      });
+    }
 
-    extended_links.push({
-      name: "Anikii Proxy",
-      url: get_proxied_download_url(stream_type)
-    });
-
+    const extended_links = Array.from(filtered_map.values());
+    
+    // extended_links.push({
+    //   name: "Anikii Direct",
+    //   url: get_direct_download_url(stream_type === "dub" ? "dub" : "sub")
+    // });
+    
     return extended_links;
-  }, [stream_type, sub_links, dub_links, get_direct_download_url, get_live_stream_url, get_proxied_download_url]);
+  }, [stream_type, sub_links, dub_links, hsub_links, dub_data, get_direct_download_url]);
 
   const external_download_link = stream_type === "sub" 
     ? extra_data?.episodesSub?.download_link 
@@ -63,10 +76,12 @@ export default function WatchPage() {
   // Auto-select primary link when data loads or type changes
   useEffect(() => {
     if (Array.isArray(current_links) && current_links.length > 0) {
-      const primary = current_links.find((l: any) => 
-        l.name?.toLowerCase() === "gogocdn" || 
-        l.name?.toLowerCase() === "vidstreaming"
-      ) || current_links[0];
+      // Prioritize HD-1, then HD-2, then others
+      const primary = 
+        current_links.find((l: any) => l.name?.toUpperCase() === "HD-1") ||
+        current_links.find((l: any) => l.name?.toUpperCase() === "HD-2") ||
+        current_links.find((l: any) => l.name?.toUpperCase() === "ANIKII DIRECT") ||
+        current_links[0];
       
       setStreamUrl(primary.url || "");
       setSelectedSourceName(primary.name || "");
@@ -117,6 +132,14 @@ export default function WatchPage() {
             >
               SUB
             </button>
+            {has_hsub && (
+              <button 
+                onClick={() => setStreamType("hsub")}
+                className={`px-6 py-2 rounded-full text-sm font-bold transition-all ${stream_type === "hsub" ? "bg-primary text-primary-content shadow-lg" : "hover:bg-base-300"}`}
+              >
+                HSUB
+              </button>
+            )}
             {has_dub && (
               <button 
                 onClick={() => setStreamType("dub")}
@@ -176,7 +199,7 @@ export default function WatchPage() {
             </div>
           </div>
           
-          <div className="flex flex-wrap gap-3 w-full md:w-auto">
+          {/* <div className="flex flex-wrap gap-3 w-full md:w-auto">
             <a 
               href={download_link}
               target="_blank"
@@ -190,7 +213,7 @@ export default function WatchPage() {
               <Download size={18} />
               <span className="text-sm">Download</span>
             </a>
-          </div>
+          </div> */}
         </div>
 
         <section className="bg-base-200/30 p-6 md:p-8 rounded-box border border-base-300/10">

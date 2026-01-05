@@ -1,3 +1,5 @@
+export type StreamType = "sub" | "dub" | "hsub";
+
 export interface IStreamLink {
   name: string;
   url: string;

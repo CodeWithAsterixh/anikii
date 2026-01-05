@@ -3,7 +3,7 @@ import { Header } from "../components/header/header";
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-base-100 text-base-content flex flex-col">
+    <div className="max-h-screen overflow-y-auto bg-base-100 text-base-content flex flex-col">
       <Header />
       <main className="flex-grow container mx-auto px-4 py-6 md:py-10">
         {children}

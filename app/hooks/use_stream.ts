@@ -7,6 +7,7 @@ import {
   get_direct_download_url as get_direct_url,
   get_live_stream_url as get_live_url
 } from "../helpers/stream_controller";
+import type { StreamType } from "../types";
 
 export function use_stream(id: number, ep?: number) {
   const metadata = use_async(get_stream_metadata);
@@ -24,13 +25,13 @@ export function use_stream(id: number, ep?: number) {
     }
   }, [id, ep]);
 
-  const get_proxied_download_url = useCallback((type: "sub" | "dub" = "sub") => 
+  const get_proxied_download_url = useCallback((type: StreamType = "sub") => 
     ep ? get_proxied_url(id, ep, type) : "", [id, ep]);
 
-  const get_direct_download_url = useCallback((type: "sub" | "dub" = "sub", provider?: string) => 
+  const get_direct_download_url = useCallback((type: StreamType = "sub", provider?: string) => 
     ep ? get_direct_url(id, ep, type, provider) : "", [id, ep]);
 
-  const get_live_stream_url = useCallback((type: "sub" | "dub" = "sub", provider?: string) => 
+  const get_live_stream_url = useCallback((type: StreamType = "sub", provider?: string) => 
     ep ? get_live_url(id, ep, type, provider) : "", [id, ep]);
 
   return {
