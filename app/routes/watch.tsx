@@ -1,12 +1,12 @@
+import { Download, Globe, Info, Layers, Server } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router";
-import { useState, useEffect, useMemo } from "react";
-import { MainLayout } from "../layouts/main_layout";
-import { VideoPlayer } from "../components/video_player/video_player";
-import { SectionTitle } from "../components/section_title/section_title";
 import { EpisodeList } from "../components/episode_list/episode_list";
-import { use_stream } from "../hooks/use_stream";
-import { Download, Info, Globe, Layers, Server } from "lucide-react";
+import { SectionTitle } from "../components/section_title/section_title";
 import { ErrorView } from "../components/status_views/error_view";
+import { VideoPlayer } from "../components/video_player/video_player";
+import { use_stream } from "../hooks/use_stream";
+import { MainLayout } from "../layouts/main_layout";
 
 export default function WatchPage() {
   const { id, ep } = useParams();
@@ -52,8 +52,6 @@ export default function WatchPage() {
     ? extra_data?.episodesSub?.download_link 
     : extra_data?.episodesDub?.download_link;
 
-  const proxied_download_link = get_proxied_download_url(stream_type);
-  const direct_download_link = get_direct_download_url(stream_type);
 
   // Auto-select primary link when data loads or type changes
   useEffect(() => {
