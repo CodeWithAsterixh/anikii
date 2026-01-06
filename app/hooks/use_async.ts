@@ -19,15 +19,20 @@ export function use_async<T>(
   });
 
   const last_args = useRef<any[]>([]);
+  const call_id = useRef(0);
 
   const execute = useCallback(
     async (...args: any[]) => {
+      const current_id = ++call_id.current;
       last_args.current = args;
       set_state((prev) => ({ ...prev, loading: true, error: null }));
       
       try {
         const response = await asyncFunction(...args);
         
+        // Only update state if this is still the most recent call
+        if (current_id !== call_id.current) return null;
+
         // Handle empty data patterns
         // If it's an envelope { data: ... }, check the nested data
         const payload = (response && typeof response === 'object' && 'data' in response) 
@@ -46,6 +51,8 @@ export function use_async<T>(
         });
         return response;
       } catch (error: any) {
+        if (current_id !== call_id.current) return null;
+        
         set_state({ 
           data: null, 
           loading: false, 

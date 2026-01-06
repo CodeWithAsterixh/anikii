@@ -6,11 +6,24 @@ const API_BASE_URL = __BASEURL__;
 
 export const api_client = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 60000,
+  timeout: 30000, // Reduced from 60s for better responsiveness
   headers: {
     "Content-Type": "application/json",
+    "X-Requested-With": "XMLHttpRequest", // Helps prevent CSRF in some backend setups
   },
+  withCredentials: true, // If cookies are used for session/CSRF later
 });
+
+api_client.interceptors.request.use(
+  (config) => {
+    // Ensure all requests are over HTTPS in production if baseURL is external
+    if (import.meta.env.PROD && config.baseURL?.startsWith("http://")) {
+      config.baseURL = config.baseURL.replace("http://", "https://");
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 api_client.interceptors.response.use(
   (response) => {

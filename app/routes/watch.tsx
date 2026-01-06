@@ -1,4 +1,4 @@
-import { Download, Globe, Info, Layers, Server } from "lucide-react";
+import { Globe, Info, Layers, Server } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router";
 import { EpisodeList } from "../components/episode_list/episode_list";
@@ -6,6 +6,7 @@ import { SectionTitle } from "../components/section_title/section_title";
 import { ErrorView } from "../components/status_views/error_view";
 import { VideoPlayer } from "../components/video_player/video_player";
 import { use_stream } from "../hooks/use_stream";
+import { use_watch_links } from "../hooks/use_watch_links";
 import { MainLayout } from "../layouts/main_layout";
 import type { StreamType } from "../types";
 
@@ -16,80 +17,19 @@ export default function WatchPage() {
   
   const { 
     episode_extra, 
-    get_proxied_download_url, 
-    get_direct_download_url, 
-    get_live_stream_url 
   } = use_stream(anime_id, episode_num);
   
-  const [stream_type, setStreamType] = useState<StreamType>("sub");
-  const [stream_url, setStreamUrl] = useState<string>("");
-  const [selected_source_name, setSelectedSourceName] = useState<string>("");
-
-  const extra_data = episode_extra.data?.data;
-  const sub_data = extra_data?.episodesSub;
-  const dub_data = extra_data?.episodesDub;
-
-  const sub_links = sub_data?.stream_links || [];
-  const dub_links = dub_data?.stream_links || [];
-  
-  // HSUB links might come from sub_data or grouped separately
-  const hsub_links = sub_data?.links_hsub || [];
-
-  const has_dub = (Array.isArray(dub_links) && dub_links.length > 0) || (dub_data?.links_dub?.length > 0);
-  const has_hsub = Array.isArray(hsub_links) && hsub_links.length > 0;
-
-  const current_links = useMemo(() => {
-    let base_links: any[] = [];
-    if (stream_type === "sub") base_links = sub_links;
-    else if (stream_type === "dub") base_links = (dub_data as any)?.links_dub || dub_links;
-    else if (stream_type === "hsub") base_links = hsub_links;
-    
-    // Filter for only HD-1 and HD-2, and ensure uniqueness
-    const filtered_map = new Map();
-    
-    if (Array.isArray(base_links)) {
-      base_links.forEach((link: any) => {
-        const name = link.name?.toUpperCase();
-        if ((name === "HD-1" || name === "HD-2") && !filtered_map.has(name)) {
-          filtered_map.set(name, link);
-        }
-      });
-    }
-
-    const extended_links = Array.from(filtered_map.values());
-    
-    // extended_links.push({
-    //   name: "Anikii Direct",
-    //   url: get_direct_download_url(stream_type === "dub" ? "dub" : "sub")
-    // });
-    
-    return extended_links;
-  }, [stream_type, sub_links, dub_links, hsub_links, dub_data, get_direct_download_url]);
-
-  const external_download_link = stream_type === "sub" 
-    ? extra_data?.episodesSub?.download_link 
-    : extra_data?.episodesDub?.download_link;
-
-  const download_link = external_download_link || get_proxied_download_url(stream_type);
-
-
-  // Auto-select primary link when data loads or type changes
-  useEffect(() => {
-    if (Array.isArray(current_links) && current_links.length > 0) {
-      // Prioritize HD-1, then HD-2, then others
-      const primary = 
-        current_links.find((l: any) => l.name?.toUpperCase() === "HD-1") ||
-        current_links.find((l: any) => l.name?.toUpperCase() === "HD-2") ||
-        current_links.find((l: any) => l.name?.toUpperCase() === "ANIKII DIRECT") ||
-        current_links[0];
-      
-      setStreamUrl(primary.url || "");
-      setSelectedSourceName(primary.name || "");
-    } else {
-      setStreamUrl("");
-      setSelectedSourceName("");
-    }
-  }, [current_links]);
+  const {
+    stream_type,
+    set_stream_type,
+    stream_url,
+    set_stream_url,
+    selected_source_name,
+    set_selected_source_name,
+    current_links,
+    has_dub,
+    has_hsub,
+  } = use_watch_links(episode_extra.data?.data);
 
   if (episode_extra.is_loading) {
     return (
@@ -114,6 +54,7 @@ export default function WatchPage() {
     );
   }
 
+  const extra_data = episode_extra.data?.data;
   const anime_info = extra_data?.animeInfo;
   const last_episode = anime_info?.episodes?.lastEpisode || 0;
 
@@ -127,14 +68,14 @@ export default function WatchPage() {
         <div className="flex flex-wrap gap-4 items-center justify-between mb-8">
           <div className="flex items-center gap-2 bg-base-200/50 p-1 rounded-full border border-base-300/20">
             <button 
-              onClick={() => setStreamType("sub")}
+              onClick={() => set_stream_type("sub")}
               className={`px-6 py-2 rounded-full text-sm font-bold transition-all ${stream_type === "sub" ? "bg-primary text-primary-content shadow-lg" : "hover:bg-base-300"}`}
             >
               SUB
             </button>
             {has_hsub && (
               <button 
-                onClick={() => setStreamType("hsub")}
+                onClick={() => set_stream_type("hsub")}
                 className={`px-6 py-2 rounded-full text-sm font-bold transition-all ${stream_type === "hsub" ? "bg-primary text-primary-content shadow-lg" : "hover:bg-base-300"}`}
               >
                 HSUB
@@ -142,7 +83,7 @@ export default function WatchPage() {
             )}
             {has_dub && (
               <button 
-                onClick={() => setStreamType("dub")}
+                onClick={() => set_stream_type("dub")}
                 className={`px-6 py-2 rounded-full text-sm font-bold transition-all ${stream_type === "dub" ? "bg-primary text-primary-content shadow-lg" : "hover:bg-base-300"}`}
               >
                 DUB
@@ -155,8 +96,8 @@ export default function WatchPage() {
               <button
                 key={link.name}
                 onClick={() => {
-                  setStreamUrl(link.url);
-                  setSelectedSourceName(link.name);
+                  set_stream_url(link.url);
+                  set_selected_source_name(link.name);
                 }}
                 className={`
                   flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold border transition-all

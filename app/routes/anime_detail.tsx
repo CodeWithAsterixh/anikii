@@ -6,6 +6,7 @@ import { AnimeCard } from "../components/anime_card/anime_card";
 import { use_anime } from "../hooks/use_anime";
 import { ErrorView } from "../components/status_views/error_view";
 import { EmptyState } from "../components/status_views/empty_state";
+import { sanitize_html } from "../helpers/sanitizer";
 
 export default function AnimeDetail() {
   const { id } = useParams();
@@ -70,7 +71,7 @@ export default function AnimeDetail() {
           )}
 
           <p className="text-base-content/80 leading-relaxed mb-8 max-w-3xl" 
-             dangerouslySetInnerHTML={{ __html: anime.description || "No description available." }} />
+             dangerouslySetInnerHTML={{ __html: sanitize_html(anime.description || "No description available.") }} />
           
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 py-6 border-y border-base-200">
             <div>
