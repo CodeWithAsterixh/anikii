@@ -164,7 +164,7 @@ export default function WatchPage() {
         <div className="flex flex-col md:flex-row justify-between items-start gap-6 mb-10">
           <div className="flex-grow">
             <h1 className="text-2xl font-bold mb-2 tracking-tight flex items-center gap-3">
-              {anime_info?.title || `Episode ${episode_num}`}
+              {`Episode ${episode_num}`}
               {selected_source_name && (
                 <span className="badge badge-primary badge-sm font-bold">{selected_source_name}</span>
               )}

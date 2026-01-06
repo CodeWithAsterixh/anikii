@@ -62,7 +62,7 @@ export const AnimeDetailsSchema = AnimeSchema.extend({
     airingAt: z.number(),
     timeUntilAiring: z.number(),
     episode: z.number(),
-  }).optional(),
+  }).nullable().optional().catch(null),
 });
 
 export function createApiEnvelopeSchema<T extends z.ZodTypeAny>(dataSchema: T) {
