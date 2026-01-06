@@ -1,23 +1,88 @@
 import { Globe, Info, Layers, Server } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
-import { useParams } from "react-router";
+import { useLoaderData } from "react-router";
 import { EpisodeList } from "../components/episode_list/episode_list";
 import { SectionTitle } from "../components/section_title/section_title";
 import { ErrorView } from "../components/status_views/error_view";
 import { VideoPlayer } from "../components/video_player/video_player";
-import { use_stream } from "../hooks/use_stream";
+import { get_stream_details } from "../helpers/stream_controller";
+import { EpisodeExtraEnvelopeSchema } from "../helpers/schemas";
 import { use_watch_links } from "../hooks/use_watch_links";
 import { MainLayout } from "../layouts/main_layout";
-import type { StreamType } from "../types";
+import { SITE_URL } from "../config";
+import type { Route } from "./+types/watch";
+
+export const meta: Route.MetaFunction = ({ data, params }) => {
+  if (!data || data.error) {
+    return [{ title: "Episode Not Found | Anikii" }];
+  }
+  
+  const { ep } = params;
+  const anime = data.extra_data?.animeInfo;
+  const title = anime?.title || `Episode ${ep}`;
+  const description = `Watch ${title} online in high quality on Anikii.`;
+  const canonical_url = `${SITE_URL}/watch/${params.id}/${ep}`;
+
+  return [
+    { title: `Watching ${title} - Episode ${ep} | Anikii` },
+    { name: "description", content: description },
+    { property: "og:title", content: `Watching ${title} - Episode ${ep} | Anikii` },
+    { property: "og:description", content: description },
+    { property: "og:type", content: "video.episode" },
+    { property: "og:url", content: canonical_url },
+    { name: "twitter:card", content: "summary_large_image" },
+    { tagName: "link", rel: "canonical", href: canonical_url },
+  ];
+};
+
+export const loader = async ({ params }: Route.LoaderArgs) => {
+  const anime_id = Number(params.id);
+  const episode_num = Number(params.ep);
+  
+  if (isNaN(anime_id) || isNaN(episode_num)) {
+    throw new Response("Invalid Parameters", { status: 400 });
+  }
+
+  try {
+    const stream_data_raw = await get_stream_details(anime_id, episode_num);
+    
+    // Validate with Zod for security and type safety
+    const stream_data = EpisodeExtraEnvelopeSchema.parse(stream_data_raw);
+    
+    if (!stream_data.data) {
+      throw new Response("Stream Data Not Found", { status: 404 });
+    }
+
+    return {
+      extra_data: stream_data.data,
+      anime_id,
+      episode_num,
+    };
+  } catch (error) {
+    console.error("Watch loader error:", error);
+    if (error instanceof Response) throw error;
+    return {
+      error: true,
+      message: error instanceof Error ? error.message : "An unexpected error occurred"
+    };
+  }
+};
 
 export default function WatchPage() {
-  const { id, ep } = useParams();
-  const anime_id = Number(id);
-  const episode_num = Number(ep);
-  
-  const { 
-    episode_extra, 
-  } = use_stream(anime_id, episode_num);
+  const data = useLoaderData<typeof loader>();
+
+  if (data.error) {
+    return (
+      <MainLayout>
+        <ErrorView 
+          message={data.message || "Unable to load the video player. This might be due to a temporary server issue."} 
+          onRetry={() => window.location.reload()}
+          className="my-20"
+        />
+      </MainLayout>
+    );
+  }
+
+  const { extra_data, anime_id, episode_num } = data;
   
   const {
     stream_type,
@@ -29,32 +94,8 @@ export default function WatchPage() {
     current_links,
     has_dub,
     has_hsub,
-  } = use_watch_links(episode_extra.data?.data);
+  } = use_watch_links(extra_data);
 
-  if (episode_extra.is_loading) {
-    return (
-      <MainLayout>
-        <div className="max-w-5xl mx-auto space-y-6">
-          <div className="animate-pulse aspect-video bg-base-200 rounded-box" />
-          <div className="h-12 w-1/3 bg-base-200 rounded-md animate-pulse" />
-        </div>
-      </MainLayout>
-    );
-  }
-
-  if (episode_extra.is_error) {
-    return (
-      <MainLayout>
-        <ErrorView 
-          message="Unable to load the video player. This might be due to a temporary server issue." 
-          onRetry={episode_extra.retry}
-          className="my-20"
-        />
-      </MainLayout>
-    );
-  }
-
-  const extra_data = episode_extra.data?.data;
   const anime_info = extra_data?.animeInfo;
   const last_episode = anime_info?.episodes?.lastEpisode || 0;
 
@@ -113,7 +154,7 @@ export default function WatchPage() {
           </div>
         </div>
 
-        {!stream_url && !episode_extra.is_loading && (
+        {!stream_url && (
           <div className="bg-warning/10 text-warning p-4 rounded-box flex items-center gap-3 mb-6 border border-warning/20">
             <Info size={20} />
             <p className="text-sm font-semibold">No streaming links available for this version yet.</p>
@@ -139,31 +180,15 @@ export default function WatchPage() {
               </span>
             </div>
           </div>
-          
-          {/* <div className="flex flex-wrap gap-3 w-full md:w-auto">
-            <a 
-              href={download_link}
-              target="_blank"
-              rel="noopener noreferrer"
-              title="External Download Provider"
-              className={`
-                flex items-center justify-center gap-2 bg-base-200 hover:bg-base-300 px-6 py-3 rounded-full font-bold transition-all active:scale-95 flex-grow md:flex-grow-0
-                ${!download_link ? "opacity-50 pointer-events-none" : ""}
-              `}
-            >
-              <Download size={18} />
-              <span className="text-sm">Download</span>
-            </a>
-          </div> */}
         </div>
 
         <section className="bg-base-200/30 p-6 md:p-8 rounded-box border border-base-300/10">
           <SectionTitle title="Episodes" />
-          <EpisodeList 
+          {anime_id&&<EpisodeList 
             anime_id={anime_id} 
             total_episodes={last_episode} 
             current_ep={episode_num}
-          />
+          />}
         </section>
       </div>
     </MainLayout>

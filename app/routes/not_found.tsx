@@ -1,5 +1,13 @@
 import { Link } from "react-router";
 import { MainLayout } from "../layouts/main_layout";
+import type { Route } from "./+types/not_found";
+
+export const meta: Route.MetaFunction = () => {
+  return [
+    { title: "Page Not Found | Anikii" },
+    { name: "robots", content: "noindex, follow" },
+  ];
+};
 
 export default function NotFound() {
   return (

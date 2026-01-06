@@ -12,6 +12,16 @@ export const get_stream_metadata = async (id: number) => {
   return StreamMetadataEnvelopeSchema.parse(response);
 };
 
+export const get_stream_details = async (id: number, ep: number) => {
+  if (!id || isNaN(id) || !ep || isNaN(ep)) {
+    throw new Error("Invalid anime ID or episode number provided");
+  }
+  const response = await api_client.get<any, IApiSuccessEnvelope<IEpisodeExtra>>(
+    `/anime/${id}/stream/ep/${ep}/extra`
+  );
+  return EpisodeExtraEnvelopeSchema.parse(response);
+};
+
 export const get_episode_extra = async (id: number, ep: number) => {
   if (!id || isNaN(id) || !ep || isNaN(ep)) {
     throw new Error("Invalid anime ID or episode number provided");

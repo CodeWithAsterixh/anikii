@@ -1,46 +1,108 @@
-import { useParams } from "react-router";
+import { useLoaderData } from "react-router";
 import { MainLayout } from "../layouts/main_layout";
 import { SectionTitle } from "../components/section_title/section_title";
 import { EpisodeList } from "../components/episode_list/episode_list";
 import { AnimeCard } from "../components/anime_card/anime_card";
-import { use_anime } from "../hooks/use_anime";
+import { get_anime_details, get_recommended_anime } from "../helpers/anime_controller";
+import { AnimeDetailsEnvelopeSchema, AnimeListEnvelopeSchema } from "../helpers/schemas";
 import { ErrorView } from "../components/status_views/error_view";
 import { EmptyState } from "../components/status_views/empty_state";
-import { sanitize_html } from "../helpers/sanitizer";
+import { SITE_URL } from "../config";
+import type { Route } from "./+types/anime_detail";
+import { sanitize_html } from "~/helpers/sanitizer";
 
-export default function AnimeDetail() {
-  const { id } = useParams();
-  const anime_id = Number(id);
-  const { details, recommended } = use_anime(anime_id);
+export const meta: Route.MetaFunction = ({ data }) => {
+  if (!data || data.error || !data.anime) {
+    return [{ title: "Anime Not Found | Anikii" }];
+  }
+  
+  const anime = data.anime;
+  const title = anime.title?.english || anime.title?.romaji || "Anime Details";
+  const description = anime.description?.replace(/<[^>]*>?/gm, '').slice(0, 160) || "Watch " + title + " on Anikii.";
+  const image = anime.coverImage?.cover_image;
+  const canonical_url = `${SITE_URL}/anime/${anime.id}`;
 
-  if (details.is_loading) {
-    return (
-      <MainLayout>
-        <div className="flex flex-col md:flex-row gap-8 mb-12 animate-pulse">
-          <div className="w-full md:w-1/4 aspect-[3/4] bg-base-200 rounded-box" />
-          <div className="flex-grow space-y-4">
-            <div className="h-12 bg-base-200 w-3/4 rounded-md" />
-            <div className="h-4 bg-base-200 w-1/4 rounded-md" />
-            <div className="h-32 bg-base-200 w-full rounded-md" />
-          </div>
-        </div>
-      </MainLayout>
-    );
+  return [
+    { title: `${title} | Anikii` },
+    { name: "description", content: description },
+    { property: "og:title", content: `${title} | Anikii` },
+    { property: "og:description", content: description },
+    { property: "og:image", content: image },
+    { property: "og:url", content: canonical_url },
+    { property: "og:type", content: "video.tv_show" },
+    { name: "twitter:card", content: "summary_large_image" },
+    { name: "twitter:title", content: `${title} | Anikii` },
+    { name: "twitter:description", content: description },
+    { name: "twitter:image", content: image },
+    { tagName: "link", rel: "canonical", href: canonical_url },
+  ];
+};
+
+export const loader = async ({ params }: Route.LoaderArgs) => {
+  const anime_id = Number(params.id);
+  
+  if (isNaN(anime_id)) {
+    throw new Response("Invalid Anime ID", { status: 400 });
   }
 
-  if (details.is_error || !details.data?.data) {
+  try {
+    const [detailsRaw, recommendedRaw] = await Promise.all([
+      get_anime_details(anime_id),
+      get_recommended_anime(anime_id),
+    ]);
+
+    // Validate with Zod for security and type safety
+    const details = AnimeDetailsEnvelopeSchema.parse(detailsRaw);
+    const recommended = AnimeListEnvelopeSchema.parse(recommendedRaw);
+
+    if (!details.data) {
+      throw new Response("Anime Not Found", { status: 404 });
+    }
+
+    return {
+      anime: details.data,
+      recommended: recommended.data || [],
+      anime_id,
+    };
+  } catch (error) {
+    console.error("Anime detail loader error:", error);
+    if (error instanceof Response) throw error;
+    return {
+      error: true,
+      message: error instanceof Error ? error.message : "An unexpected error occurred"
+    };
+  }
+};
+
+export default function AnimeDetail() {
+  const data = useLoaderData<typeof loader>();
+
+  if (data.error) {
     return (
       <MainLayout>
         <ErrorView 
-          message={details.error?.message || "We couldn't find the details for this anime."} 
-          onRetry={details.retry}
+          message={data.message || "We couldn't find the details for this anime."} 
+          onRetry={() => window.location.reload()}
           className="my-20"
         />
       </MainLayout>
     );
   }
 
-  const anime = details.data.data;
+  const { anime, recommended, anime_id } = data;
+
+  if (!anime) {
+    return (
+      <MainLayout>
+        <ErrorView 
+          message="Anime not found. It may have been removed or the ID is incorrect." 
+          onRetry={() => window.location.reload()}
+          className="my-20"
+        />
+      </MainLayout>
+    );
+  }
+
   const title = anime.title?.english || anime.title?.romaji || "Unknown Title";
 
   return (
@@ -103,11 +165,11 @@ export default function AnimeDetail() {
         )}
       </section>
 
-      {recommended.data?.data && (recommended.data.data || []).length > 0 && (
+      {recommended.length > 0 && (
         <section>
           <SectionTitle title="Recommended For You" />
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6">
-            {(recommended.data.data || []).map((rec: any) => (
+            {recommended.map((rec: any) => (
               <AnimeCard key={rec.id} anime={rec} />
             ))}
           </div>
