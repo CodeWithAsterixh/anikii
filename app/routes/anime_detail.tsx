@@ -11,14 +11,14 @@ import { SITE_URL } from "../config";
 import type { Route } from "./+types/anime_detail";
 import { sanitize_html } from "~/helpers/sanitizer";
 
-export const meta: Route.MetaFunction = ({ data }) => {
-  if (!data || data.error || !data.anime) {
+export const meta: Route.MetaFunction = ({ loaderData:metaData }) => {
+  if (!metaData || metaData.error || !metaData.anime) {
     return [{ title: "Anime Not Found | Anikii" }];
   }
   
-  const anime = data.anime;
+  const anime = metaData.anime;
   const title = anime.title?.english || anime.title?.romaji || "Anime Details";
-  const description = anime.description?.replace(/<[^>]*>?/gm, '').slice(0, 160) || "Watch " + title + " on Anikii.";
+  const description = anime.description?.replaceAll(/<[^>]*>?/gm, '').slice(0, 160) || "Watch " + title + " on Anikii.";
   const image = anime.coverImage?.cover_image;
   const canonical_url = `${SITE_URL}/anime/${anime.id}`;
 
@@ -41,7 +41,7 @@ export const meta: Route.MetaFunction = ({ data }) => {
 export const loader = async ({ params }: Route.LoaderArgs) => {
   const anime_id = Number(params.id);
   
-  if (isNaN(anime_id)) {
+  if (Number.isNaN(anime_id)) {
     throw new Response("Invalid Anime ID", { status: 400 });
   }
 
@@ -82,7 +82,7 @@ export default function AnimeDetail() {
       <MainLayout>
         <ErrorView 
           message={data.message || "We couldn't find the details for this anime."} 
-          onRetry={() => window.location.reload()}
+          onRetry={() => globalThis.window.location.reload()}
           className="my-20"
         />
       </MainLayout>
@@ -96,7 +96,7 @@ export default function AnimeDetail() {
       <MainLayout>
         <ErrorView 
           message="Anime not found. It may have been removed or the ID is incorrect." 
-          onRetry={() => window.location.reload()}
+          onRetry={() => globalThis.window.location.reload()}
           className="my-20"
         />
       </MainLayout>

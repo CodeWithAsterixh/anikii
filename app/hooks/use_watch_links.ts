@@ -6,10 +6,11 @@ interface StreamLink {
   url: string;
 }
 
-export function use_watch_links(extra_data: any) {
-  const [stream_type, set_stream_type] = useState<StreamType>("sub");
-  const [stream_url, set_stream_url] = useState<string>("");
-  const [selected_source_name, set_selected_source_name] = useState<string>("");
+
+export function useWatchLinks(extra_data: any) {
+  const [streamType, setStreamType] = useState<StreamType>("sub");
+  const [streamUrl, setStreamUrl] = useState<string>("");
+  const [selectedSourceName, setSelectedSourceName] = useState<string>("");
 
   const sub_data = extra_data?.episodesSub;
   const dub_data = extra_data?.episodesDub;
@@ -23,9 +24,9 @@ export function use_watch_links(extra_data: any) {
 
   const current_links = useMemo(() => {
     let base_links: StreamLink[] = [];
-    if (stream_type === "sub") base_links = sub_links;
-    else if (stream_type === "dub") base_links = (dub_data as any)?.links_dub || dub_links;
-    else if (stream_type === "hsub") base_links = hsub_links;
+    if (streamType === "sub") base_links = sub_links;
+    else if (streamType === "dub") base_links = (dub_data)?.links_dub || dub_links;
+    else if (streamType === "hsub") base_links = hsub_links;
     
     const filtered_map = new Map<string, StreamLink>();
     
@@ -47,7 +48,7 @@ export function use_watch_links(extra_data: any) {
     }
 
     return Array.from(filtered_map.values());
-  }, [stream_type, sub_links, dub_links, hsub_links, dub_data]);
+  }, [streamType, sub_links, dub_links, hsub_links, dub_data]);
 
   useEffect(() => {
     if (current_links.length > 0) {
@@ -56,21 +57,21 @@ export function use_watch_links(extra_data: any) {
         current_links.find((l) => l.name?.toUpperCase() === "HD-2") ||
         current_links[0];
       
-      set_stream_url(primary.url || "");
-      set_selected_source_name(primary.name || "");
+      setStreamUrl(primary.url || "");
+      setSelectedSourceName(primary.name || "");
     } else {
-      set_stream_url("");
-      set_selected_source_name("");
+      setStreamUrl("");
+      setSelectedSourceName("");
     }
   }, [current_links]);
 
   return {
-    stream_type,
-    set_stream_type,
-    stream_url,
-    set_stream_url,
-    selected_source_name,
-    set_selected_source_name,
+    stream_type: streamType,
+    set_stream_type: setStreamType,
+    stream_url: streamUrl,
+    set_stream_url: setStreamUrl,
+    selected_source_name: selectedSourceName,
+    set_selected_source_name: setSelectedSourceName,
     current_links,
     has_dub,
     has_hsub,

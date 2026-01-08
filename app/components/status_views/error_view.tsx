@@ -10,7 +10,7 @@ export function ErrorView({
   message = "Something went wrong while loading this content.", 
   onRetry,
   className = ""
-}: ErrorViewProps) {
+}: Readonly<ErrorViewProps>) {
   return (
     <div className={`flex flex-col items-center justify-center p-8 text-center bg-error/5 rounded-box border border-error/20 ${className}`}>
       <AlertCircle className="text-error mb-4" size={48} />

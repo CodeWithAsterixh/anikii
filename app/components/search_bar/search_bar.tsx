@@ -4,10 +4,10 @@ import { useState, useEffect } from "react";
 export function SearchBar({ 
   onSearch, 
   initialValue = "" 
-}: { 
+}: Readonly<{ 
   onSearch: (query: string) => void;
   initialValue?: string;
-}) {
+}>) {
   const [query, setQuery] = useState(initialValue);
 
   useEffect(() => {

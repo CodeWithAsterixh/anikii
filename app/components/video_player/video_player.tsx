@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState, useMemo } from "react";
 import { AlertTriangle, Play } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 declare global {
   interface Window {
@@ -7,15 +7,15 @@ declare global {
   }
 }
 
-export function VideoPlayer({ src }: { src: string }) {
-  const [error, set_error] = useState(false);
-  const [loading, set_loading] = useState(false);
+export function VideoPlayer({ src }: Readonly<{ src: string }>) {
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const is_safe_url = useMemo(() => {
     if (!src) return false;
     try {
-      const url = new URL(src, window.location.origin);
+      const url = new URL(src, globalThis.window.location.origin);
       return ["http:", "https:"].includes(url.protocol);
     } catch {
       return false;
@@ -26,48 +26,48 @@ export function VideoPlayer({ src }: { src: string }) {
     const video = videoRef.current;
     if (!src || !is_safe_url) return;
 
-    set_error(false);
-    set_loading(true);
+    setError(false);
+    setLoading(true);
 
     const is_hls = src.toLowerCase().includes(".m3u8");
 
     if (is_hls && video) {
       if (video.canPlayType('application/vnd.apple.mpegurl')) {
         video.src = src;
-      } else if (window.Hls && window.Hls.isSupported()) {
-        const hls = new window.Hls();
+      } else if (globalThis.window?.Hls.isSupported()) {
+        const hls = new globalThis.window.Hls();
         hls.loadSource(src);
         hls.attachMedia(video);
-        hls.on(window.Hls.Events.ERROR, (_event: any, data: any) => {
+        hls.on(globalThis.window.Hls.Events.ERROR, (_event: any, data: any) => {
           if (data.fatal) {
-            set_error(true);
-            set_loading(false);
+            setError(true);
+            setLoading(false);
           }
         });
-        hls.on(window.Hls.Events.MANIFEST_PARSED, () => {
-          set_loading(false);
+        hls.on(globalThis.window.Hls.Events.MANIFEST_PARSED, () => {
+          setLoading(false);
         });
         return () => hls.destroy();
       } else {
-        set_error(true);
-        set_loading(false);
+        setError(true);
+        setLoading(false);
       }
     } else if (video) {
       video.src = src;
     } else {
       // If no video ref yet (e.g. iframe mode), we still need to clear loading
-      const timer = setTimeout(() => set_loading(false), 2000);
+      const timer = setTimeout(() => setLoading(false), 2000);
       return () => clearTimeout(timer);
     }
   }, [src]);
 
   const handle_error = () => {
-    set_error(true);
-    set_loading(false);
+    setError(true);
+    setLoading(false);
   };
 
   const handle_load = () => {
-    set_loading(false);
+    setLoading(false);
   };
 
   return (
@@ -126,6 +126,7 @@ export function VideoPlayer({ src }: { src: string }) {
                 autoPlay
                 controlsList="nodownload"
               >
+                <track kind="captions" />
                 Your browser does not support the video tag.
               </video>
             ) : (
@@ -133,8 +134,7 @@ export function VideoPlayer({ src }: { src: string }) {
                 src={src}
                 className="w-full h-full"
                 allowFullScreen
-                scrolling="no"
-                frameBorder="0"
+                
                 allow="autoplay; encrypted-media; picture-in-picture"
                 title="Anime Stream"
                 onError={handle_error}

@@ -34,35 +34,35 @@ export const SeasonSchema = z.object({
 export const AnimeSchema = z.object({
   id: z.number(),
   title: z.union([z.string(), AnimeTitleSchema]),
-  episodes: z.number().catch(0),
-  status: z.string().optional().catch("Unknown"),
-  coverImage: CoverImageSchema.optional().catch({}),
-  format: z.string().optional().catch("N/A"),
-  popularity: z.number().optional().catch(0),
-  averageScore: z.number().optional().catch(0),
-  trending: z.number().optional().catch(0),
-  releaseDate: z.union([z.number(), z.string()]).optional().catch(""),
+  episodes: z.number().default(0),
+  status: z.string().optional().default("Unknown"),
+  coverImage: CoverImageSchema.optional().default({}),
+  format: z.string().optional().default("N/A"),
+  popularity: z.number().optional().default(0),
+  averageScore: z.number().optional().default(0),
+  trending: z.number().optional().default(0),
+  releaseDate: z.union([z.number(), z.string()]).optional().default(""),
 });
 
 export const AnimeDetailsSchema = AnimeSchema.extend({
   title: AnimeTitleSchema, // In details it's always an object
-  description: z.string().optional().catch("No description available."),
-  genres: z.array(z.string()).optional().catch([]),
-  studios: z.array(z.string()).optional().catch([]),
-  duration: z.number().optional().catch(0),
-  season: SeasonSchema.optional().catch({}),
-  type: z.string().optional().catch("TV"),
+  description: z.string().optional().default("No description available."),
+  genres: z.array(z.string()).optional().default([]),
+  studios: z.array(z.string()).optional().default([]),
+  duration: z.number().optional().default(0),
+  season: SeasonSchema.optional().default({}),
+  type: z.string().optional().default("TV"),
   trailer: z.object({
     id: z.string().optional(),
     site: z.string().optional(),
     thumbnail: z.string().optional(),
-  }).optional().catch({}),
-  tags: z.array(z.string()).optional().catch([]),
+  }).optional().default({}),
+  tags: z.array(z.string()).optional().default([]),
   nextAiringEpisode: z.object({
     airingAt: z.number(),
     timeUntilAiring: z.number(),
     episode: z.number(),
-  }).nullable().optional().catch(null),
+  }).nullable().optional().default(null),
 });
 
 export function createApiEnvelopeSchema<T extends z.ZodTypeAny>(dataSchema: T) {
@@ -79,15 +79,15 @@ export const AnimeDetailsEnvelopeSchema = createApiEnvelopeSchema(AnimeDetailsSc
 
 export const StreamLinkSchema = z.object({
   name: z.string(),
-  url: z.string().url(),
+  url: z.url(),
 });
 
 export const EpisodeInfoSchema = z.object({
-  title: z.string().optional().catch(""),
-  thumbnail: z.string().optional().catch(""),
+  title: z.string().optional().default(""),
+  thumbnail: z.string().optional().default(""),
   episodes: z.object({
-    currentEpisode: z.number().catch(0),
-    lastEpisode: z.number().catch(0),
+    currentEpisode: z.number().default(0),
+    lastEpisode: z.number().default(0),
   }).optional(),
 });
 
@@ -96,9 +96,9 @@ export const EpisodeExtraSchema = z.object({
   episodesDub: z.any().optional(),
   animeInfo: EpisodeInfoSchema.optional(),
   meta: z.object({
-    episode: z.number().catch(0),
-    hasSub: z.boolean().catch(false),
-    hasDub: z.boolean().catch(false),
+    episode: z.number().default(0),
+    hasSub: z.boolean().default(false),
+    hasDub: z.boolean().default(false),
   }).optional(),
 });
 
@@ -106,10 +106,10 @@ export const StreamMetadataSchema = z.object({
   id: z.number(),
   streamingEpisodes: z.array(z.object({
     title: z.string(),
-    thumbnail: z.string().optional().catch(""),
-    url: z.string().url(),
-    site: z.string().optional().catch("Unknown"),
-  })).optional().catch([]),
+    thumbnail: z.string().optional().default(""),
+    url: z.url(),
+    site: z.string().optional().default("Unknown"),
+  })).optional().default([]),
 });
 
 export const StreamMetadataEnvelopeSchema = createApiEnvelopeSchema(StreamMetadataSchema);

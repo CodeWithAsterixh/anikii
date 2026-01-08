@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 import type { IAnime } from "../../types";
 
-export function Carousel({ anime_list }: { anime_list: IAnime[] }) {
+export function Carousel({ anime_list }: Readonly<{ anime_list: IAnime[] }>) {
   // Graceful handling of empty or missing list
   if (!Array.isArray(anime_list) || anime_list.length === 0) {
     return (

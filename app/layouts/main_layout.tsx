@@ -1,7 +1,7 @@
 import React from "react";
 import { Header } from "../components/header/header";
 
-export function MainLayout({ children }: { children: React.ReactNode }) {
+export function MainLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <div className="max-h-screen overflow-y-auto bg-base-100 text-base-content flex flex-col">
       <Header />

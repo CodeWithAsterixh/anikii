@@ -1,13 +1,13 @@
 import { useEffect } from "react";
-import { use_async } from "./use_async";
-import { 
-  get_anime_details, 
-  get_recommended_anime 
+import { useAsync } from "./use_async";
+import {
+  get_anime_details,
+  get_recommended_anime,
 } from "../helpers/anime_controller";
 
-export function use_anime(id: number) {
-  const details = use_async(get_anime_details);
-  const recommended = use_async(get_recommended_anime);
+export function useAnime(id: number) {
+  const details = useAsync(get_anime_details);
+  const recommended = useAsync(get_recommended_anime);
 
   useEffect(() => {
     if (id) {

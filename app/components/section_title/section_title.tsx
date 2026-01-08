@@ -1,4 +1,4 @@
-export function SectionTitle({ title, subtitle }: { title: string; subtitle?: string }) {
+export function SectionTitle({ title, subtitle }: Readonly<{ title: string; subtitle?: string }>) {
   return (
     <div className="mb-6">
       <h2 className="text-2xl font-bold border-l-4 border-primary pl-4">

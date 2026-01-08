@@ -12,7 +12,7 @@ export function EmptyState({
   message = "We couldn't find what you were looking for.", 
   className = "",
   icon
-}: EmptyStateProps) {
+}: Readonly<EmptyStateProps>) {
   return (
     <div className={`flex flex-col items-center justify-center p-12 text-center opacity-60 ${className}`}>
       {icon || <SearchX size={64} className="mb-6 opacity-20" />}

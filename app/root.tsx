@@ -23,7 +23,7 @@ export const links: Route.LinksFunction = () => [
   },
 ];
 
-export function Layout({ children }: { children: React.ReactNode }) {
+export function Layout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
       <head>
@@ -76,7 +76,7 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
         
         <div className="flex flex-col gap-3">
           <button 
-            onClick={() => window.location.reload()}
+            onClick={() => globalThis.window.location.reload()}
             className="w-full bg-primary text-primary-content py-3 rounded-full font-bold hover:bg-primary/90 transition-all"
           >
             Try Again

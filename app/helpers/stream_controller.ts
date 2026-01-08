@@ -3,7 +3,7 @@ import type { IApiSuccessEnvelope, IStreamMetadata, IEpisodeExtra } from "../typ
 import { StreamMetadataEnvelopeSchema, EpisodeExtraEnvelopeSchema } from "./schemas";
 
 export const get_stream_metadata = async (id: number) => {
-  if (!id || isNaN(id)) {
+  if (!id || Number.isNaN(id)) {
     throw new Error("Invalid anime ID provided");
   }
   const response = await api_client.get<any, IApiSuccessEnvelope<IStreamMetadata>>(
@@ -13,7 +13,7 @@ export const get_stream_metadata = async (id: number) => {
 };
 
 export const get_stream_details = async (id: number, ep: number) => {
-  if (!id || isNaN(id) || !ep || isNaN(ep)) {
+  if (!id || Number.isNaN(id) || !ep || Number.isNaN(ep)) {
     throw new Error("Invalid anime ID or episode number provided");
   }
   const response = await api_client.get<any, IApiSuccessEnvelope<IEpisodeExtra>>(
@@ -23,11 +23,11 @@ export const get_stream_details = async (id: number, ep: number) => {
 };
 
 export const get_episode_extra = async (id: number, ep: number) => {
-  if (!id || isNaN(id) || !ep || isNaN(ep)) {
+  if (!id || Number.isNaN(id) || !ep || Number.isNaN(ep)) {
     throw new Error("Invalid anime ID or episode number provided");
   }
   const response = await api_client.get<any, IApiSuccessEnvelope<IEpisodeExtra>>(
-    `/anime/${id}/stream/ep/${ep}/extra`
+    `/anime/${id}/ep/${ep}/extra`
   );
   return EpisodeExtraEnvelopeSchema.parse(response);
 };

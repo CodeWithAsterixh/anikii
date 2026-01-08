@@ -7,12 +7,13 @@ export interface IAsyncState<T> {
   is_empty: boolean;
 }
 
-export function use_async<T>(
+export function useAsync<T>(
   asyncFunction: (...args: any[]) => Promise<T>,
   options: { immediate?: boolean; initial_data?: T } = {}
 ) {
-  const [state, set_state] = useState<IAsyncState<T>>({
-    data: options.initial_data || null,
+  const [state, setState] = useState<IAsyncState<T>>({
+
+    data: options.initial_data ?? null,
     loading: false,
     error: null,
     is_empty: false,
@@ -25,7 +26,7 @@ export function use_async<T>(
     async (...args: any[]) => {
       const current_id = ++call_id.current;
       last_args.current = args;
-      set_state((prev) => ({ ...prev, loading: true, error: null }));
+      setState((prev) => ({ ...prev, loading: true, error: null }));
       
       try {
         const response = await asyncFunction(...args);
@@ -43,7 +44,7 @@ export function use_async<T>(
           (Array.isArray(payload) && payload.length === 0) ||
           (typeof payload === 'object' && Object.keys(payload).length === 0);
 
-        set_state({ 
+        setState({ 
           data: response, 
           loading: false, 
           error: null, 
@@ -53,7 +54,7 @@ export function use_async<T>(
       } catch (error: any) {
         if (current_id !== call_id.current) return null;
         
-        set_state({ 
+        setState({ 
           data: null, 
           loading: false, 
           error: error instanceof Error ? error : new Error(String(error)), 

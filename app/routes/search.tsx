@@ -59,7 +59,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 export default function SearchPage() {
   const { results, query, has_searched, error } = useLoaderData<typeof loader>();
   const navigation = useNavigation();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [_, setSearchParams] = useSearchParams();
   
   const is_loading = navigation.state === "loading" && navigation.location.pathname === "/search";
 
@@ -72,7 +72,7 @@ export default function SearchPage() {
       <SearchBar onSearch={perform_search} initialValue={query} />
 
       {error && (
-        <ErrorView message="Search failed. Please try again." onRetry={() => window.location.reload()} className="my-10" />
+        <ErrorView message="Search failed. Please try again." onRetry={() => globalThis.window.location.reload()} className="my-10" />
       )}
 
       {has_searched && !error && results.length === 0 && !is_loading && (
@@ -100,7 +100,7 @@ export default function SearchPage() {
       {is_loading && results.length === 0 && (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6">
           {Array.from({ length: 12 }).map((_, i) => (
-            <div key={i} className="aspect-[3/4] bg-base-200 animate-pulse rounded-box" />
+            <div key={i+1} className="aspect-[3/4] bg-base-200 animate-pulse rounded-box" />
           ))}
         </div>
       )}

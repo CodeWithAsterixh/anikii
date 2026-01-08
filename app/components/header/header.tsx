@@ -1,5 +1,5 @@
+import { Home, Search } from "lucide-react";
 import { Link, NavLink } from "react-router";
-import { Search, Home, PlayCircle } from "lucide-react";
 
 export function Header() {
   return (

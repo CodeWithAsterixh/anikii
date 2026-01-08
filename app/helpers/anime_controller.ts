@@ -3,7 +3,7 @@ import type { IApiSuccessEnvelope, IAnimeDetails, IAnime } from "../types";
 import { AnimeDetailsEnvelopeSchema, AnimeListEnvelopeSchema } from "./schemas";
 
 export const get_anime_details = async (id: number) => {
-  if (!id || isNaN(id)) {
+  if (!id || Number.isNaN(id)) {
     throw new Error("Invalid anime ID provided");
   }
   const response = await api_client.get<any, IApiSuccessEnvelope<IAnimeDetails>>(
@@ -13,7 +13,7 @@ export const get_anime_details = async (id: number) => {
 };
 
 export const get_recommended_anime = async (id: number, page = 1) => {
-  if (!id || isNaN(id)) {
+  if (!id || Number.isNaN(id)) {
     throw new Error("Invalid anime ID provided");
   }
   const response = await api_client.get<any, IApiSuccessEnvelope<IAnime[]>>(

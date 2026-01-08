@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 import type { IAnime } from "../../types";
 
-export function AnimeCard({ anime }: { anime: IAnime }) {
+export function AnimeCard({ anime }: Readonly<{ anime: IAnime }>) {
   if (!anime) return null;
 
   // Defensive title extraction

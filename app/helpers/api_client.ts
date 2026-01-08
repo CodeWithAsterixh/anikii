@@ -4,6 +4,28 @@ import { __BASEURL__ } from "lib/constants/baseurl";
 // Fallback to local if constant is missing or undefined
 const API_BASE_URL = __BASEURL__;
 
+export class ApiError extends Error {
+  status: {
+    success: boolean;
+    code: number;
+    message: string;
+  };
+  data: any;
+  error: any;
+
+  constructor(message: string, code: number, error: any) {
+    super(message);
+    this.name = "ApiError";
+    this.status = {
+      success: false,
+      code: code,
+      message: message,
+    };
+    this.data = null;
+    this.error = error;
+  }
+}
+
 export const api_client = axios.create({
   baseURL: API_BASE_URL,
   timeout: 30000, // Reduced from 60s for better responsiveness
@@ -28,7 +50,7 @@ api_client.interceptors.request.use(
 api_client.interceptors.response.use(
   (response) => {
     // Basic validation: Ensure response exists and has data
-    if (!response || !response.data) {
+    if (!response?.data) {
       console.warn("API returned an empty response body");
       return { status: { success: false, message: "Empty response" }, data: null };
     }
@@ -46,14 +68,12 @@ api_client.interceptors.response.use(
     });
 
     // Normalize error response so the app doesn't crash
-    return Promise.reject({
-      status: {
-        success: false,
-        code: error.response?.status || 500,
-        message: error_message
-      },
-      data: null,
-      error: error
-    });
+    return Promise.reject(
+      new ApiError(
+        error_message,
+        error.response?.status || 500,
+        error
+      )
+    );
   }
 );

@@ -6,7 +6,7 @@ import DOMPurify from "dompurify";
  * @returns A sanitized HTML string.
  */
 export function sanitize_html(html: string): string {
-  if (typeof window === "undefined") {
+  if (globalThis.window === undefined) {
     return html; // Fallback for SSR if necessary, though DOMPurify works in node with jsdom
   }
   return DOMPurify.sanitize(html, {

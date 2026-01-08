@@ -6,18 +6,18 @@ import { ErrorView } from "../components/status_views/error_view";
 import { VideoPlayer } from "../components/video_player/video_player";
 import { get_stream_details } from "../helpers/stream_controller";
 import { EpisodeExtraEnvelopeSchema } from "../helpers/schemas";
-import { use_watch_links } from "../hooks/use_watch_links";
+import { useWatchLinks } from "../hooks/use_watch_links";
 import { MainLayout } from "../layouts/main_layout";
 import { SITE_URL } from "../config";
 import type { Route } from "./+types/watch";
 
-export const meta: Route.MetaFunction = ({ data, params }) => {
-  if (!data || data.error) {
+export const meta: Route.MetaFunction = ({ loaderData, params }) => {
+  if (!loaderData || loaderData.error) {
     return [{ title: "Episode Not Found | Anikii" }];
   }
   
   const { ep } = params;
-  const anime = data.extra_data?.animeInfo;
+  const anime = loaderData.extra_data?.animeInfo;
   const title = anime?.title || `Episode ${ep}`;
   const description = `Watch ${title} online in high quality on Anikii.`;
   const canonical_url = `${SITE_URL}/watch/${params.id}/${ep}`;
@@ -38,7 +38,7 @@ export const loader = async ({ params }: Route.LoaderArgs) => {
   const anime_id = Number(params.id);
   const episode_num = Number(params.ep);
   
-  if (isNaN(anime_id) || isNaN(episode_num)) {
+  if (Number.isNaN(anime_id) || Number.isNaN(episode_num)) {
     throw new Response("Invalid Parameters", { status: 400 });
   }
 
@@ -75,7 +75,7 @@ export default function WatchPage() {
       <MainLayout>
         <ErrorView 
           message={data.message || "Unable to load the video player. This might be due to a temporary server issue."} 
-          onRetry={() => window.location.reload()}
+          onRetry={() => globalThis.window.location.reload()}
           className="my-20"
         />
       </MainLayout>
@@ -94,7 +94,7 @@ export default function WatchPage() {
     current_links,
     has_dub,
     has_hsub,
-  } = use_watch_links(extra_data);
+  } = useWatchLinks(extra_data);
 
   const anime_info = extra_data?.animeInfo;
   const last_episode = anime_info?.episodes?.lastEpisode || 0;

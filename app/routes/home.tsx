@@ -65,7 +65,7 @@ export default function Home() {
       <MainLayout>
         <ErrorView 
           message="We're having trouble connecting to the Anikii servers. Please check your connection." 
-          onRetry={() => window.location.reload()} 
+          onRetry={() => globalThis.window.location.reload()} 
           className="my-20"
         />
       </MainLayout>
@@ -79,7 +79,7 @@ export default function Home() {
 <Carousel anime_list={trending as IAnime[]} />
       ) : (
         <div className="h-[400px] w-full bg-base-200/50 rounded-box mb-10 flex items-center justify-center p-6">
-           <ErrorView message="Failed to load trending anime" onRetry={() => window.location.reload()} />
+           <ErrorView message="Failed to load trending anime" onRetry={() => globalThis.window.location.reload()} />
         </div>
       )}
 
