@@ -7,7 +7,7 @@ export interface IAnimeTitle {
 export interface ICoverImage {
   cover_image_color?: string;
   cover_image?: string;
-  bannerImage?: string;
+  banner_image?: string;
 }
 
 export interface ISeason {

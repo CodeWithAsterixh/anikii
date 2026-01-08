@@ -18,7 +18,7 @@ export function Carousel({ anime_list }: Readonly<{ anime_list: IAnime[] }>) {
     ? hero.title 
     : (hero.title?.english || hero.title?.romaji || hero.title?.native || "Unknown Title");
 
-  const image_src = hero.coverImage?.bannerImage || hero.coverImage?.cover_image || "/placeholder-banner.png";
+  const image_src = hero.coverImage?.banner_image || hero.coverImage?.cover_image || "/placeholder-banner.png";
 
   return (
     <div className="relative w-full aspect-[16/9] md:aspect-[21/9] rounded-box overflow-hidden mb-10 group border border-base-300/10 shadow-lg">

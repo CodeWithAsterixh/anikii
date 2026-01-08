@@ -23,7 +23,7 @@ export const AnimeTitleSchema = z.object({
 export const CoverImageSchema = z.object({
   cover_image_color: z.string().optional(),
   cover_image: z.string().optional(),
-  bannerImage: z.string().optional(),
+  banner_image: z.string().optional(),
 });
 
 export const SeasonSchema = z.object({
